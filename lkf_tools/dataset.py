@@ -31,7 +31,7 @@ class process_dataset(object):
     """
     Class to process deformation and drift dataset to LKF data set.
     """
-    def __init__(self,netcdf_file,output_path='./',xarray=None,
+    def __init__(self,netcdf_file,creg,output_path='./', xarray=None,
                  max_kernel=5,min_kernel=1, dog_thres=0.01,skeleton_kernel=0,
                  dis_thres=4,ellp_fac=2,angle_thres=45,eps_thres=1.25,lmin=3,
                  latlon=True,return_eps=True,red_fac=1,t_red=3):
@@ -63,10 +63,12 @@ class process_dataset(object):
         self.return_eps = return_eps
         self.red_fac = red_fac
         self.t_red = t_red
-        
+        self.creg = creg
+
+        print(creg)
 
         # Read netcdf file
-        if xarray is None:
+        if xarray is None: # ici
             self.data = xr.open_dataset(self.netcdf_file)
         else:
             self.data = xarray

@@ -22,8 +22,18 @@ else:
 
 Si div, shr ET vor sont présents ils sont directement utilisés...si non ils sont recalculés (après le else). 
 
+QUESTIONS pour Nils:
+
 **Est-ce que vor est nécessaire pour détecter les LKFs?
 
 **self.corfac = 12.5e3/np.mean...is it hardcoded here? What is 12.5e3?
 
 **Should I modify this... prefix: /Users/nhutter/miniforge3/envs/lkf_tools in environment.yml?
+
+** in dataset.py: netcdf_file: expected variables U,V,A in shape (time,x,y)...is it ok if our files are (time,nj,ni) ...y,x?
+
+CHOSES A CONSIDERER:
+
+tracking needs vorticity (vor) and u,v. If used consider uvelU, vvelU not just (uvel, vvel...at T point).
+
+Watchout...ULON, ULAT in code are in fact TLON, TLAT in our CICE outputs.
