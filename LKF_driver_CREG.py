@@ -13,11 +13,17 @@ creggrid='creg025' # creg025 or creg12
 EXP='run6f'
 ddate='2005032903_000'
 main_dir='/home/jfl001/data/runsLemieux_et_al_2022/'
+main_dir_grid='/home/socn000/data/eccc-ppp5/env_rhel-8-icelake-64/datafiles/constants/oce/repository/master/CONCEPTS/'
 
 #-----------------
 
 data_path=os.path.join(main_dir+creggrid+'/'+EXP+'/netcdf/'+ddate+'.nc')
-#print(data_path)
+if (creggrid == 'creg025'):
+    grid_path=os.path.join(main_dir_grid+'/creg025pe/grid/coordinates_CREG025_LIM.nc')
+elif (creggrid == 'creg12'):
+    grid_path=os.path.join(main_dir_grid+'/creg012pe/grid/coordinates_CREG12_ext.nc')
+else:
+    print ("Wrong choice of grid")
 
 #----- open netcdf file -----
 
@@ -30,6 +36,11 @@ creg_nc = xr.open_dataset(data_path)
 creg_nc = creg_nc.rename({'ULON':'LONTP', 'ULAT':'LATTP'})
 creg_nc = creg_nc.rename({'divu':'div', 'shear':'shr', 'aice':'A', 
                           'uvel':'U', 'vvel':'V', 'TLON':'ULON', 'TLAT':'ULAT'})
+
+#----- open grid coordinate file -----
+
+grid_nc = xr.open_dataset(data_path)
+grid_nc = grid_nc.rename({'ULON':'LONTP', 'ULAT':'LATTP'})
 
 #creg_nc = creg_nc.rename({'ni':'x', 'nj':'y','divu':'div', 'shear':'shr', 'aice':'A', 
 #                          'uvel':'U', 'vvel':'V', 'TLON':'ULON', 'TLAT':'ULAT'})
