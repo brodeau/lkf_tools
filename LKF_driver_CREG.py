@@ -19,6 +19,8 @@ main_dir='/home/jfl001/data/runsLemieux_et_al_2022/'
 data_path=os.path.join(main_dir+creggrid+'/'+EXP+'/netcdf/'+ddate+'.nc')
 #print(data_path)
 
+#----- open netcdf file -----
+
 creg_nc = xr.open_dataset(data_path)
 
 # WATCHOUT: in code U,V,A, shr,div and vor are collocated. The lat,lon at these 
@@ -26,10 +28,10 @@ creg_nc = xr.open_dataset(data_path)
 #           T points...this is why TLAT,TLON are renamed ULAT, ULON. 
 
 creg_nc = creg_nc.rename({'ULON':'LONTP', 'ULAT':'LATTP'})
-creg_nc = creg_nc.rename({'divu':'div', 'shear':'shr',
+creg_nc = creg_nc.rename({'divu':'div', 'shear':'shr', 'aice':'A', 
                           'uvel':'U', 'vvel':'V', 'TLON':'ULON', 'TLAT':'ULAT'})
 
-#creg_nc = creg_nc.rename({'xc':'x', 'yc':'y', 'divu':'div', 'shear':'shr',
+#creg_nc = creg_nc.rename({'ni':'x', 'nj':'y','divu':'div', 'shear':'shr', 'aice':'A', 
 #                          'uvel':'U', 'vvel':'V', 'TLON':'ULON', 'TLAT':'ULAT'})
 
 #creg_nc = creg_nc.assign(A=np.isfinite(creg_nc.div).astype('float'))
@@ -37,3 +39,5 @@ creg_nc = creg_nc.rename({'divu':'div', 'shear':'shr',
 
 lkf_data = process_dataset(data_path,creg=cregflag,
                            output_path='/home/jfl001/data/LKF_diag', xarray=creg_nc)
+
+lkf_data.detect_lkfs(indexes=[0])

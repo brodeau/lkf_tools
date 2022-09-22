@@ -65,8 +65,6 @@ class process_dataset(object):
         self.t_red = t_red
         self.creg = creg
 
-        print(creg)
-
         # Read netcdf file
         if xarray is None: # ici
             self.data = xr.open_dataset(self.netcdf_file)
@@ -109,7 +107,9 @@ class process_dataset(object):
         
         :param indexes: time indexes that should be detected. If None all time steps are detected
         """
-        
+        print("check creg")
+        print(self.creg)
+
         # Check for already dectected features
         if force_redetect:
             self.lkf_filelist = [i for i in os.listdir(self.lkfpath) if i.startswith('lkf') and i.endswith('.npy')]
@@ -135,36 +135,53 @@ class process_dataset(object):
                 vice = self.data.V[it+itr,:,:]
                 aice = self.data.A[it+itr,:,:]
         
-                # Check if deformation rates are given
-                if hasattr(self.data,'div') and hasattr(self.data,'shr') and hasattr(self.data,'vor'):
-                    div = self.data.div[it+itr,:,:]
-                    shr = self.data.shr[it+itr,:,:]
-                    vor = self.data.vor[it+itr,:,:]
+                if (self.creg == 1):
+                    div = self.data.div[it+itr,:,:]/100.0 # from %day^-1 to day^-1
+                    shr = self.data.shr[it+itr,:,:]/100.0 # from %day^-1 to day^-1
+                    # vor is not in CREG outputs...would be needed for tracking
                 else:
-                    dudx = ((uice[2:,:]-uice[:-2,:])/(self.dxu[:-2,:]+self.dxu[1:-1,:]))[:,1:-1]
-                    dvdx = ((vice[2:,:]-vice[:-2,:])/(self.dxu[:-2,:]+self.dxu[1:-1,:]))[:,1:-1]
-                    dudy = ((uice[:,2:]-uice[:,:-2])/(self.dyu[:,:-2]+self.dyu[:,1:-1]))[1:-1,:]
-                    dvdy = ((vice[:,2:]-vice[:,:-2])/(self.dyu[:,:-2]+self.dyu[:,1:-1]))[1:-1,:]
+                # Check if deformation rates are given
+                    if hasattr(self.data,'div') and hasattr(self.data,'shr') and hasattr(self.data,'vor'):
+                        div = self.data.div[it+itr,:,:]
+                        shr = self.data.shr[it+itr,:,:]
+                        vor = self.data.vor[it+itr,:,:]
+                    else:
+                        dudx = ((uice[2:,:]-uice[:-2,:])/(self.dxu[:-2,:]+self.dxu[1:-1,:]))[:,1:-1]
+                        dvdx = ((vice[2:,:]-vice[:-2,:])/(self.dxu[:-2,:]+self.dxu[1:-1,:]))[:,1:-1]
+                        dudy = ((uice[:,2:]-uice[:,:-2])/(self.dyu[:,:-2]+self.dyu[:,1:-1]))[1:-1,:]
+                        dvdy = ((vice[:,2:]-vice[:,:-2])/(self.dyu[:,:-2]+self.dyu[:,1:-1]))[1:-1,:]
 
-                    div = (dudx + dvdy) * 3600. *24. # in day^-1
-                    shr = np.sqrt((dudx-dvdy)**2 + (dudy + dvdx)**2) * 3600. *24. # in day^-1
-                    vor = 0.5*(dudy-dvdx) * 3600. *24. # in day^-1
-
+                        div = (dudx + dvdy) * 3600. *24. # in day^-1
+                        shr = np.sqrt((dudx-dvdy)**2 + (dudy + dvdx)**2) * 3600. *24. # in day^-1
+                        vor = 0.5*(dudy-dvdx) * 3600. *24. # in day^-1
+                print("ici1")
                 eps_tot = np.sqrt(div**2+shr**2)
+                print("ici2")
+                print(aice.shape)
+                print(eps_tot.shape)
+                eps_tot = eps_tot.where((aice>0) & (aice<=1))
+                plt.pcolor(eps_tot, vmin=0, vmax=1)
+                plt.savefig('debugg.png')
+#                eps_tot = eps_tot.where((aice[1:-1,1:-1]>0) & (aice[1:-1,1:-1]<=1))
 
-                eps_tot = eps_tot.where((aice[1:-1,1:-1]>0) & (aice[1:-1,1:-1]<=1))
+                print("ici3")
 
                 # Mask Arctic basin and shrink array
-                eps_tot = eps_tot.where(self.mask[1:-1,1:-1])
+                eps_tot = eps_tot.where(self.mask)
+#                eps_tot = eps_tot.where(self.mask[1:-1,1:-1])
+                print("ici4")
+                plt.pcolor(eps_tot, vmin=0, vmax=1)
+                plt.savefig('debugg.png')
                 eps_tot = eps_tot[max([0,self.index_y[0][0]-1]):self.index_y[0][-1]+2:self.red_fac,
                                   max([0,self.index_x[0][0]-1]):self.index_x[0][-1]+2:self.red_fac]
+                print("ici5")
                 eps_tot[0,:] = np.nan; eps_tot[-1,:] = np.nan
                 eps_tot[:,0] = np.nan; eps_tot[:,-1] = np.nan
                 eps_tot[1,:] = np.nan; eps_tot[-2,:] = np.nan
                 eps_tot[:,1] = np.nan; eps_tot[:,-2] = np.nan
-                
+                print("ici6")
                 self.eps_tot_list.append(np.array(eps_tot))
-    
+                print("ici7")
 
             # Apply detection algorithm
             # Correct detection parameters for different resolution
