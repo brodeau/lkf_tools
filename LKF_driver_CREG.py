@@ -14,8 +14,12 @@ EXP='run6f'
 ddate='2005032903_000'
 main_dir='/home/jfl001/data/runsLemieux_et_al_2022/'
 main_dir_grid='/home/socn000/data/eccc-ppp5/env_rhel-8-icelake-64/datafiles/constants/oce/repository/master/CONCEPTS/'
+store_main_dir='/home/jfl001/data/Lemieux2022/LKF_diag'
 
-#-----------------
+#----- define paths and file name --------
+
+store_path=os.path.join(store_main_dir+'/'+creggrid+'/'+EXP+'/')
+fileout=ddate + '_' + EXP
 
 data_path=os.path.join(main_dir+creggrid+'/'+EXP+'/netcdf/'+ddate+'.nc')
 if (creggrid == 'creg025'):
@@ -39,16 +43,15 @@ creg_nc = creg_nc.rename({'divu':'div', 'shear':'shr', 'aice':'A',
 
 #----- open grid coordinate file -----
 
-grid_nc = xr.open_dataset(data_path)
-grid_nc = grid_nc.rename({'ULON':'LONTP', 'ULAT':'LATTP'})
+grid_nc = xr.open_dataset(grid_path)
+grid_nc = grid_nc.rename({'e1t':'DXU', 'e2t':'DYV'})
+
+creg_nc = xr.Dataset.merge(creg_nc, grid_nc)
 
 #creg_nc = creg_nc.rename({'ni':'x', 'nj':'y','divu':'div', 'shear':'shr', 'aice':'A', 
 #                          'uvel':'U', 'vvel':'V', 'TLON':'ULON', 'TLAT':'ULAT'})
 
-#creg_nc = creg_nc.assign(A=np.isfinite(creg_nc.div).astype('float'))
-#creg_nc.A[0,:,:].plot()
-
-lkf_data = process_dataset(data_path,creg=cregflag,
-                           output_path='/home/jfl001/data/LKF_diag', xarray=creg_nc)
+lkf_data = process_dataset(fileout,creg=cregflag,
+                           output_path=store_path, xarray=creg_nc, t_red=1)
 
 lkf_data.detect_lkfs(indexes=[0])

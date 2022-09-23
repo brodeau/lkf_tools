@@ -66,9 +66,9 @@ class process_dataset(object):
         self.creg = creg
 
         # Read netcdf file
-        if xarray is None: # ici
+        if xarray is None:
             self.data = xr.open_dataset(self.netcdf_file)
-        else:
+        else: # ici
             self.data = xarray
 
         # Store variables
@@ -139,6 +139,8 @@ class process_dataset(object):
                     div = self.data.div[it+itr,:,:]/100.0 # from %day^-1 to day^-1
                     shr = self.data.shr[it+itr,:,:]/100.0 # from %day^-1 to day^-1
                     # vor is not in CREG outputs...would be needed for tracking
+                    vor = self.data.div[it+itr,:,:]/100.0 # set equal to div
+#                    vor = np.nan                          # set to nan
                 else:
                 # Check if deformation rates are given
                     if hasattr(self.data,'div') and hasattr(self.data,'shr') and hasattr(self.data,'vor'):
@@ -154,34 +156,33 @@ class process_dataset(object):
                         div = (dudx + dvdy) * 3600. *24. # in day^-1
                         shr = np.sqrt((dudx-dvdy)**2 + (dudy + dvdx)**2) * 3600. *24. # in day^-1
                         vor = 0.5*(dudy-dvdx) * 3600. *24. # in day^-1
-                print("ici1")
                 eps_tot = np.sqrt(div**2+shr**2)
-                print("ici2")
-                print(aice.shape)
-                print(eps_tot.shape)
+#                print(eps_tot.shape)
                 eps_tot = eps_tot.where((aice>0) & (aice<=1))
-                plt.pcolor(eps_tot, vmin=0, vmax=1)
-                plt.savefig('debugg.png')
-#                eps_tot = eps_tot.where((aice[1:-1,1:-1]>0) & (aice[1:-1,1:-1]<=1))
-
-                print("ici3")
+#                plt.pcolor(eps_tot, vmin=0, vmax=1)
+#                plt.colorbar()
+#                plt.savefig('debugg.png')
+#                eps_tot = eps_tot.where((aice[1:-1,1:-1]>0) & (aice[1:-1,1:-1]<=1)) # jfl does not work...because of nan?
 
                 # Mask Arctic basin and shrink array
                 eps_tot = eps_tot.where(self.mask)
 #                eps_tot = eps_tot.where(self.mask[1:-1,1:-1])
-                print("ici4")
-                plt.pcolor(eps_tot, vmin=0, vmax=1)
-                plt.savefig('debugg.png')
+
+#                plt.pcolor(eps_tot, vmin=0, vmax=1)
+#                plt.savefig('debugg.png')
                 eps_tot = eps_tot[max([0,self.index_y[0][0]-1]):self.index_y[0][-1]+2:self.red_fac,
                                   max([0,self.index_x[0][0]-1]):self.index_x[0][-1]+2:self.red_fac]
-                print("ici5")
+
                 eps_tot[0,:] = np.nan; eps_tot[-1,:] = np.nan
                 eps_tot[:,0] = np.nan; eps_tot[:,-1] = np.nan
                 eps_tot[1,:] = np.nan; eps_tot[-2,:] = np.nan
                 eps_tot[:,1] = np.nan; eps_tot[:,-2] = np.nan
-                print("ici6")
+
                 self.eps_tot_list.append(np.array(eps_tot))
-                print("ici7")
+
+            print(np.nanmean(self.dxu))
+            print(np.nanmean(self.dyu))
+            print(float(self.red_fac))
 
             # Apply detection algorithm
             # Correct detection parameters for different resolution
@@ -197,7 +198,6 @@ class process_dataset(object):
                                          max_ind=500*self.corfac,use_eps=True,skeleton_kernel=self.skeleton_kernel)
 
             # Save the detected features
-
             if self.latlon:
                 lkf = segs2latlon_model(lkf,
                                         np.array(self.lon[max([0,self.index_y[0][0]-1]):self.index_y[0][-1]+2:self.red_fac,

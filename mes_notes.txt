@@ -32,6 +32,8 @@ QUESTIONS pour Nils:
 
 ** in dataset.py: netcdf_file: expected variables U,V,A in shape (time,x,y)...is it ok if our files are (time,nj,ni) ...y,x?
 
+**not clear what t_red is...it seems it needs to be set to 1 for my stuff.
+
 CHOSES A CONSIDERER:
 
 tracking needs vorticity (vor) and u,v. If used consider uvelU, vvelU not just (uvel, vvel...at T point).
