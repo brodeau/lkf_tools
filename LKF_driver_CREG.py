@@ -56,8 +56,8 @@ creg_nc = xr.Dataset.merge(creg_nc, grid_nc)
 
 #---- process data and detect LKFs ---
 
-lkf_data = process_dataset(fileout,creg=cregflag,
-                           output_path=store_path, xarray=creg_nc, t_red=1)
+lkf_data = process_dataset(fileout,creg=cregflag,  output_path=store_path,
+                           xarray=creg_nc, skeleton_kernel=0, t_red=1)
 
 lkf_data.detect_lkfs(indexes=[0])
 
@@ -81,10 +81,16 @@ if (produce_plot):
 
     lkfs = np.load(lkf_data.lkfpath.joinpath('lkf_%s_%03i.npy' %(lkf_data.netcdf_file.split('/')[-1].split('.')[0],(it+1))),allow_pickle=True)
 
+    i=0
     for ilkf in lkfs:
+        if i == 60:
+            print(ilkf.shape)
+            print(ilkf)
+        i=i+1
         if np.min(ilkf[:,2])<-150 and np.max(ilkf[:,2]>150):
             ilkf[ilkf[:,2]<0,2]+=360
         ax.plot(ilkf[:,2],ilkf[:,3],transform=ccrs.PlateCarree())
 
     plt.colorbar(pcm,label='total deformation')
     plt.savefig('testing12.png')
+

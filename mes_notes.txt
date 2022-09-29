@@ -39,3 +39,9 @@ CHOSES A CONSIDERER:
 tracking needs vorticity (vor) and u,v. If used consider uvelU, vvelU not just (uvel, vvel...at T point).
 
 Watchout...ULON, ULAT in code are in fact TLON, TLAT in our CICE outputs.
+
+LKF objects (in fact ilkf)
+
+They are of shape [n,7]...n depends on length of LKF. Je pense que ilkf[:,2] est la longitude et ilkf[:,3] la latitude. Réponse de Nils (28 sept 2022):
+'The output of the detection is a list of arrays, where each array represents an LKF. The rows represent the numbers of pixels the LKF includes. The first two columns state the i,j coordinates of the pixels, column 3 and 4 provide lat/lon positions and column 5,6, and 7 the deformation rates.'
+
