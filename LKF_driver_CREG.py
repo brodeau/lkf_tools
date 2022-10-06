@@ -17,6 +17,7 @@ ddate='2005032903_000'
 main_dir='/home/jfl001/data/runsLemieux_et_al_2022/'
 main_dir_grid='/home/socn000/data/eccc-ppp5/env_rhel-8-icelake-64/datafiles/constants/oce/repository/master/CONCEPTS/'
 store_main_dir='/home/jfl001/data/Lemieux2022/LKF_diag'
+kvalue=0
 produce_plot=True
 
 #----- define paths and file name --------
@@ -72,7 +73,7 @@ creg_nc = xr.Dataset.merge(creg_nc, grid_nc)
 print('call process_dataset')
 
 lkf_data = process_dataset(fileout,creg=cregflag,  output_path=store_path,
-                           xarray=creg_nc, skeleton_kernel=0, t_red=1)
+                           xarray=creg_nc, skeleton_kernel=kvalue, t_red=1)
 
 lkf_data.detect_lkfs(indexes=[0])
 
