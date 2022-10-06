@@ -19,10 +19,10 @@ import cartopy.crs as ccrs
 creggrid='creg025' # creg025 or creg12
 EXP='run6f'
 ddate='2005032903_000'
-lkfplot=60
+lkfplot=112
 main_dir='/home/jfl001/data/Lemieux2022/LKF_diag'
 main_dirnc='/home/jfl001/data/runsLemieux_et_al_2022/'
-delta=2 # subplot has delta cells on four sides around region of interest
+delta=5 # subplot has delta cells on four sides around region of interest
 
 #----- define paths and file names --------
 
@@ -84,6 +84,8 @@ else:
 
 l=0
 for ilkf in lkfs:
+#    print(l)
+#    print(ilkf)
     if l == lkfplot:
         nb=ilkf.shape[0] # nb of points in LKF i
         maxjl=np.max(ilkf[:,0])
@@ -104,8 +106,8 @@ print(zlkf)
 
 # define smaller (sub) domain for pcolor plot
 
-jsubfin=int(maxjl-minjl+delta+delta)
-isubfin=int(maxil-minil+delta+delta)
+jsubfin=int(maxjl-minjl+delta+delta+1)
+isubfin=int(maxil-minil+delta+delta+1)
 LKFp= np.zeros((jsubfin,isubfin))
 eps_totp= np.zeros((jsubfin,isubfin))
 
@@ -130,7 +132,6 @@ plt.savefig('oneLKF.png')
 
 for jsub in range(jsubfin):
     for isub in range(isubfin):
-#        print(jsub)
         jl=jsub+int(minjl)-delta
         il=isub+int(minil)-delta
         j=jl+jshift-1
