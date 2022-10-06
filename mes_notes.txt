@@ -45,3 +45,24 @@ LKF objects (in fact ilkf)
 They are of shape [n,7]...n depends on length of LKF. Je pense que ilkf[:,2] est la longitude et ilkf[:,3] la latitude. Réponse de Nils (28 sept 2022):
 'The output of the detection is a list of arrays, where each array represents an LKF. The rows represent the numbers of pixels the LKF includes. The first two columns state the i,j coordinates of the pixels, column 3 and 4 provide lat/lon positions and column 5,6, and 7 the deformation rates.'
 
+INFO INDICES:
+
+un point d'un LKF detecte est ilkf[n,0]=164 et ilkf[n,1]=56. Ce point correspond à i=148 et j=492 sur la grille creg025. Dans courriel du 4 oct 2022 Nils écrit que pour passer d'un à l'autre je dois faire 
+
+ 
+i = lkf[:,0] + lkf_data.index_x[0][0]
+j = lkf[:,1] + lkf_data.index_y[0][0]
+
+
+pour creg025, lkf_data.index_x[0][0]=93, lkf_data.index_y[0][0]=329. J'ai l'impression que  ilkf[n,0]=164 =jl (il,jl: coord dans le code de Nils) et ilkf[n,1]=56 =il
+
+Si je fais 
+
+i=il + 93 = 56+93 = 149
+j=jl + 329 = 164+329 = 493
+
+Je devrais donc faire
+
+i = il + 93 -1 =  148
+j = jl + 329 -1 = 492
+

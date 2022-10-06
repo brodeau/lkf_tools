@@ -56,6 +56,21 @@ creg_nc = xr.Dataset.merge(creg_nc, grid_nc)
 
 #---- process data and detect LKFs ---
 
+# il y presentement un bug dans les sorties des i,j. i est lkf[:,0] et j lkf[:,1].
+# Voir courriel de Nils du 4 oct 2022. Pour corriger les i,j je dois faire:
+# i = lkf[:,0] + lkf_data.index_x[0][0]
+# j = lkf[:,1] + lkf_data.index_y[0][0]
+#
+# pour creg025:
+# lkf_data.index_x[0][0]=93
+# lkf_data.index_y[0][0]=329
+# 
+# pour creg12:
+# lkf_data.index_x[0][0]=278
+# lkf_data.index_y[0][0]=985
+
+print('call process_dataset')
+
 lkf_data = process_dataset(fileout,creg=cregflag,  output_path=store_path,
                            xarray=creg_nc, skeleton_kernel=0, t_red=1)
 
@@ -85,7 +100,7 @@ if (produce_plot):
     for ilkf in lkfs:
         if i == 60:
             print(ilkf.shape)
-            print(ilkf)
+#            print(ilkf)
         i=i+1
         if np.min(ilkf[:,2])<-150 and np.max(ilkf[:,2]>150):
             ilkf[ilkf[:,2]<0,2]+=360
