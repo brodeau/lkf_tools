@@ -19,11 +19,11 @@ import cartopy.crs as ccrs
 creggrid='creg025' # creg025 or creg12
 EXP='run6f'
 ddate='2005032903_000'
-lkfplot=46
+lkfplot=62
 main_dir='/home/jfl001/data/Lemieux2022/LKF_diag'
 main_dirnc='/home/jfl001/data/runsLemieux_et_al_2022/'
-delta=5 # subplot has delta cells on four sides around region of interest
-dsearch=4 # +- dsearch cells around one LKF cell
+#delta=5 # subplot has delta cells on four sides around region of interest
+dsearch=5 # +- dsearch cells around one LKF cell (dist is capped if searching too far!!!)
 frac=0.5 # half width is defined as eps_tot < frac*LKFepsmax 
 
 #---- exemples interessants 2005032903_000 run6f kvalue=7----
@@ -91,9 +91,11 @@ print(eps_tot.shape)
 if (creggrid == 'creg025'):
     jshift=329
     ishift=93
+#    addcell=8 # look if land around
 elif (creggrid == 'creg12'):
     jshift=985
     ishift=278
+#    addcell=24 # look if land around
 else:
     print ("Wrong choice of grid")
 
@@ -123,10 +125,12 @@ print(zlkf)
 
 # define smaller (sub) domain for pcolor plot
 
-jsubfin=int(maxjl-minjl+delta+delta+1)
-isubfin=int(maxil-minil+delta+delta+1)
-LKFp= np.zeros((jsubfin,isubfin))
-eps_totp= np.zeros((jsubfin,isubfin))
+#jsubfin=int(maxjl-minjl+delta+delta+1)
+#isubfin=int(maxil-minil+delta+delta+1)
+#LKFp= np.zeros((jsubfin,isubfin))
+#eps_totp= np.zeros((jsubfin,isubfin))
+
+#print(np.sum(eps_totp))
 
 #---- find search direction and width (MV to function...)--------------------
 #  
@@ -185,9 +189,19 @@ for n in range(nb):
 #        print(LKFepsmax)
 #        print(target)
 
+# set initial values (overwritten if found while s < dsearch)
+
+        idelta=int(dsearch*av1)
+        jdelta=int(dsearch*bv1)
+        halfw1[n]=np.sqrt(idelta**2 + jdelta**2)
+        idelta=int(dsearch*av2)
+        jdelta=int(dsearch*bv2)
+        halfw2[n]=np.sqrt(idelta**2 + jdelta**2)
+
 # along v1
         s=0
         while s < dsearch:
+#            print(s)
             idelta=int((s+1)*av1)
             jdelta=int((s+1)*bv1)
             jj=j+jdelta
@@ -200,7 +214,6 @@ for n in range(nb):
 # along v2
         s=0
         while s < dsearch: 
-            print('ici2')
             idelta=int((s+1)*av2)
             jdelta=int((s+1)*bv2)
             jj=j+jdelta
@@ -215,7 +228,8 @@ for n in range(nb):
         
         
     else:
-        LKFwidth[n]=np.nan
+        halfw1[n]=np.nan
+        halfw2[n]=np.nan
 
 #print(halfw1)
 #print(halfw2)
