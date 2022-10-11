@@ -17,7 +17,7 @@ ddate='2005032903_000'
 main_dir='/home/jfl001/data/runsLemieux_et_al_2022/'
 main_dir_grid='/home/socn000/data/eccc-ppp5/env_rhel-8-icelake-64/datafiles/constants/oce/repository/master/CONCEPTS/'
 store_main_dir='/home/jfl001/data/Lemieux2022/LKF_diag'
-kvalue=0
+kvalue=7
 produce_plot=True
 
 #----- define paths and file name --------

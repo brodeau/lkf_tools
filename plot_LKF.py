@@ -19,7 +19,7 @@ import cartopy.crs as ccrs
 creggrid='creg025' # creg025 or creg12
 EXP='run6f'
 ddate='2005032903_000'
-lkfplot=112
+lkfplot=46
 main_dir='/home/jfl001/data/Lemieux2022/LKF_diag'
 main_dirnc='/home/jfl001/data/runsLemieux_et_al_2022/'
 delta=5 # subplot has delta cells on four sides around region of interest
@@ -140,7 +140,7 @@ for jsub in range(jsubfin):
 #        print(eps_totp[jsub,isub])
 
 plt.figure(2)
-plt.pcolor(eps_totp, vmin=0.0, vmax=0.1)
+plt.pcolor(eps_totp, vmin=0.0, vmax=0.2)
 plt.colorbar()
 plt.savefig('eps_tot.png')
 
