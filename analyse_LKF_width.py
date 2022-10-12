@@ -22,9 +22,11 @@ ddate='2005032903_000'
 lkfplot=62
 main_dir='/home/jfl001/data/Lemieux2022/LKF_diag'
 main_dirnc='/home/jfl001/data/runsLemieux_et_al_2022/'
+dir_util='/home/jfl001/Lemieux2022/UTIL'
 #delta=5 # subplot has delta cells on four sides around region of interest
 dsearch=5 # +- dsearch cells around one LKF cell (dist is capped if searching too far!!!)
 frac=0.5 # half width is defined as eps_tot < frac*LKFepsmax 
+mindist=150.0 # LKF point is analysed if dist from land > mindist (km)
 
 #---- exemples interessants 2005032903_000 run6f kvalue=7----
 # 46: ligne horizontale
@@ -47,6 +49,7 @@ filein='lkf_' + ddate + '_' + EXP + '_001.npy'
 tpdir=ddate + '_' + EXP
 path_filein=os.path.join(main_dir+'/'+creggrid+'/'+EXP+'/'+tpdir+'/'+filein)
 data_path=os.path.join(main_dirnc+creggrid+'/'+EXP+'/netcdf/'+ddate+'.nc')
+path_filedist=os.path.join(dir_util +'/dist_'+creggrid+'.pkl')
 
 #----- open npy file -----
 
@@ -61,7 +64,9 @@ div = creg_nc.divu[0,:,:]/100.0
 shr = creg_nc.shear[0,:,:]/100.0
 eps_tot = np.sqrt(div**2+shr**2)
 
-print(eps_tot.shape)
+#----- open distance to land file --------
+
+dist = np.load(path_filedist,allow_pickle=True)
 
 #----- shift indices ---------------------
 
@@ -150,6 +155,12 @@ halfw2=np.zeros(nb)
 for n in range(nb):
     print('n')
     print(n)
+
+    jl = int(zlkf[n,0])
+    il = int(zlkf[n,1])
+    j=jl+jshift-1
+    i=il+ishift-1 
+
     if (n == 0):
         deltj=zlkf[1,0]-zlkf[0,0]
         delti=zlkf[1,1]-zlkf[0,1]
@@ -175,19 +186,13 @@ for n in range(nb):
     # width is analysed if sdelt=1, 2 or 4. These corresponds to vectors v along 
     # x^, y^ or at 45 deg.
 
-    if (sdelt == 1 or sdelt == 2 or sdelt == 4):
+    if (sdelt == 1 or sdelt == 2 or sdelt == 4 and dist[j,i] > mindist):
         av1=int(-bv) # v1 and v2 are found by rotating v by +-90 deg
         bv1=int(av)
         av2=int(bv)
         bv2=int(-av)
-        jl = int(zlkf[n,0])
-        il = int(zlkf[n,1])
-        j=jl+jshift-1
-        i=il+ishift-1 
         LKFepsmax=eps_tot[j,i]
         target=frac*LKFepsmax
-#        print(LKFepsmax)
-#        print(target)
 
 # set initial values (overwritten if found while s < dsearch)
 
@@ -201,7 +206,6 @@ for n in range(nb):
 # along v1
         s=0
         while s < dsearch:
-#            print(s)
             idelta=int((s+1)*av1)
             jdelta=int((s+1)*bv1)
             jj=j+jdelta
@@ -231,8 +235,8 @@ for n in range(nb):
         halfw1[n]=np.nan
         halfw2[n]=np.nan
 
-#print(halfw1)
-#print(halfw2)
+print(halfw1)
+print(halfw2)
 
 #    jl=zlkf[n,0]
 #    il=zlkf[n,1]
