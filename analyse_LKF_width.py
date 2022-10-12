@@ -23,7 +23,6 @@ lkfplot=62
 main_dir='/home/jfl001/data/Lemieux2022/LKF_diag'
 main_dirnc='/home/jfl001/data/runsLemieux_et_al_2022/'
 dir_util='/home/jfl001/Lemieux2022/UTIL'
-#delta=5 # subplot has delta cells on four sides around region of interest
 dsearch=5 # +- dsearch cells around one LKF cell (dist is capped if searching too far!!!)
 frac=0.5 # half width is defined as eps_tot < frac*LKFepsmax 
 mindist=150.0 # LKF point is analysed if dist from land > mindist (km)
@@ -96,11 +95,9 @@ dist = np.load(path_filedist,allow_pickle=True)
 if (creggrid == 'creg025'):
     jshift=329
     ishift=93
-#    addcell=8 # look if land around
 elif (creggrid == 'creg12'):
     jshift=985
     ishift=278
-#    addcell=24 # look if land around
 else:
     print ("Wrong choice of grid")
 
@@ -109,7 +106,6 @@ else:
 l=0
 for ilkf in lkfs:
 #    print(l)
-#    print(ilkf)
     if l == lkfplot:
         nb=ilkf.shape[0] # nb of points in LKF i
         maxjl=np.max(ilkf[:,0])
@@ -121,21 +117,10 @@ for ilkf in lkfs:
         print(maxjl)
         print(minil)
         print(maxil)
-#        print(int(maxjl)+jshift)
-#        print(int(maxil)+ishift)
         zlkf=ilkf
     l=l+1
 
 print(zlkf)
-
-# define smaller (sub) domain for pcolor plot
-
-#jsubfin=int(maxjl-minjl+delta+delta+1)
-#isubfin=int(maxil-minil+delta+delta+1)
-#LKFp= np.zeros((jsubfin,isubfin))
-#eps_totp= np.zeros((jsubfin,isubfin))
-
-#print(np.sum(eps_totp))
 
 #---- find search direction and width (MV to function...)--------------------
 #  
@@ -228,7 +213,7 @@ for n in range(nb):
             s=s+1        
 
 #        tpcalc= np.sqrt(zlkf[n,4]**2 + zlkf[n,5]**2)
-#        print(tpcalc) # tpcalc should be equal tp LKFepstot...it is
+#        print(tpcalc) # tpcalc should be equal tp LKFepsmax...it is
         
         
     else:
@@ -237,34 +222,3 @@ for n in range(nb):
 
 print(halfw1)
 print(halfw2)
-
-#    jl=zlkf[n,0]
-#    il=zlkf[n,1]
-#    jsub=int(jl-minjl+delta)
-#    isub=int(il-minil+delta)
-#    LKFp[jsub,isub]=1
-#    j=int(jl)+jshift-1
-#    i=int(il)+ishift-1
-#    print(zlkf[n,4])
-#    print(div[j,i])
-
-#plt.pcolor(LKFp)
-#plt.colorbar()
-#plt.savefig('oneLKF.png')
-
-#---- copy eps_tot in subdomain for pcolor plot ----
-
-#for jsub in range(jsubfin):
-#    for isub in range(isubfin):
-#        jl=jsub+int(minjl)-delta
-#        il=isub+int(minil)-delta
-#        j=jl+jshift-1
-#        i=il+ishift-1        
-#        eps_totp[jsub,isub]=eps_tot[j,i]
-#        print(eps_totp[jsub,isub])
-
-#plt.figure(2)
-#plt.pcolor(eps_totp, vmin=0.0, vmax=0.2)
-#plt.colorbar()
-#plt.savefig('eps_tot.png')
-
