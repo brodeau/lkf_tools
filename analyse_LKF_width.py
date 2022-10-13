@@ -19,7 +19,7 @@ import cartopy.crs as ccrs
 creggrid='creg025' # creg025 or creg12
 EXP='run6f'
 ddate='2005032903_000'
-lkfplot=62
+lkfchoice=62
 main_dir='/home/jfl001/data/Lemieux2022/LKF_diag'
 main_dirnc='/home/jfl001/data/runsLemieux_et_al_2022/'
 dir_util='/home/jfl001/Lemieux2022/UTIL'
@@ -34,19 +34,18 @@ mindist=150.0 # LKF point is analysed if dist from land > mindist (km)
 # 63: courte ligne diagonale parfaite de fortes def
 # 69: ligne verticale
 
-#def lkf_poly_fit_p(x,y,deg):
-#    if x.size-1<deg:
-#        deg=x.size-1
-#    t = np.arange(x.size)
-#    p_x = np.polyfit(t,x,deg)
-#    p_y = np.polyfit(t,y,deg)
-#    return p_x,p_y
+#---- begin -------------------------------
+
+print('working on date:')
+print(ddate)
 
 #----- define paths and file names --------
 
 filein='lkf_' + ddate + '_' + EXP + '_001.npy'
+fileout='lkf_' + ddate + '_' + EXP + '_width.npy'
 tpdir=ddate + '_' + EXP
 path_filein=os.path.join(main_dir+'/'+creggrid+'/'+EXP+'/'+tpdir+'/'+filein)
+path_fileout=os.path.join(main_dir+'/'+creggrid+'/'+EXP+'/'+tpdir+'/'+fileout)
 data_path=os.path.join(main_dirnc+creggrid+'/'+EXP+'/netcdf/'+ddate+'.nc')
 path_filedist=os.path.join(dir_util +'/dist_'+creggrid+'.pkl')
 
@@ -105,22 +104,16 @@ else:
 
 l=0
 for ilkf in lkfs:
-    print(l)
-#    if l == lkfplot:
+#    print(l)
+#    print(ilkf.shape)
+#    if l == lkfchoice:
     nb=ilkf.shape[0] # nb of points in LKF i
     maxjl=np.max(ilkf[:,0])
     minjl=np.min(ilkf[:,0])
     maxil=np.max(ilkf[:,1])
     minil=np.min(ilkf[:,1])
 
-#    print(minjl)
-#    print(maxjl)
-#    print(minil)
-#    print(maxil)
     zlkf=ilkf
-#    l=l+1
-
-#    print(zlkf)
 
 #---- find search direction and width (MV to function...)--------------------
 #  
@@ -136,8 +129,6 @@ for ilkf in lkfs:
     halfw2=np.zeros(nb)
  
     for n in range(nb):
-#        print('n')
-#        print(n)
 
         jl = int(zlkf[n,0])
         il = int(zlkf[n,1])
@@ -154,7 +145,6 @@ for ilkf in lkfs:
             deltj=zlkf[n+1,0]-zlkf[n-1,0]
             delti=zlkf[n+1,1]-zlkf[n-1,1]
         
-#    mvect=np.sqrt(delti**2 + deltj**2) # magnitude vector
 # v vector is written as av,bv = av x^ + bv y^ (x^,y^=unit vectors along i and j)
 # v, v1 and v2 are either (1,0),(0,1),(-1,0),(0,-1),(1,1),(-1,1),(-1,-1),(1,-1)
 # be careful vector as x^ component first!!!
@@ -211,14 +201,18 @@ for ilkf in lkfs:
                 s=s+1        
 
 #        tpcalc= np.sqrt(zlkf[n,4]**2 + zlkf[n,5]**2)
-#        print(tpcalc) # tpcalc should be equal tp LKFepsmax...it is
-        
+#        print(tpcalc) # tpcalc should be equal tp LKFepsmax...it is        
         
         else:
             halfw1[n]=np.nan
             halfw2[n]=np.nan
 
-    if l == 62:
-        print(halfw1)
-        print(halfw2)
+    zlkf=np.c_[zlkf, halfw1] # add halfw vectors to zlkf
+    zlkf=np.c_[zlkf, halfw2]
+    lkfs[l,]=zlkf        
+
     l=l+1
+
+#----- save output file -----
+
+np.save(path_fileout,lkfs,allow_pickle=True)
