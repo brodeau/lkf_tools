@@ -105,22 +105,22 @@ else:
 
 l=0
 for ilkf in lkfs:
-#    print(l)
-    if l == lkfplot:
-        nb=ilkf.shape[0] # nb of points in LKF i
-        maxjl=np.max(ilkf[:,0])
-        minjl=np.min(ilkf[:,0])
-        maxil=np.max(ilkf[:,1])
-        minil=np.min(ilkf[:,1])
+    print(l)
+#    if l == lkfplot:
+    nb=ilkf.shape[0] # nb of points in LKF i
+    maxjl=np.max(ilkf[:,0])
+    minjl=np.min(ilkf[:,0])
+    maxil=np.max(ilkf[:,1])
+    minil=np.min(ilkf[:,1])
 
-        print(minjl)
-        print(maxjl)
-        print(minil)
-        print(maxil)
-        zlkf=ilkf
-    l=l+1
+#    print(minjl)
+#    print(maxjl)
+#    print(minil)
+#    print(maxil)
+    zlkf=ilkf
+#    l=l+1
 
-print(zlkf)
+#    print(zlkf)
 
 #---- find search direction and width (MV to function...)--------------------
 #  
@@ -129,96 +129,96 @@ print(zlkf)
 # search direction (there is 180 deg between v1 and v2). v1 is obtained by a 
 # 'regle de la main droite'. The index (nail up) points in the direction of v 
 # and the thumb indicates the direction of v1. 
-#
+# jl = zlkf[:,0], il=zlkf[:,1]
 #----------------------------------------------------------------------------
 
-halfw1=np.zeros(nb)
-halfw2=np.zeros(nb)
+    halfw1=np.zeros(nb)
+    halfw2=np.zeros(nb)
  
-# jl = zlkf[:,0], il=zlkf[:,1]
+    for n in range(nb):
+#        print('n')
+#        print(n)
 
-for n in range(nb):
-    print('n')
-    print(n)
+        jl = int(zlkf[n,0])
+        il = int(zlkf[n,1])
+        j=jl+jshift-1
+        i=il+ishift-1 
 
-    jl = int(zlkf[n,0])
-    il = int(zlkf[n,1])
-    j=jl+jshift-1
-    i=il+ishift-1 
-
-    if (n == 0):
-        deltj=zlkf[1,0]-zlkf[0,0]
-        delti=zlkf[1,1]-zlkf[0,1]
-    elif (n == nb-1):
-        deltj=zlkf[n,0]-zlkf[n-1,0]
-        delti=zlkf[n,1]-zlkf[n-1,1]
-    else:
-        deltj=zlkf[n+1,0]-zlkf[n-1,0]
-        delti=zlkf[n+1,1]-zlkf[n-1,1]
+        if (n == 0):
+            deltj=zlkf[1,0]-zlkf[0,0]
+            delti=zlkf[1,1]-zlkf[0,1]
+        elif (n == nb-1):
+            deltj=zlkf[n,0]-zlkf[n-1,0]
+            delti=zlkf[n,1]-zlkf[n-1,1]
+        else:
+            deltj=zlkf[n+1,0]-zlkf[n-1,0]
+            delti=zlkf[n+1,1]-zlkf[n-1,1]
         
 #    mvect=np.sqrt(delti**2 + deltj**2) # magnitude vector
-    # v vector is written as av,bv = av x^ + bv y^ (x^,y^=unit vectors along i and j)
-    # v, v1 and v2 are either (1,0),(0,1),(-1,0),(0,-1),(1,1),(-1,1),(-1,-1),(1,-1)
-    # be careful vector as x^ component first!!!
+# v vector is written as av,bv = av x^ + bv y^ (x^,y^=unit vectors along i and j)
+# v, v1 and v2 are either (1,0),(0,1),(-1,0),(0,-1),(1,1),(-1,1),(-1,-1),(1,-1)
+# be careful vector as x^ component first!!!
     
-    sdelt=abs(delti)+abs(deltj) # sum of |delti|+|deltj|
-    sdelt=int(sdelt)
-    deno=max(0.1,abs(delti))
-    av=delti/deno
-    deno=max(0.1,abs(deltj))
-    bv=deltj/deno
+        sdelt=abs(delti)+abs(deltj) # sum of |delti|+|deltj|
+        sdelt=int(sdelt)
+        deno=max(0.1,abs(delti))
+        av=delti/deno
+        deno=max(0.1,abs(deltj))
+        bv=deltj/deno
 
-    # width is analysed if sdelt=1, 2 or 4. These corresponds to vectors v along 
-    # x^, y^ or at 45 deg.
+# width is analysed if sdelt=1, 2 or 4. These corresponds to vectors v along 
+# x^, y^ or at 45 deg.
 
-    if (sdelt == 1 or sdelt == 2 or sdelt == 4 and dist[j,i] > mindist):
-        av1=int(-bv) # v1 and v2 are found by rotating v by +-90 deg
-        bv1=int(av)
-        av2=int(bv)
-        bv2=int(-av)
-        LKFepsmax=eps_tot[j,i]
-        target=frac*LKFepsmax
+        if (sdelt == 1 or sdelt == 2 or sdelt == 4 and dist[j,i] > mindist):
+            av1=int(-bv) # v1 and v2 are found by rotating v by +-90 deg
+            bv1=int(av)
+            av2=int(bv)
+            bv2=int(-av)
+            LKFepsmax=eps_tot[j,i]
+            target=frac*LKFepsmax
 
 # set initial values (overwritten if found while s < dsearch)
 
-        idelta=int(dsearch*av1)
-        jdelta=int(dsearch*bv1)
-        halfw1[n]=np.sqrt(idelta**2 + jdelta**2)
-        idelta=int(dsearch*av2)
-        jdelta=int(dsearch*bv2)
-        halfw2[n]=np.sqrt(idelta**2 + jdelta**2)
+            idelta=int(dsearch*av1)
+            jdelta=int(dsearch*bv1)
+            halfw1[n]=np.sqrt(idelta**2 + jdelta**2)
+            idelta=int(dsearch*av2)
+            jdelta=int(dsearch*bv2)
+            halfw2[n]=np.sqrt(idelta**2 + jdelta**2)
 
 # along v1
-        s=0
-        while s < dsearch:
-            idelta=int((s+1)*av1)
-            jdelta=int((s+1)*bv1)
-            jj=j+jdelta
-            ii=i+idelta
-            if eps_tot[jj,ii] < target:
-                halfw1[n]=np.sqrt(idelta**2 + jdelta**2)
-                break
-            s=s+1
+            s=0
+            while s < dsearch:
+                idelta=int((s+1)*av1)
+                jdelta=int((s+1)*bv1)
+                jj=j+jdelta
+                ii=i+idelta
+                if eps_tot[jj,ii] < target:
+                    halfw1[n]=np.sqrt(idelta**2 + jdelta**2)
+                    break
+                s=s+1
 
 # along v2
-        s=0
-        while s < dsearch: 
-            idelta=int((s+1)*av2)
-            jdelta=int((s+1)*bv2)
-            jj=j+jdelta
-            ii=i+idelta
-            if eps_tot[jj,ii] < target:
-                halfw2[n]=np.sqrt(idelta**2 + jdelta**2)
-                break
-            s=s+1        
+            s=0
+            while s < dsearch: 
+                idelta=int((s+1)*av2)
+                jdelta=int((s+1)*bv2)
+                jj=j+jdelta
+                ii=i+idelta
+                if eps_tot[jj,ii] < target:
+                    halfw2[n]=np.sqrt(idelta**2 + jdelta**2)
+                    break
+                s=s+1        
 
 #        tpcalc= np.sqrt(zlkf[n,4]**2 + zlkf[n,5]**2)
 #        print(tpcalc) # tpcalc should be equal tp LKFepsmax...it is
         
         
-    else:
-        halfw1[n]=np.nan
-        halfw2[n]=np.nan
+        else:
+            halfw1[n]=np.nan
+            halfw2[n]=np.nan
 
-print(halfw1)
-print(halfw2)
+    if l == 62:
+        print(halfw1)
+        print(halfw2)
+    l=l+1
