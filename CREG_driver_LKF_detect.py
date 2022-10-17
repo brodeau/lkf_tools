@@ -1,5 +1,4 @@
 import os,sys
-#sys.path.append(r'/home/jfl001/Lemieux2022/LKF_diag/lkf_tools/creg_lkf_tools')
 import numpy as np
 import pandas as pd
 from datetime import timedelta
@@ -8,7 +7,10 @@ import pickle
 import calendar
 
 #----- INPUT -----
-
+#ni = 528 ; creg025
+#nj = 735 ;
+#ni = 1580 ; creg12
+#nj = 2198 ;
 cregflag=1 # used to customize code for CREG applications.
 creggrid='creg025' # creg025 or creg12
 EXP='run6f'
