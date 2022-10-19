@@ -90,6 +90,8 @@ def CREG_lkf_detect(date, grid_path, data_path, store_path, fileout, kvalue, pro
         plt.colorbar(pcm,label='total deformation')
         plt.savefig('testing12.png')
 
+#---------------------------------------------------------
+
 def CREG_lkf_analysis(date,creggrid,path_filedist,path_filein,path_fileout,data_path,dsearch,frac,mindist):
     
     print('working on date:')
@@ -259,3 +261,45 @@ def CREG_lkf_analysis(date,creggrid,path_filedist,path_filein,path_fileout,data_
 #----- save output file -----
 
     np.save(path_fileout,lkfs,allow_pickle=True)
+
+#---------------------------------------------------------
+
+def CREG_lkf_concatenate_width (date,path_filein, hwidth):
+    
+# ilkf[n,7] = hwidth1
+# ilkf[n,8] = hwidth2
+
+    print(date)
+    tpvect=[]
+    l=0
+    lt=0
+    lr=0
+    lkfs = np.load(path_filein,allow_pickle=True)
+    print(lkfs.shape)
+    
+    for ilkf in lkfs:
+        nb=ilkf.shape[0] # nb of points in LKF i
+        for n in range(nb):
+            lt=lt+1
+            if hwidth == 1:
+                if ilkf[n,7] > 0:
+                    tpvect.append(ilkf[n,7])
+                    l=l+1
+                else:
+                    lr=lr+1
+            elif hwidth == 2:
+                if ilkf[n,8] > 0:
+                    tpvect.append(ilkf[n,8])
+                    l=l+1
+                else:
+                    lr=lr+1
+                    
+            else:
+                print('wrong hwidth value') 
+            
+    print('final number of LKF points:')
+    print(l)
+    print('number of rejected LKF points:')
+    print(lr)
+    
+    return tpvect
