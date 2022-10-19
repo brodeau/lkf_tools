@@ -2,7 +2,7 @@ import os,sys
 import numpy as np
 import pandas as pd
 from datetime import timedelta
-from CREG_lkf_tools import CREG_lkf_width
+from CREG_lkf_tools import CREG_lkf_concatenate_width
 import pickle
 import calendar
 
@@ -36,12 +36,12 @@ for i in range(len(list_dates)):
     tpvect=[]
     path_filein=os.path.join(main_dir+'/'+creggrid+'/'+EXP+'/'+tpdir+'/'+filein)
     tpvect=CREG_lkf_concatenate_width (date0, path_filein, hwidth=1)
-    hwidth1.append(tpvect)
+    hwidth1.extend(tpvect)
 
     tpvect=[]
     path_filein=os.path.join(main_dir+'/'+creggrid+'/'+EXP+'/'+tpdir+'/'+filein)
     tpvect=CREG_lkf_concatenate_width (date0, path_filein, hwidth=2)
-    hwidth2.append(tpvect)
+    hwidth2.extend(tpvect)
 
 np.save(path_fileout1,hwidth1,allow_pickle=True)
 np.save(path_fileout2,hwidth2,allow_pickle=True)
