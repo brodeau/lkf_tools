@@ -18,7 +18,7 @@ import cartopy.crs as ccrs
 
 creggrid='creg025' # creg025 or creg12
 EXP='run6f'
-ddate='2005032903_000'
+ddate='2005032900_000'
 lkfchoice=62
 main_dir='/home/jfl001/data/Lemieux2022/LKF_diag'
 main_dirnc='/home/jfl001/data/runsLemieux_et_al_2022/'

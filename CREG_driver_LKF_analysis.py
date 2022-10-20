@@ -6,6 +6,14 @@ from CREG_lkf_tools  import *
 import pickle
 import calendar
 
+#----  CREG_driver_LKF_analysis -----------------------------
+#
+# Driver that loops through a series of files (dates) and that 
+# calls the funtion CREG_lkf_analysis that calculates the LKF
+# half widths.
+#
+#------------------------------------------------------------
+
 #----- INPUT -----
 #ni = 528 ; creg025
 #nj = 735 ;

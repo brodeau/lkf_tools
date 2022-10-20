@@ -27,23 +27,6 @@ path_filein2=os.path.join(main_dir+'/'+creggrid+'/'+EXP+'/WIDTH/'+filein2)
 hwidth1 = np.load(path_filein1,allow_pickle=True)
 hwidth2 = np.load(path_filein2,allow_pickle=True)
 
-#n=0
-#hconca1=np.zeros(1060)
-#for hw in hwidth1:
-#    for hwi in  hw:
-#        hconca1[n]=hwi
-#        n=n+1
-        
-
-#print(n)
-#n=0
-#hconca2=np.zeros(1060)
-#for hw in hwidth2:
-#    for hwi in  hw:
-#        hconca2[n]=hwi
-#        n=n+1
-
-
 plt.hist(hwidth1, bins=mybins, color = "dodgerblue", ec="dodgerblue")
 plt.hist(hwidth2, bins=mybins, alpha=0.3, color = "magenta", ec="magenta")
 #plt.hist(Ddef2, bins=mybins, alpha=0.3, color = "orange", ec="orange", )

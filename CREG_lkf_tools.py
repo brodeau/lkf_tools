@@ -6,6 +6,14 @@ import cartopy.crs as ccrs
 from pathlib import Path
 from lkf_tools.dataset import *
 
+#----  CREG_lkf_detect --------------------------------------
+#
+# Prepares CREG netcdf outputs to be used by Nils' LKF
+# detection algorithm. Also offers possibility to plot 
+# detected LKFs on pan-Arctic grid (produce_plot=True).
+#
+#------------------------------------------------------------
+
 def CREG_lkf_detect(date, grid_path, data_path, store_path, fileout, kvalue, produce_plot):
 
     print(fileout)
@@ -90,7 +98,19 @@ def CREG_lkf_detect(date, grid_path, data_path, store_path, fileout, kvalue, pro
         plt.colorbar(pcm,label='total deformation')
         plt.savefig('testing12.png')
 
-#---------------------------------------------------------
+#----  CREG_lkf_analysis --------------------------------------
+#
+# Analyses detected LKFs in order to calculate half widths
+# of LKFs. Detected LKF points have maximum values of eps_tot. 
+# Given a certain direction of an LKF, the half widths are 
+# then calculated in perpendicular directions referred to as 
+# search directions. The search is done for a max number of 
+# cells (dsearch) in a given direction. The half widths are 
+# obtained when eps_tot < frac * (eps_tot_max). Half widths 
+# are only calculated when the distance of a LKF point 
+# (grid cell) from land is larger than mindist.
+#
+#------------------------------------------------------------
 
 def CREG_lkf_analysis(date,creggrid,path_filedist,path_filein,path_fileout,data_path,dsearch,frac,mindist):
     
@@ -262,7 +282,11 @@ def CREG_lkf_analysis(date,creggrid,path_filedist,path_filein,path_fileout,data_
 
     np.save(path_fileout,lkfs,allow_pickle=True)
 
-#---------------------------------------------------------
+#----  CREG_lkf_concatenate_width ---------------------------
+#
+# Concatenate half widths of a given LKF file in two vectors.
+# 
+#------------------------------------------------------------
 
 def CREG_lkf_concatenate_width (date,path_filein, hwidth):
     

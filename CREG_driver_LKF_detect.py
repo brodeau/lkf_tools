@@ -6,6 +6,13 @@ from CREG_lkf_tools  import *
 import pickle
 import calendar
 
+#----  CREG_driver_LKF_detect -------------------------------
+#
+# Driver that loops through a series of files (dates) and that 
+# calls the funtion CREG_lkf_detect.
+#
+#------------------------------------------------------------
+
 #----- INPUT -----
 #ni = 528 ; creg025
 #nj = 735 ;

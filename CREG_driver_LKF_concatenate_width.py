@@ -6,6 +6,16 @@ from CREG_lkf_tools import CREG_lkf_concatenate_width
 import pickle
 import calendar
 
+#----  CREG_driver_concatenate_width ------------------------
+#
+# Driver that loops through a series of files (dates) and that 
+# calls the funtion CREG_lkf_concatenate_width. That function
+# concatenate the half widths for one LKF file (one date) and
+# the concatenation for multiple files (mutiple dates) is done
+# here in the driver.
+#
+#------------------------------------------------------------
+
 #----- INPUT -----
 creggrid='creg025' # creg025 or creg12
 EXP='run6f'
