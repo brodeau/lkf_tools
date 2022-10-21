@@ -49,4 +49,4 @@ for i in range(len(list_dates)) :
     date0 = (list_dates[i] + timedelta(days=-0)).strftime('%Y%m%d%H')
     data_path=os.path.join(main_dir+creggrid+'/'+EXP+'/netcdf/'+date0+suffix+'.nc')
     fileout=date0 + suffix + '_' + EXP
-    CREG_lkf_detect(date0, grid_path, data_path, store_path, fileout, kvalue, produce_plot)
+    CREG_lkf_detect(date0, creggrid, grid_path, data_path, store_path, fileout, kvalue, produce_plot)

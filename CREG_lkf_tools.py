@@ -14,7 +14,7 @@ from lkf_tools.dataset import *
 #
 #------------------------------------------------------------
 
-def CREG_lkf_detect(date, grid_path, data_path, store_path, fileout, kvalue, produce_plot):
+def CREG_lkf_detect(date, creggrid, grid_path, data_path, store_path, fileout, kvalue, produce_plot):
 
     print(fileout)
 
@@ -95,8 +95,9 @@ def CREG_lkf_detect(date, grid_path, data_path, store_path, fileout, kvalue, pro
             ax.plot(ilkf[:,2],ilkf[:,3],transform=ccrs.PlateCarree())
 
         print('saving image')
+        filefig='mapLKF_'+creggrid+'_'+date+.'png'
         plt.colorbar(pcm,label='total deformation')
-        plt.savefig('testing12.png')
+        plt.savefig(filefig)
 
 #----  CREG_lkf_analysis --------------------------------------
 #
