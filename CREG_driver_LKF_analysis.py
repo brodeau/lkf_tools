@@ -20,7 +20,7 @@ import calendar
 #ni = 1580 ; creg12
 #nj = 2198 ;
 creggrid='creg025' # creg025 or creg12
-EXP='run8fb'
+EXP='run7f'
 main_dir='/home/jfl001/data/Lemieux2022/LKF_diag'
 main_dirnc='/home/jfl001/data/runsLemieux_et_al_2022/'
 dir_util='/home/jfl001/Lemieux2022/UTIL'
@@ -48,3 +48,6 @@ for i in range(len(list_dates)) :
     path_filedist=os.path.join(dir_util +'/dist_'+creggrid+'.pkl')
 
     CREG_lkf_analysis(date0,creggrid,path_filedist,path_filein,path_fileout,data_path,dsearch,frac,mindist)
+
+print('Width analysis done for experiment:')
+print(EXP)

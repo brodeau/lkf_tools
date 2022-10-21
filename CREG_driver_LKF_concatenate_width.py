@@ -18,7 +18,7 @@ import calendar
 
 #----- INPUT -----
 creggrid='creg025' # creg025 or creg12
-EXP='run8fb'
+EXP='run7f'
 main_dir='/home/jfl001/data/Lemieux2022/LKF_diag'
 
 FREQ='24H'
@@ -60,3 +60,6 @@ for i in range(len(list_dates)):
 
 np.save(path_fileout1,hwidth1,allow_pickle=True)
 np.save(path_fileout2,hwidth2,allow_pickle=True)
+
+print('Concatenation done for experiment:')
+print(EXP)
