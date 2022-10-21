@@ -95,7 +95,7 @@ def CREG_lkf_detect(date, creggrid, grid_path, data_path, store_path, fileout, k
             ax.plot(ilkf[:,2],ilkf[:,3],transform=ccrs.PlateCarree())
 
         print('saving image')
-        filefig='mapLKF_'+creggrid+'_'+date+.'png'
+        filefig='mapLKF_'+creggrid+'_'+date+'.png'
         plt.colorbar(pcm,label='total deformation')
         plt.savefig(filefig)
 

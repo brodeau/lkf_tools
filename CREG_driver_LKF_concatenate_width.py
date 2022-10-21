@@ -18,19 +18,24 @@ import calendar
 
 #----- INPUT -----
 creggrid='creg025' # creg025 or creg12
-EXP='run6f'
+EXP='run8fb'
 main_dir='/home/jfl001/data/Lemieux2022/LKF_diag'
 
 FREQ='24H'
-SDATE='20050329'
-EDATE='20050329'
+SDATE='20050201'
+EDATE='20050228'
 suffix='_000'
 #-----------------------------------------
 
+widthdir=os.path.join(main_dir+'/'+creggrid+'/'+EXP+'/WIDTH/')
+
+if not os.path.isdir(widthdir):
+    os.makedirs(widthdir)
+
 fileout1='hwidth1_lkf_'+SDATE+'_'+EDATE+'.npy'
-path_fileout1=os.path.join(main_dir+'/'+creggrid+'/'+EXP+'/WIDTH/'+fileout1)
+path_fileout1=os.path.join(widthdir+fileout1)
 fileout2='hwidth2_lkf_'+SDATE+'_'+EDATE+'.npy'
-path_fileout2=os.path.join(main_dir+'/'+creggrid+'/'+EXP+'/WIDTH/'+fileout2)
+path_fileout2=os.path.join(widthdir+fileout2)
 
 list_dates=list(pd.date_range(SDATE,EDATE, freq=FREQ))
 

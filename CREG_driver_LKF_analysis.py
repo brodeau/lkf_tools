@@ -20,7 +20,7 @@ import calendar
 #ni = 1580 ; creg12
 #nj = 2198 ;
 creggrid='creg025' # creg025 or creg12
-EXP='run6f'
+EXP='run8fb'
 main_dir='/home/jfl001/data/Lemieux2022/LKF_diag'
 main_dirnc='/home/jfl001/data/runsLemieux_et_al_2022/'
 dir_util='/home/jfl001/Lemieux2022/UTIL'
@@ -29,8 +29,8 @@ frac=0.5 # half width is defined as eps_tot < frac*LKFepsmax
 mindist=150.0 # LKF point is analysed if dist from land > mindist (km)
 
 FREQ='24H'
-SDATE='20050329'
-EDATE='20050329'
+SDATE='20050201'
+EDATE='20050228'
 suffix='_000'
 #-----------------------------------------
 
