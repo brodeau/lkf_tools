@@ -328,3 +328,80 @@ def CREG_lkf_concatenate_width (date,path_filein, hwidth):
     print(lr)
     
     return tpvect
+
+#----  CREG_lkf_analysis --------------------------------------
+#
+# Called by CREG_driver_LKF_density to calculate contribution 
+# to density from a single LKF file (containing many detected
+# LKFs). There is no criterion applied here for the distance 
+# to land. This could be done later when plotting the density. 
+#
+#------------------------------------------------------------
+
+def CREG_lkf_density(date,creggrid,path_filein):
+    
+    print('working on date:')
+    print(date)
+
+#----- open npy file -----
+
+    lkfs = np.load(path_filein,allow_pickle=True)
+    print(lkfs.shape)
+
+#----- shift indices ---------------------
+
+# arrays (i,j) are read in python as (j,i)
+
+# il y presentement un bug dans les sorties des j,i. 
+# les indices ne correspondent pas aux indices de la grille native.
+# dans ce code: jl,il indices des LKFs (avec bug) et j,i indices grille native
+# jl=lkf[:,0] et il=lkf[:,1].
+# Voir courriel de Nils du 4 oct 2022. Pour corriger les i,j je dois faire:
+# i = lkf[:,0] + lkf_data.index_x[0][0]
+# j = lkf[:,1] + lkf_data.index_y[0][0]
+
+# pour creg025:
+# lkf_data.index_x[0][0]=93
+# lkf_data.index_y[0][0]=329
+# 
+# pour creg12:
+# lkf_data.index_x[0][0]=278
+# lkf_data.index_y[0][0]=985
+
+# je pense que ce que Nils a écrit n'est pas ok. Ça devrait être:
+
+# j = lkf[:,0] + lkf_data.index_y[0][0] - 1
+# i = lkf[:,1] + lkf_data.index_x[0][0] - 1
+
+    if (creggrid == 'creg025'):
+        nx=528
+        ny=735
+        jshift=329
+        ishift=93
+    elif (creggrid == 'creg12'):
+        nx=1580
+        ny=2198
+        jshift=985
+        ishift=278
+    else:
+        print ("Wrong choice of grid")
+
+#---- calc density contribution from group of LKFs -----
+
+    TPdens= np.zeros((ny,nx))
+
+    l=0
+    for ilkf in lkfs:
+        nb=ilkf.shape[0] # nb of points in LKF i
+        zlkf=ilkf
+
+        for n in range(nb):
+
+            jl = int(zlkf[n,0])
+            il = int(zlkf[n,1])
+            j=jl+jshift-1
+            i=il+ishift-1 
+            TPdens[j,i]=TPdens[j,i]+1.0
+        l=l+1
+
+    return TPdens
