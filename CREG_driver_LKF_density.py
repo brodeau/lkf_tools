@@ -23,7 +23,7 @@ import calendar
 #ni = 1580 ; creg12
 #nj = 2198 ;
 creggrid='creg025' # creg025 or creg12
-EXP='run7f'
+EXP='run8fb'
 main_dir='/home/jfl001/data/Lemieux2022/LKF_diag'
 
 FREQ='24H'
