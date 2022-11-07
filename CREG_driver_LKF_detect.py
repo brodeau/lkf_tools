@@ -31,6 +31,16 @@ SDATE='20050217'
 EDATE='20050217'
 suffix='_000'
 
+#----- check kernel value ----------------
+# kvalue should be odd: see Nils' email (4 nov 2022)
+
+if kvalue % 2 == 0:
+    print("kernel value should be an odd integer") 
+    exit()
+else:
+    print("kernel value = ") 
+    print(kvalue)
+
 #----- define paths and file name --------
 
 store_path=os.path.join(store_main_dir+'/'+creggrid+'/'+EXP+'/')
