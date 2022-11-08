@@ -20,7 +20,7 @@ import calendar
 #ni = 1580 ; creg12
 #nj = 2198 ;
 creggrid='creg025' # creg025 or creg12
-EXP='run7f'
+EXP='run1f'
 main_dir='/home/jfl001/data/Lemieux2022/LKF_diag'
 main_dirnc='/home/jfl001/data/runsLemieux_et_al_2022/'
 dir_util='/home/jfl001/Lemieux2022/UTIL'
@@ -30,7 +30,7 @@ mindist=150.0 # LKF point is analysed if dist from land > mindist (km)
 
 FREQ='24H'
 SDATE='20050201'
-EDATE='20050228'
+EDATE='20050201'
 suffix='_000'
 
 #----- label for width criterion ---------------------------
@@ -53,7 +53,7 @@ for i in range(len(list_dates)) :
     date0 = (list_dates[i] + timedelta(days=-0)).strftime('%Y%m%d%H')
     date0ext=date0 + '_000'
     filein='lkf_' + date0ext + '_' + EXP + '_001.npy'
-    fileout='lkf_' + date0ext + '_' + EXP + '_a.npy' # a for analysed
+    fileout='lkf_' + date0ext + '_' + EXP + '_' + fraclabel +'.npy'
     tpdir=date0ext + '_' + EXP
     path_filein=os.path.join(main_dir+'/'+creggrid+'/'+EXP+'/'+tpdir+'/'+filein)
     path_fileout=os.path.join(main_dir+'/'+creggrid+'/'+EXP+'/'+tpdir+'/'+fileout)
