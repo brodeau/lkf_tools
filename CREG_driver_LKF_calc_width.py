@@ -6,10 +6,10 @@ from CREG_lkf_tools  import *
 import pickle
 import calendar
 
-#----  CREG_driver_LKF_analysis -----------------------------
+#----  CREG_driver_LKF_calc_width ---------------------------
 #
 # Driver that loops through a series of files (dates) and that 
-# calls the funtion CREG_lkf_analysis that calculates the LKF
+# calls the funtion CREG_lkf_calc_width that calculates the LKF
 # half widths.
 #
 #------------------------------------------------------------
@@ -32,7 +32,20 @@ FREQ='24H'
 SDATE='20050201'
 EDATE='20050228'
 suffix='_000'
-#-----------------------------------------
+
+#----- label for width criterion ---------------------------
+
+if frac == 0.25:
+    fraclabel='0p25'
+elif frac == 0.5:
+    fraclabel='0p5'
+elif frac == 0.75:
+    fraclabel='0p75'
+else:
+    print('frac value is not allowed')
+    exit()
+
+#-----------------------------------------------------------
 
 list_dates=list(pd.date_range(SDATE,EDATE, freq=FREQ))
 
@@ -47,7 +60,7 @@ for i in range(len(list_dates)) :
     data_path=os.path.join(main_dirnc+creggrid+'/'+EXP+'/netcdf/'+date0ext+'.nc')
     path_filedist=os.path.join(dir_util +'/dist_'+creggrid+'.pkl')
 
-    CREG_lkf_analysis(date0,creggrid,path_filedist,path_filein,path_fileout,data_path,dsearch,frac,mindist)
+    CREG_lkf_calc_width(date0,creggrid,path_filedist,path_filein,path_fileout,data_path,dsearch,frac,mindist)
 
 print('Width analysis done for experiment:')
 print(EXP)

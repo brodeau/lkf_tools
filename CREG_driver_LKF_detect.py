@@ -19,16 +19,16 @@ import calendar
 #ni = 1580 ; creg12
 #nj = 2198 ;
 cregflag=1 # used to customize code for CREG applications.
-creggrid='creg025' # creg025 or creg12
-EXP='run12fb'
+creggrid='creg12' # creg025 or creg12
+EXP='run12_6f'
 main_dir='/home/jfl001/data/runsLemieux_et_al_2022/'
 main_dir_grid='/home/socn000/data/eccc-ppp5/env_rhel-8-icelake-64/datafiles/constants/oce/repository/master/CONCEPTS/'
 store_main_dir='/home/jfl001/data/Lemieux2022/LKF_diag'
 kvalue=7 # value for kernel
 produce_plot=False
 FREQ='24H'
-SDATE='20050217'
-EDATE='20050217'
+SDATE='20050101'
+EDATE='20050331'
 suffix='_000'
 
 #----- check kernel value ----------------

@@ -99,7 +99,7 @@ def CREG_lkf_detect(date, creggrid, grid_path, data_path, store_path, fileout, k
         plt.colorbar(pcm,label='total deformation')
         plt.savefig(filefig)
 
-#----  CREG_lkf_analysis --------------------------------------
+#----  CREG_lkf_calc_width ----------------------------------
 #
 # Analyses detected LKFs in order to calculate half widths
 # of LKFs. Detected LKF points have maximum values of eps_tot. 
@@ -113,7 +113,7 @@ def CREG_lkf_detect(date, creggrid, grid_path, data_path, store_path, fileout, k
 #
 #------------------------------------------------------------
 
-def CREG_lkf_analysis(date,creggrid,path_filedist,path_filein,path_fileout,data_path,dsearch,frac,mindist):
+def CREG_lkf_calc_width(date,creggrid,path_filedist,path_filein,path_fileout,data_path,dsearch,frac,mindist):
     
     print('working on date:')
     print(date)
@@ -329,7 +329,7 @@ def CREG_lkf_concatenate_width (date,path_filein, hwidth):
     
     return tpvect
 
-#----  CREG_lkf_analysis --------------------------------------
+#----  CREG_lkf_density -------------------------------------
 #
 # Called by CREG_driver_LKF_density to calculate contribution 
 # to density from a single LKF file (containing many detected
