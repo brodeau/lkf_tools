@@ -24,18 +24,19 @@ def CREG_lkf_detect(date, creggrid, grid_path, data_path, store_path, fileout, k
 
     creg_nc = xr.open_dataset(data_path)
 
-# WATCHOUT: in code U,V,A, shr,div and vor are collocated. The lat,lon at these 
-#           points are ULAT and ULON...In our case all these variables are at the
-#           T points...this is why TLAT,TLON are renamed ULAT, ULON. 
-
-    creg_nc = creg_nc.rename({'ULON':'LONTP', 'ULAT':'LATTP'})
-    creg_nc = creg_nc.rename({'divu':'div', 'shear':'shr', 'aice':'A', 
-                              'uvel':'U', 'vvel':'V', 'TLON':'ULON', 'TLAT':'ULAT'})
+    creg_nc = creg_nc.rename({'divu':'div', 'shear':'shr', 'vort':'vor', 'aice':'A', 
+                              'uvel':'U', 'vvel':'V'})
 
 #----- open grid coordinate file -----
 
+# WATCHOUT: in the code here U,V,A, shr,div and vor are collocated. 
+#           All are ok for my creg12 runs except uvel and vvel (U point) but they
+#           are not needed for detect. I would have to check this if I use lkf_tracking
+#           ULAT and ULON here are in fact at the T point. This is why I use nav_lat and 
+#           nav_lon to define these. 
+
     grid_nc = xr.open_dataset(grid_path)
-    grid_nc = grid_nc.rename({'e1t':'DXU', 'e2t':'DYV'})
+    grid_nc = grid_nc.rename({'e1t':'DXU', 'e2t':'DYV', 'nav_lon':'ULON', 'nav_lat':'ULAT'})
 
     creg_nc = xr.Dataset.merge(creg_nc, grid_nc)
 
