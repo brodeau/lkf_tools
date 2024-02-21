@@ -68,7 +68,7 @@ class process_dataset(object):
         # Read netcdf file
         if xarray is None:
             self.data = xr.open_dataset(self.netcdf_file)
-        else: # ici
+        else:
             self.data = xarray
 
         # Store variables
@@ -107,8 +107,6 @@ class process_dataset(object):
         
         :param indexes: time indexes that should be detected. If None all time steps are detected
         """
-        print("check creg")
-        print(self.creg)
 
         # Check for already dectected features
         if force_redetect:
@@ -138,9 +136,7 @@ class process_dataset(object):
                 if (self.creg == 1):
                     div = self.data.div[it+itr,:,:]/100.0 # from %day^-1 to day^-1
                     shr = self.data.shr[it+itr,:,:]/100.0 # from %day^-1 to day^-1
-                    # vor is not in CREG outputs...would be needed for tracking
-                    vor = self.data.div[it+itr,:,:]/100.0 # set equal to div
-#                    vor = np.nan                          # set to nan
+                    vor = self.data.vor[it+itr,:,:]/100.0 # from %day^-1 to day^-1
                 else:
                 # Check if deformation rates are given
                     if hasattr(self.data,'div') and hasattr(self.data,'shr') and hasattr(self.data,'vor'):
@@ -157,12 +153,12 @@ class process_dataset(object):
                         shr = np.sqrt((dudx-dvdy)**2 + (dudy + dvdx)**2) * 3600. *24. # in day^-1
                         vor = 0.5*(dudy-dvdx) * 3600. *24. # in day^-1
                 eps_tot = np.sqrt(div**2+shr**2)
-#                print(eps_tot.shape)
                 eps_tot = eps_tot.where((aice>0) & (aice<=1))
+#               jfl replaced line below by line above...does not work because of nans?
+#                eps_tot = eps_tot.where((aice[1:-1,1:-1]>0) & (aice[1:-1,1:-1]<=1))
 #                plt.pcolor(eps_tot, vmin=0, vmax=1)
 #                plt.colorbar()
 #                plt.savefig('debugg.png')
-#                eps_tot = eps_tot.where((aice[1:-1,1:-1]>0) & (aice[1:-1,1:-1]<=1)) # jfl does not work...because of nan?
 
                 # Mask Arctic basin and shrink array
                 eps_tot = eps_tot.where(self.mask)
@@ -180,9 +176,6 @@ class process_dataset(object):
 
                 self.eps_tot_list.append(np.array(eps_tot))
 
-            print(np.nanmean(self.dxu))
-            print(np.nanmean(self.dyu))
-            print(float(self.red_fac))
 
             # Apply detection algorithm
             # Correct detection parameters for different resolution
