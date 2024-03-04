@@ -154,14 +154,14 @@ class process_dataset(object):
                         vor = 0.5*(dudy-dvdx) * 3600. *24. # in day^-1
                 eps_tot = np.sqrt(div**2+shr**2)
                 eps_tot = eps_tot.where((aice>0) & (aice<=1))
+
 #               jfl replaced line below by line above...does not work because of nans?
 #                eps_tot = eps_tot.where((aice[1:-1,1:-1]>0) & (aice[1:-1,1:-1]<=1))
-#                plt.pcolor(eps_tot, vmin=0, vmax=1)
-#                plt.colorbar()
-#                plt.savefig('debugg.png')
 
                 # Mask Arctic basin and shrink array
-                eps_tot = eps_tot.where(self.mask)
+
+#                eps_tot = eps_tot.where(self.mask) # jfl crashes here replace by line below:
+                eps_tot = np.where(self.mask, eps_tot, np.nan)
 #                eps_tot = eps_tot.where(self.mask[1:-1,1:-1])
 
 #                plt.pcolor(eps_tot, vmin=0, vmax=1)

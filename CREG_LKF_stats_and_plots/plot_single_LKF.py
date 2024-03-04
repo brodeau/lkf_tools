@@ -16,20 +16,21 @@ import cartopy.crs as ccrs
 #ni = 1580 ; creg12
 #nj = 2198 ;
 
-creggrid='creg025' # creg025 or creg12
-EXP='run6f'
-ddate='2005032903_000'
-lkfplot=62
-main_dir='/home/jfl001/data/Lemieux2022/LKF_diag'
-main_dirnc='/home/jfl001/data/runsLemieux_et_al_2022/'
+creggrid='creg12' # creg025 or creg12
+EXP='eg1p5_ef1p5'
+EXPr='run_eg1.5_ef1.5'
+ddate='2005042300'
+lkfplot=75
+main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag'
+main_dirnc='/home/jfl001/data/runsLemieux_et_al_plast_pot/'
 delta=5 # subplot has delta cells on four sides around region of interest
 
 #----- define paths and file names --------
 
 filein='lkf_' + ddate + '_' + EXP + '_001.npy'
 tpdir=ddate + '_' + EXP
-path_filein=os.path.join(main_dir+'/'+creggrid+'/'+EXP+'/'+tpdir+'/'+filein)
-data_path=os.path.join(main_dirnc+creggrid+'/'+EXP+'/netcdf/'+ddate+'.nc')
+path_filein=os.path.join(main_dir+'/'+EXP+'/'+tpdir+'/'+filein)
+data_path=os.path.join(main_dirnc+'/'+EXPr+'/hourly/'+ddate+'0000_iceh_inst.nc')
 
 #----- open npy file -----
 
