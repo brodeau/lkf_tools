@@ -4,7 +4,8 @@ import os
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
 from pathlib import Path
-from scipy.optimize import fsolve
+#from scipy.optimize import fsolve
+from shapely.geometry import LineString
 from lkf_tools.dataset import *
 
 #----  CREG_lkf_detect --------------------------------------
@@ -479,78 +480,49 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein):
     nt=0
 
     for ind1, lkf1 in enumerate(lkfs):
-#        print(i1)
-        
-#        nb1=lkf1.shape[0] # nb of points in LKF 1
-#        y1=np.zeros(nb1)
-#        x1=np.zeros(nb1)
-        j1=lkf1[:,0]
-        i1=lkf1[:,1]
-        coeff1 = np.polyfit(i1,j1,6)
         maxj1=np.max(lkf1[:,0])
         minj1=np.min(lkf1[:,0])
         maxi1=np.max(lkf1[:,1])
         mini1=np.min(lkf1[:,1])
+        j1=lkf1[:,0]
+        i1=lkf1[:,1]
+        coeff1 = np.polyfit(i1,j1,6)
         xf1 = np.linspace(mini1,maxi1,100)
-        yf1 = np.poly1d(coeff1)
+        yfunc1 = np.poly1d(coeff1)
+        yf1=yfunc1(xf1)
+        line1=LineString(np.column_stack((xf1,yf1)))
 
         for ind2, lkf2 in enumerate(lkfs):
             if ind2 > ind1:
-                j2=lkf2[:,0]
-                i2=lkf2[:,1]
                 maxj2=np.max(lkf2[:,0])
                 minj2=np.min(lkf2[:,0])
                 maxi2=np.max(lkf2[:,1])
                 mini2=np.min(lkf2[:,1])
                 ovlflag=overlap(mini1, minj1, maxi1, maxj1, mini2, minj2, maxi2, maxj2)
                 if ovlflag:
-                    print(ind1,ind2)
                     npot=npot+1
+                    j2=lkf2[:,0]
+                    i2=lkf2[:,1]
                     coeff2 = np.polyfit(i2,j2,6)
                     xf2 = np.linspace(mini2,maxi2,100)
-                    yf2 = np.poly1d(coeff2)
-                    intpt=fsolve(lambda x : yf2(x) - yf1(x), 0.0, full_output=1)
-                    if ind1 == 348 and ind2 == 402:
-                        plt.plot( xf1,yf1(xf1))
-                        plt.plot( i1,j1)
-                        plt.plot( xf2,yf2(xf2))
-                        plt.plot( i2,j2)
-                        plt.show()
-                        
+                    yfunc2 = np.poly1d(coeff2)
+                    yf2=yfunc2(xf2)
+                    line2=LineString(np.column_stack((xf2,yf2)))
+                    
+                    intersec=line1.intersection(line2)
+                    if not intersec.is_empty:
+                        nt=nt+1
+                        print(ind1, ind2)
+
                     #intpt=fsolve(lambda x : yf2(x) - yf1(x), 0.0, full_output=1)
-                    if intpt[2] == 1:
-                        if intpt[0] >= mini1 and intpt[0] <= maxi1 and intpt[0] >= mini2 and intpt[0] <= maxi2:
-                            print('BINGO')
-                            nt=nt+1
-                            print(ind1, ind2)
-                        #if ind1 == 185 and ind2 == 195:
-                        #    print('ici dude')
-                        #    print(intpt)
-                        #    plt.plot( xf1,yf1(xf1))
-                            #plt.plot( i1,j1, '*')
-                        #    plt.plot( xf2,yf2(xf2))
-                            #plt.plot( i2,j2, 's')
-                        #    plt.show()
-
-#        if ind1 == 115:
-#            coeff1 = np.polyfit(i1,j1,6)
-#            maxi1=np.max(lkf1[:,1])
-#            mini1=np.min(lkf1[:,1])
-#            xf1 = np.linspace(mini1,maxi1,100)
-#            yf1 = np.poly1d(coeff1)
-#            plt.plot( i1,j1, '*')
-#            plt.plot( xf1,yf1(xf1))
-#            plt.show()
-
-
-#hh=fsolve(lambda x : yn(x) - zn(x), 0.0, full_output=1)
-#print(hh[0]) # x value of intersect
-#print(hh[1])
-#print(hh[2]) # la la flag = 1 conv
-
-
-#  maxjl=np.max(ilkf[:,0])
-#        halfw1=np.zeros(nb)
-
+                    if ind1 == 184 and ind2 == 207:
+                        plt.plot( xf1,yf1)
+                        plt.plot( i1,j1,'.')
+                        plt.plot( xf2,yf2)
+                        plt.plot( i2,j2, '.')
+                        plt.plot( intersec.x,intersec.y, '*r')
+                        #plt.show()
+                        #exit()
+                                        
     print(npot)
     print(nt)
