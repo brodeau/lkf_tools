@@ -483,6 +483,8 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein):
 # i1,j1 and i2,j2: i,j in physical domain. ex: i1=661,662,663...
 # ii1,jj1 and ii2,jj2: i,j in lkf array. ex: ii1=0,1,2...
 
+    pdeg=1
+
     for ind1, lkf1 in enumerate(lkfs):
         nb1=lkf1.shape[0] # nb of points in LKF
         maxj1=np.max(lkf1[:,0])
@@ -534,7 +536,7 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein):
                         xf1=i1[min_ind1:max_ind1]
                         nbsub1=xf1.shape[0]-1
                         yf1=j1[min_ind1:max_ind1]
-                        coeff1 = np.polyfit(xf1,yf1,6)
+                        coeff1 = np.polyfit(xf1,yf1,pdeg)
                         yfunc1 = np.poly1d(coeff1)
                         xpf1 = np.linspace(xf1[0],xf1[nbsub1],50)
                         ypf1=yfunc1(xpf1)
@@ -544,12 +546,12 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein):
                         xf2=i2[min_ind2:max_ind2]
                         nbsub2=xf2.shape[0]-1
                         yf2=j2[min_ind2:max_ind2]
-                        coeff2 = np.polyfit(xf2,yf2,6)
+                        coeff2 = np.polyfit(xf2,yf2,pdeg)
                         yfunc2 = np.poly1d(coeff2)
                         xpf2 = np.linspace(xf2[0],xf2[nbsub2],50)
                         ypf2=yfunc2(xpf2)
 
-                        if ind1 == 4 and ind2 == 7:
+                        if ind1 == 189 and ind2 == 207:
                             plt.plot( i1,j1,'.')
                             plt.plot( xpf1,ypf1)
                             plt.plot( i2,j2, '.')
