@@ -479,21 +479,23 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein):
     npot=0
     nt=0
 
+# 1) linestring, 2) intersection, 3) polyfit in region of intersection 4) angle
+# i1,j1 and i2,j2: i,j in physical domain. ex: i1=661,662,663...
+# ii1,jj1 and ii2,jj2: i,j in lkf array. ex: ii1=0,1,2...
+
     for ind1, lkf1 in enumerate(lkfs):
+        nb1=lkf1.shape[0] # nb of points in LKF
         maxj1=np.max(lkf1[:,0])
         minj1=np.min(lkf1[:,0])
         maxi1=np.max(lkf1[:,1])
         mini1=np.min(lkf1[:,1])
         j1=lkf1[:,0]
         i1=lkf1[:,1]
-        coeff1 = np.polyfit(i1,j1,6)
-        xf1 = np.linspace(mini1,maxi1,100)
-        yfunc1 = np.poly1d(coeff1)
-        yf1=yfunc1(xf1)
-        line1=LineString(np.column_stack((xf1,yf1)))
+        line1=LineString(np.column_stack((i1,j1)))
 
         for ind2, lkf2 in enumerate(lkfs):
             if ind2 > ind1:
+                nb2=lkf2.shape[0] # nb of points in LKF
                 maxj2=np.max(lkf2[:,0])
                 minj2=np.min(lkf2[:,0])
                 maxi2=np.max(lkf2[:,1])
@@ -503,26 +505,67 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein):
                     npot=npot+1
                     j2=lkf2[:,0]
                     i2=lkf2[:,1]
-                    coeff2 = np.polyfit(i2,j2,6)
-                    xf2 = np.linspace(mini2,maxi2,100)
-                    yfunc2 = np.poly1d(coeff2)
-                    yf2=yfunc2(xf2)
-                    line2=LineString(np.column_stack((xf2,yf2)))
+                    line2=LineString(np.column_stack((i2,j2)))
                     
-                    intersec=line1.intersection(line2)
+                    intersec=line1.intersection(line2) # inters. pt between line1,2
+                    dlt=5
                     if not intersec.is_empty:
-                        nt=nt+1
-                        print(ind1, ind2)
+                        print('dudeman', ind1, ind2)
+                        if intersec.geom_type == 'Point':
+                            iint=intersec.x
+                            jint=intersec.y
+                        elif intersec.geom_type == 'LineString': #take 1st pt of string
+                            iint=intersec.xy[0][0]
+                            jint=intersec.xy[1][0]
+                        elif intersec.geom_type == 'MultiPoint': #take 1st pt of multipt
+                            iint=intersec.geoms[0].x
+                            jint=intersec.geoms[0].y
 
-                    #intpt=fsolve(lambda x : yf2(x) - yf1(x), 0.0, full_output=1)
-                    if ind1 == 184 and ind2 == 207:
-                        plt.plot( xf1,yf1)
-                        plt.plot( i1,j1,'.')
-                        plt.plot( xf2,yf2)
-                        plt.plot( i2,j2, '.')
-                        plt.plot( intersec.x,intersec.y, '*r')
+                        deltai=abs(i1-iint) # delta i between i1 and intersec i
+                        deltaj=abs(j1-jint) # delta i between j1 and intersec j
+                        index1=np.argmin(deltai+deltaj)
+                        deltai=abs(i2-iint) # delta i between i2 and intersec i
+                        deltaj=abs(j2-jint) # delta i between j2 and intersec j
+                        index2=np.argmin(deltai+deltaj)
+                        
+                        #--- define part of array close to intersec for polyfit
+                        min_ind1=max(0, index1-dlt)
+                        max_ind1=min(index1+dlt,nb1)
+                        xf1=i1[min_ind1:max_ind1]
+                        nbsub1=xf1.shape[0]-1
+                        yf1=j1[min_ind1:max_ind1]
+                        coeff1 = np.polyfit(xf1,yf1,6)
+                        yfunc1 = np.poly1d(coeff1)
+                        xpf1 = np.linspace(xf1[0],xf1[nbsub1],50)
+                        ypf1=yfunc1(xpf1)
+
+                        min_ind2=max(0, index2-dlt)
+                        max_ind2=min(index2+dlt,nb2)
+                        xf2=i2[min_ind2:max_ind2]
+                        nbsub2=xf2.shape[0]-1
+                        yf2=j2[min_ind2:max_ind2]
+                        coeff2 = np.polyfit(xf2,yf2,6)
+                        yfunc2 = np.poly1d(coeff2)
+                        xpf2 = np.linspace(xf2[0],xf2[nbsub2],50)
+                        ypf2=yfunc2(xpf2)
+
+                        if ind1 == 4 and ind2 == 7:
+                            plt.plot( i1,j1,'.')
+                            plt.plot( xpf1,ypf1)
+                            plt.plot( i2,j2, '.')
+                            plt.plot( xpf2,ypf2)
+                            plt.show()
+#                    if ind1 == 71 and ind2 == 75:
+#                        plt.plot( xf1,yf1)
+#                        plt.plot( i1,j1,'.')
+                        #plt.plot( xf1,yf1)
+#                        plt.plot( xf2,yf2)
+#                        plt.plot( i2,j2, '.')
+                        #plt.plot( xf2,yf2)
+                        #print(intersec.x)
+                        #plt.plot( intersec.x,intersec.y, '*r')
                         #plt.show()
                         #exit()
                                         
-    print(npot)
-    print(nt)
+#    print(npot)
+#    print(nt)
