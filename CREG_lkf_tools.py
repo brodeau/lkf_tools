@@ -419,6 +419,8 @@ def overlap(ibl1, jbl1, itr1, jtr1, ibl2, jbl2, itr2, jtr2):
 
     return ovlflag
 
+#---- get i,j at intersection point -----------------------
+
 def get_ij_intersection(intersec):
     if intersec.geom_type == 'Point':
         iint=intersec.x
@@ -431,6 +433,22 @@ def get_ij_intersection(intersec):
         jint=intersec.geoms[0].y
         
     return iint,jint
+
+#---- polyfit over intersection zone ------------------------
+
+def get_polyfit(vari, xf, yf, pdeg, nbsub):
+    if vari > 1: # y=p(x)
+        coeff = np.polyfit(xf,yf,pdeg)
+        yfunc = np.poly1d(coeff)
+        xpf = np.linspace(xf[0],xf[nbsub],50)
+        ypf=yfunc(xpf)
+    else:
+        coeff = np.polyfit(yf,xf,pdeg) # x=p(y)
+        xfunc = np.poly1d(coeff)
+        ypf = np.linspace(yf[0],yf[nbsub],50)
+        xpf=xfunc(ypf)
+        
+    return xpf,ypf
 
 #----  CREG_lkf_pairs_and_angles ----------------------------
 #
@@ -526,7 +544,7 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein):
                     dlt=5
                     if not intersec.is_empty:
                         iint,jint=get_ij_intersection(intersec) # get i,j at intersection point
-
+                        nt=nt+1
                         deltai=abs(i1-iint) # delta i between i1 and intersec i
                         deltaj=abs(j1-jint) # delta i between j1 and intersec j
                         index1=np.argmin(deltai+deltaj)
@@ -540,38 +558,24 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein):
                         xf1=i1[min_ind1:max_ind1]
                         nbsub1=xf1.shape[0]-1
                         yf1=j1[min_ind1:max_ind1]
-                        coeff1 = np.polyfit(xf1,yf1,pdeg)
-                        yfunc1 = np.poly1d(coeff1)
-                        xpf1 = np.linspace(xf1[0],xf1[nbsub1],50)
-                        ypf1=yfunc1(xpf1)
-
+                        vari1=max(xf1)-min(xf1) # variation of i1 in pts used for polyfit
+                               
+                        xpf1,ypf1=get_polyfit(vari1, xf1, yf1, pdeg, nbsub1) # polyfit LKF1
+      
                         min_ind2=max(0, index2-dlt)
                         max_ind2=min(index2+dlt,nb2)
                         xf2=i2[min_ind2:max_ind2]
                         nbsub2=xf2.shape[0]-1
                         yf2=j2[min_ind2:max_ind2]
-                        coeff2 = np.polyfit(xf2,yf2,pdeg)
-                        yfunc2 = np.poly1d(coeff2)
-                        xpf2 = np.linspace(xf2[0],xf2[nbsub2],50)
-                        ypf2=yfunc2(xpf2)
+                        vari2=max(xf2)-min(xf2) # variation of i2 in pts used for polyfit
 
-                        if ind1 == 189 and ind2 == 207:
+                        xpf2,ypf2=get_polyfit(vari2, xf2, yf2, pdeg, nbsub2) # polyfit LKF2
+      
+                        if ind1 == 176 and ind2 == 183:
                             plt.plot( i1,j1,'.')
                             plt.plot( xpf1,ypf1)
                             plt.plot( i2,j2, '.')
                             plt.plot( xpf2,ypf2)
+                            plt.plot( intersec.x,intersec.y, '*m')
                             plt.show()
-#                    if ind1 == 71 and ind2 == 75:
-#                        plt.plot( xf1,yf1)
-#                        plt.plot( i1,j1,'.')
-                        #plt.plot( xf1,yf1)
-#                        plt.plot( xf2,yf2)
-#                        plt.plot( i2,j2, '.')
-                        #plt.plot( xf2,yf2)
-                        #print(intersec.x)
-                        #plt.plot( intersec.x,intersec.y, '*r')
-                        #plt.show()
-                        #exit()
-                                        
-#    print(npot)
-#    print(nt)
+
