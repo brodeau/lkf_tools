@@ -419,6 +419,19 @@ def overlap(ibl1, jbl1, itr1, jtr1, ibl2, jbl2, itr2, jtr2):
 
     return ovlflag
 
+def get_ij_intersection(intersec):
+    if intersec.geom_type == 'Point':
+        iint=intersec.x
+        jint=intersec.y
+    elif intersec.geom_type == 'LineString': #take 1st pt of string
+        iint=intersec.xy[0][0]
+        jint=intersec.xy[1][0]
+    elif intersec.geom_type == 'MultiPoint': #take 1st pt of multipt
+        iint=intersec.geoms[0].x
+        jint=intersec.geoms[0].y
+        
+    return iint,jint
+
 #----  CREG_lkf_pairs_and_angles ----------------------------
 #
 # Identifies pairs of LKFs that intersect and calc the 
@@ -512,16 +525,7 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein):
                     intersec=line1.intersection(line2) # inters. pt between line1,2
                     dlt=5
                     if not intersec.is_empty:
-                        print('dudeman', ind1, ind2)
-                        if intersec.geom_type == 'Point':
-                            iint=intersec.x
-                            jint=intersec.y
-                        elif intersec.geom_type == 'LineString': #take 1st pt of string
-                            iint=intersec.xy[0][0]
-                            jint=intersec.xy[1][0]
-                        elif intersec.geom_type == 'MultiPoint': #take 1st pt of multipt
-                            iint=intersec.geoms[0].x
-                            jint=intersec.geoms[0].y
+                        iint,jint=get_ij_intersection(intersec) # get i,j at intersection point
 
                         deltai=abs(i1-iint) # delta i between i1 and intersec i
                         deltaj=abs(j1-jint) # delta i between j1 and intersec j

@@ -25,8 +25,8 @@ creggrid='creg12' # creg025 or creg12
 EXP='eg1p5_ef1p5'
 main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag'
 
-SDATE='20061221'
-EDATE='20061221'
+SDATE='20060301'
+EDATE='20060301'
 FREQ='24H'
 
 #-----------------------------------------
