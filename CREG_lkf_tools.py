@@ -431,7 +431,11 @@ def get_ij_intersection(intersec):
     elif intersec.geom_type == 'MultiPoint': #take 1st pt of multipt
         iint=intersec.geoms[0].x
         jint=intersec.geoms[0].y
-        
+    else:
+        iint=intersec.geoms[0].xy[0][0]
+        jint=intersec.geoms[0].xy[1][0]
+        #print('wowowo',intersec.geoms[0].xy[0][0],intersec.geoms[0].xy[1][0])
+
     return iint,jint
 
 #---- polyfit over intersection zone ------------------------
@@ -449,6 +453,24 @@ def get_polyfit(vari, xf, yf, pdeg, nbsub):
         xpf=xfunc(ypf)
         
     return xpf,ypf
+
+#---- add extra pt at start --------------------------------
+
+def extra_pt_start(i0, i1, j0, j1):
+    delti=i1-i0
+    deltj=j1-j0
+    ist=i0-delti
+    jst=j0-deltj
+        
+    return ist,jst
+
+def extra_pt_end(im1, im2, jm1, jm2):
+    delti=im1-im2
+    deltj=jm1-jm2
+    iend=im1+delti
+    jend=jm1+deltj
+        
+    return iend,jend
 
 #----  CREG_lkf_pairs_and_angles ----------------------------
 #
@@ -525,6 +547,17 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein):
         j1=lkf1[:,0]
         i1=lkf1[:,1]
         line1=LineString(np.column_stack((i1,j1)))
+        
+        #--- extrapolate LKF1 by one pt on both sides ---
+        ist,jst=extra_pt_start(i1[0], i1[1], j1[0], j1[1])
+        j1ext=np.append(jst,j1)
+        i1ext=np.append(ist,i1)
+
+        iend,jend=extra_pt_end(i1[-1], i1[-2], j1[-1], j1[-2])
+        j1ext=np.append(j1ext,jend)
+        i1ext=np.append(i1ext,iend)
+
+        line1ext=LineString(np.column_stack((i1ext,j1ext)))
 
         for ind2, lkf2 in enumerate(lkfs):
             if ind2 > ind1:
@@ -533,48 +566,71 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein):
                 minj2=np.min(lkf2[:,0])
                 maxi2=np.max(lkf2[:,1])
                 mini2=np.min(lkf2[:,1])
-                ovlflag=overlap(mini1, minj1, maxi1, maxj1, mini2, minj2, maxi2, maxj2)
+#                ovlflag=overlap(mini1, minj1, maxi1, maxj1, mini2, minj2, maxi2, maxj2)
+                ovlflag=overlap(mini1-1, minj1-1, maxi1+1, maxj1+1, mini2-1, minj2-1, maxi2+1, maxj2+1)
                 if ovlflag:
                     npot=npot+1
                     j2=lkf2[:,0]
                     i2=lkf2[:,1]
                     line2=LineString(np.column_stack((i2,j2)))
                     
-                    intersec=line1.intersection(line2) # inters. pt between line1,2
+                    #--- extrapolate LKF1 by one pt on both sides ---
+                    ist,jst=extra_pt_start(i2[0], i2[1], j2[0], j2[1])
+                    j2ext=np.append(jst,j2)
+                    i2ext=np.append(ist,i2)
+
+                    iend,jend=extra_pt_end(i2[-1], i2[-2], j2[-1], j2[-2])
+                    j2ext=np.append(j2ext,jend)
+                    i2ext=np.append(i2ext,iend)
+
+                    line2ext=LineString(np.column_stack((i2ext,j2ext)))
+
+                    #intersec=line1.intersection(line2) # inters. pt between line1,2
+                    intersec=line1ext.intersection(line2ext) # inters. pt between line1,2
                     dlt=5
                     if not intersec.is_empty:
+                        #print(ind1,ind2)
+                        #if ind1 == 55 and ind2 == 62:
+                        #    plt.plot(line1ext.xy[0],line1ext.xy[1], '.m')
+                        #    plt.plot(line1.xy[0],line1.xy[1], '.r')
+                        #    plt.plot(line2ext.xy[0],line2ext.xy[1], '.b')
+                        #    plt.plot(line2.xy[0],line2.xy[1], '.c')
+                        #    plt.show()
+
                         iint,jint=get_ij_intersection(intersec) # get i,j at intersection point
                         nt=nt+1
-                        deltai=abs(i1-iint) # delta i between i1 and intersec i
-                        deltaj=abs(j1-jint) # delta i between j1 and intersec j
+                        deltai=abs(i1ext-iint) # delta i between i1 and intersec i
+                        deltaj=abs(j1ext-jint) # delta i between j1 and intersec j
                         index1=np.argmin(deltai+deltaj)
-                        deltai=abs(i2-iint) # delta i between i2 and intersec i
-                        deltaj=abs(j2-jint) # delta i between j2 and intersec j
+                        deltai=abs(i2ext-iint) # delta i between i2 and intersec i
+                        deltaj=abs(j2ext-jint) # delta i between j2 and intersec j
                         index2=np.argmin(deltai+deltaj)
                         
                         #--- define part of array close to intersec for polyfit
                         min_ind1=max(0, index1-dlt)
                         max_ind1=min(index1+dlt,nb1)
-                        xf1=i1[min_ind1:max_ind1]
+                        xf1=i1ext[min_ind1:max_ind1]
                         nbsub1=xf1.shape[0]-1
-                        yf1=j1[min_ind1:max_ind1]
+                        yf1=j1ext[min_ind1:max_ind1]
                         vari1=max(xf1)-min(xf1) # variation of i1 in pts used for polyfit
                                
                         xpf1,ypf1=get_polyfit(vari1, xf1, yf1, pdeg, nbsub1) # polyfit LKF1
       
                         min_ind2=max(0, index2-dlt)
                         max_ind2=min(index2+dlt,nb2)
-                        xf2=i2[min_ind2:max_ind2]
+                        xf2=i2ext[min_ind2:max_ind2]
                         nbsub2=xf2.shape[0]-1
-                        yf2=j2[min_ind2:max_ind2]
+                        yf2=j2ext[min_ind2:max_ind2]
                         vari2=max(xf2)-min(xf2) # variation of i2 in pts used for polyfit
 
                         xpf2,ypf2=get_polyfit(vari2, xf2, yf2, pdeg, nbsub2) # polyfit LKF2
-      
-                        if ind1 == 176 and ind2 == 183:
-                            plt.plot( i1,j1,'.')
+                        print(ind1,ind2)
+                        if ind1 == 23 and ind2 == 30:
+                            print(i2,j2)
+                            print(i2ext,j2ext)
+                            plt.plot( i1ext,j1ext,'.')
                             plt.plot( xpf1,ypf1)
-                            plt.plot( i2,j2, '.')
+                            plt.plot( i2ext,j2ext, '.')
                             plt.plot( xpf2,ypf2)
                             plt.plot( intersec.x,intersec.y, '*m')
                             plt.show()
