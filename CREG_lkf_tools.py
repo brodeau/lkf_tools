@@ -539,7 +539,7 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein):
     pdeg=1
 
     for ind1, lkf1 in enumerate(lkfs):
-        nb1=lkf1.shape[0] # nb of points in LKF
+        #nb1=lkf1.shape[0] # nb of points in LKF
         maxj1=np.max(lkf1[:,0])
         minj1=np.min(lkf1[:,0])
         maxi1=np.max(lkf1[:,1])
@@ -556,12 +556,12 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein):
         iend,jend=extra_pt_end(i1[-1], i1[-2], j1[-1], j1[-2])
         j1ext=np.append(j1ext,jend)
         i1ext=np.append(i1ext,iend)
-
+        nb1=i1ext.shape[0] # nb of points in LKF
         line1ext=LineString(np.column_stack((i1ext,j1ext)))
 
         for ind2, lkf2 in enumerate(lkfs):
             if ind2 > ind1:
-                nb2=lkf2.shape[0] # nb of points in LKF
+                #nb2=lkf2.shape[0] # nb of points in LKF
                 maxj2=np.max(lkf2[:,0])
                 minj2=np.min(lkf2[:,0])
                 maxi2=np.max(lkf2[:,1])
@@ -582,7 +582,7 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein):
                     iend,jend=extra_pt_end(i2[-1], i2[-2], j2[-1], j2[-2])
                     j2ext=np.append(j2ext,jend)
                     i2ext=np.append(i2ext,iend)
-
+                    nb2=i2ext.shape[0]
                     line2ext=LineString(np.column_stack((i2ext,j2ext)))
 
                     #intersec=line1.intersection(line2) # inters. pt between line1,2
@@ -608,6 +608,7 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein):
                         
                         #--- define part of array close to intersec for polyfit
                         min_ind1=max(0, index1-dlt)
+#                        max_ind1=min(index1+dlt,nb1-1)
                         max_ind1=min(index1+dlt,nb1)
                         xf1=i1ext[min_ind1:max_ind1]
                         nbsub1=xf1.shape[0]-1
@@ -617,6 +618,7 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein):
                         xpf1,ypf1=get_polyfit(vari1, xf1, yf1, pdeg, nbsub1) # polyfit LKF1
       
                         min_ind2=max(0, index2-dlt)
+#                        max_ind2=min(index2+dlt,nb2-1)
                         max_ind2=min(index2+dlt,nb2)
                         xf2=i2ext[min_ind2:max_ind2]
                         nbsub2=xf2.shape[0]-1
@@ -625,13 +627,27 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein):
 
                         xpf2,ypf2=get_polyfit(vari2, xf2, yf2, pdeg, nbsub2) # polyfit LKF2
                         print(ind1,ind2)
-                        if ind1 == 23 and ind2 == 30:
-                            print(i2,j2)
-                            print(i2ext,j2ext)
-                            plt.plot( i1ext,j1ext,'.')
-                            plt.plot( xpf1,ypf1)
-                            plt.plot( i2ext,j2ext, '.')
-                            plt.plot( xpf2,ypf2)
-                            plt.plot( intersec.x,intersec.y, '*m')
+                        if ind1 == 200 and ind2 == 207:
+                            print(index2,iint,jint)
+                            print(index2,i2ext[index2],j2ext[index2])
+                            print(xf2)
+                            print(yf2)
+                            plt.plot(i1ext,j1ext,'.m')
+                            plt.plot(line1ext.xy[0],line1ext.xy[1], '-m')
+                            plt.plot( xpf1,ypf1,'g')
+                            #plt.plot(i2,j2,'.r')
+                            plt.plot(i2ext,j2ext,'*b')
+                            plt.plot(line2ext.xy[0],line2ext.xy[1], '-b')
+                            plt.plot( xpf2,ypf2,'orange')
+                            #plt.plot(i1,j1,'.g')
+                            
+                            #print(xf2,yf2)
+                            #print(i1ext,j1ext,'b*')
+                            #print(i1,j1,'.b')
+#                            plt.plot( i1ext,j1ext,'.')
+#                            plt.plot( xpf1,ypf1)
+#                            plt.plot( i2ext,j2ext, '.')
+#                            plt.plot( xpf2,ypf2)
+                            #plt.plot( intersec.x,intersec.y, 'sr')
                             plt.show()
 
