@@ -414,6 +414,17 @@ def CREG_lkf_density(date,creggrid,path_filein):
 #  Functions for CREG_lkf_pairs_and_angles
 #------------------------------------------------------------
 
+#---- identify type of intersection -------------------------
+
+def identify_int(index1,nb1,index2,nb2):
+# index1 and index 2 identify element closest to intersection pt
+    if index1<2 or index2<2 or index1>nb1-1 or index2>nb2-1:
+        int_type=2 # T or Y intersecting LKFs
+    else:
+        int_type=1 # X intersecting LKFs...possible conjugate faults    
+
+    return int_type
+
 #---- calculate intersection angle --------------------------
 
 def calc_int_angle(ptype1,coeff1,ptype2,coeff2):
@@ -654,17 +665,22 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein):
 
                         xpf2,ypf2,ptype2,coeff2=get_polyfit(vari2,varj2,xf2,yf2,pdeg,nbsub2) # polyfit LKF2
                         
+                        #--- identify if intersection is X, T or Y
+                        int_type=identify_int(index1,nb1,index2,nb2)
                         #--- calc intersection angle
                         int_angle=calc_int_angle(ptype1,coeff1,ptype2,coeff2)
-                        #### NEED TO CHECK IF THEY INTERSECT ###
+                        #### NEED TO CHECK IF THEY INTERSECT or should I???###
 
                         print(ind1,ind2)
-                        if ind1 == 55 and ind2 == 66:
+                        cc=1
+                        if ind1 == 122 and ind2 == 123:
 #                            print('var1 g',vari1,varj1)
 #                            print('var2 o',vari2,varj2)
-                            print('ptype',ptype1,ptype2)
+                            print('ptype',ptype1,ptype2,int_type)
                             print(coeff1[0], coeff2[0])
                             print('angle',int_angle)
+                            print('ind1',min_ind1,index1,max_ind1,nb1)
+                            print('ind2',min_ind2,index2,max_ind2,nb2)
                             plt.plot(i1ext,j1ext,'.m')
                             plt.plot(line1ext.xy[0],line1ext.xy[1], '-m')
                             plt.plot( xpf1,ypf1,'g')
@@ -672,6 +688,9 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein):
                             plt.plot(line2ext.xy[0],line2ext.xy[1], '-b')
                             plt.plot( xpf2,ypf2,'orange')
                             plt.plot( intersec.x,intersec.y, 'sr')
+                            if cc==1:
+                                plt.xlim(iint-10, iint+10)
+                                plt.ylim(jint-10, jint+10)
                             plt.show()
 
 #--- calculate intersection angle
