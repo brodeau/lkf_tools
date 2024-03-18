@@ -411,20 +411,26 @@ def CREG_lkf_density(date,creggrid,path_filein):
 
 
 #------------------------------------------------------------
-#  Functions for  CREG_lkf_pairs_and_angles
+#  Functions for CREG_lkf_pairs_and_angles
 #------------------------------------------------------------
 
 #---- calculate intersection angle --------------------------
 
 def calc_int_angle(ptype1,coeff1,ptype2,coeff2):
-    if ptype1==1 and ptype2==1:
-        m1=coeff1[0]
-        m2=coeff2[0]
-        int_angle=np.arctan(abs((m1-m2)/(m1*m2)))
-    else:
-        int_angle=2
+    m1=coeff1[0]
+    m2=coeff2[0]
+    minval=1e-12    
 
-    int_angle = int_angle*180/np.pi
+    if ptype1==1 and ptype2==2:
+        denom=max(minval,abs(m2))
+        m2=np.sign(m2)*1.0/denom # convert dx/dy to -dy/dx 
+    elif ptype1==2 and ptype2==1:
+        denom=max(minval,abs(m1))
+        m1=np.sign(m1)*1.0/denom # convert dx/dy to -dy/dx 
+ 
+    deno=max(minval,abs(1+m1*m2)) # avoid div by zero
+    int_angle=np.arctan(abs((m1-m2)/deno))
+    int_angle = int_angle*180/np.pi # convert to deg
 
     return int_angle
 
@@ -651,8 +657,6 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein):
                         xpf2,ypf2,ptype2,coeff2=get_polyfit(vari2,varj2,xf2,yf2,pdeg,nbsub2) # polyfit LKF2
                         
                         int_angle=calc_int_angle(ptype1,coeff1,ptype2,coeff2)
-
-#                        anglei=calc_angle(ptype1,coeff1,ptype2,coeff2)
 
                         print(ind1,ind2)
                         if ind1 == 37 and ind2 == 227:
