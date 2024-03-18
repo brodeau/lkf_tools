@@ -610,24 +610,24 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein):
                         min_ind1=max(0, index1-dlt)
 #                        max_ind1=min(index1+dlt,nb1-1)
                         max_ind1=min(index1+dlt,nb1)
-                        xf1=i1ext[min_ind1:max_ind1]
+                        xf1=i1ext[min_ind1:max_ind1+1]
                         nbsub1=xf1.shape[0]-1
-                        yf1=j1ext[min_ind1:max_ind1]
-                        vari1=max(xf1)-min(xf1) # variation of i1 in pts used for polyfit
-                               
+                        yf1=j1ext[min_ind1:max_ind1+1]
+                        vari1=max(xf1)-min(xf1) # variation of i1 in pts used for polyfit                    
+      
                         xpf1,ypf1=get_polyfit(vari1, xf1, yf1, pdeg, nbsub1) # polyfit LKF1
       
                         min_ind2=max(0, index2-dlt)
 #                        max_ind2=min(index2+dlt,nb2-1)
                         max_ind2=min(index2+dlt,nb2)
-                        xf2=i2ext[min_ind2:max_ind2]
+                        xf2=i2ext[min_ind2:max_ind2+1]
                         nbsub2=xf2.shape[0]-1
-                        yf2=j2ext[min_ind2:max_ind2]
+                        yf2=j2ext[min_ind2:max_ind2+1]
                         vari2=max(xf2)-min(xf2) # variation of i2 in pts used for polyfit
 
                         xpf2,ypf2=get_polyfit(vari2, xf2, yf2, pdeg, nbsub2) # polyfit LKF2
                         print(ind1,ind2)
-                        if ind1 == 200 and ind2 == 207:
+                        if ind1 == 1 and ind2 == 5:
                             print(index2,iint,jint)
                             print(index2,i2ext[index2],j2ext[index2])
                             print(xf2)
@@ -639,6 +639,7 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein):
                             plt.plot(i2ext,j2ext,'*b')
                             plt.plot(line2ext.xy[0],line2ext.xy[1], '-b')
                             plt.plot( xpf2,ypf2,'orange')
+                            plt.plot( intersec.x,intersec.y, 'sr')
                             #plt.plot(i1,j1,'.g')
                             
                             #print(xf2,yf2)
