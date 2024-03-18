@@ -635,7 +635,6 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein):
                         
                         #--- define part of array close to intersec for polyfit
                         min_ind1=max(0, index1-dlt)
-#                        max_ind1=min(index1+dlt,nb1-1)
                         max_ind1=min(index1+dlt,nb1)
                         xf1=i1ext[min_ind1:max_ind1+1]
                         nbsub1=xf1.shape[0]-1
@@ -646,7 +645,6 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein):
                         xpf1,ypf1,ptype1,coeff1=get_polyfit(vari1,varj1,xf1,yf1,pdeg,nbsub1) # polyfit LKF1
       
                         min_ind2=max(0, index2-dlt)
-#                        max_ind2=min(index2+dlt,nb2-1)
                         max_ind2=min(index2+dlt,nb2)
                         xf2=i2ext[min_ind2:max_ind2+1]
                         nbsub2=xf2.shape[0]-1
@@ -656,37 +654,24 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein):
 
                         xpf2,ypf2,ptype2,coeff2=get_polyfit(vari2,varj2,xf2,yf2,pdeg,nbsub2) # polyfit LKF2
                         
+                        #--- calc intersection angle
                         int_angle=calc_int_angle(ptype1,coeff1,ptype2,coeff2)
+                        #### NEED TO CHECK IF THEY INTERSECT ###
 
                         print(ind1,ind2)
-                        if ind1 == 37 and ind2 == 227:
-                            print(index2,iint,jint)
-                            print(index2,i2ext[index2],j2ext[index2])
-                            print(xf2)
-                            print(yf2)
-                            print('var1 g',vari1,varj1)
-                            print('var2 o',vari2,varj2)
+                        if ind1 == 55 and ind2 == 66:
+#                            print('var1 g',vari1,varj1)
+#                            print('var2 o',vari2,varj2)
                             print('ptype',ptype1,ptype2)
                             print(coeff1[0], coeff2[0])
                             print('angle',int_angle)
                             plt.plot(i1ext,j1ext,'.m')
                             plt.plot(line1ext.xy[0],line1ext.xy[1], '-m')
                             plt.plot( xpf1,ypf1,'g')
-                            #plt.plot(i2,j2,'.r')
                             plt.plot(i2ext,j2ext,'*b')
                             plt.plot(line2ext.xy[0],line2ext.xy[1], '-b')
                             plt.plot( xpf2,ypf2,'orange')
                             plt.plot( intersec.x,intersec.y, 'sr')
-                            #plt.plot(i1,j1,'.g')
-                            
-                            #print(xf2,yf2)
-                            #print(i1ext,j1ext,'b*')
-                            #print(i1,j1,'.b')
-#                            plt.plot( i1ext,j1ext,'.')
-#                            plt.plot( xpf1,ypf1)
-#                            plt.plot( i2ext,j2ext, '.')
-#                            plt.plot( xpf2,ypf2)
-                            #plt.plot( intersec.x,intersec.y, 'sr')
                             plt.show()
 
 #--- calculate intersection angle
