@@ -409,6 +409,25 @@ def CREG_lkf_density(date,creggrid,path_filein):
 
     return TPdens
 
+
+#------------------------------------------------------------
+#  Functions for  CREG_lkf_pairs_and_angles
+#------------------------------------------------------------
+
+#---- calculate intersection angle --------------------------
+
+def calc_int_angle(ptype1,coeff1,ptype2,coeff2):
+    if ptype1==1 and ptype2==1:
+        m1=coeff1[0]
+        m2=coeff2[0]
+        int_angle=np.arctan(abs((m1-m2)/(m1*m2)))
+    else:
+        int_angle=2
+
+    int_angle = int_angle*180/np.pi
+
+    return int_angle
+
 #---- check if two rectangles overlap -----------------------
 
 def overlap(ibl1, jbl1, itr1, jtr1, ibl2, jbl2, itr2, jtr2):
@@ -446,13 +465,15 @@ def get_polyfit(vari, varj, xf, yf, pdeg, nbsub):
         yfunc = np.poly1d(coeff)
         xpf = np.linspace(xf[0],xf[nbsub],50)
         ypf=yfunc(xpf)
+        ptype=1
     else:
         coeff = np.polyfit(yf,xf,pdeg) # x=p(y)
         xfunc = np.poly1d(coeff)
         ypf = np.linspace(yf[0],yf[nbsub],50)
         xpf=xfunc(ypf)
+        ptype=2
         
-    return xpf,ypf
+    return xpf,ypf,ptype,coeff
 
 #---- add extra pt at start --------------------------------
 
@@ -616,7 +637,7 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein):
                         vari1=max(xf1)-min(xf1) # variation of i1 in pts used for polyfit                    
                         varj1=max(yf1)-min(yf1)
 
-                        xpf1,ypf1=get_polyfit(vari1,varj1,xf1,yf1,pdeg,nbsub1) # polyfit LKF1
+                        xpf1,ypf1,ptype1,coeff1=get_polyfit(vari1,varj1,xf1,yf1,pdeg,nbsub1) # polyfit LKF1
       
                         min_ind2=max(0, index2-dlt)
 #                        max_ind2=min(index2+dlt,nb2-1)
@@ -627,16 +648,23 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein):
                         vari2=max(xf2)-min(xf2) # variation of i2 in pts used for polyfit
                         varj2=max(yf2)-min(yf2)
 
-                        xpf2,ypf2=get_polyfit(vari2,varj2,xf2,yf2,pdeg,nbsub2) # polyfit LKF2
+                        xpf2,ypf2,ptype2,coeff2=get_polyfit(vari2,varj2,xf2,yf2,pdeg,nbsub2) # polyfit LKF2
+                        
+                        int_angle=calc_int_angle(ptype1,coeff1,ptype2,coeff2)
+
+#                        anglei=calc_angle(ptype1,coeff1,ptype2,coeff2)
 
                         print(ind1,ind2)
-                        if ind1 == 16 and ind2 == 25:
+                        if ind1 == 37 and ind2 == 227:
                             print(index2,iint,jint)
                             print(index2,i2ext[index2],j2ext[index2])
                             print(xf2)
                             print(yf2)
                             print('var1 g',vari1,varj1)
                             print('var2 o',vari2,varj2)
+                            print('ptype',ptype1,ptype2)
+                            print(coeff1[0], coeff2[0])
+                            print('angle',int_angle)
                             plt.plot(i1ext,j1ext,'.m')
                             plt.plot(line1ext.xy[0],line1ext.xy[1], '-m')
                             plt.plot( xpf1,ypf1,'g')
@@ -657,3 +685,4 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein):
                             #plt.plot( intersec.x,intersec.y, 'sr')
                             plt.show()
 
+#--- calculate intersection angle
