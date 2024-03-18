@@ -440,8 +440,8 @@ def get_ij_intersection(intersec):
 
 #---- polyfit over intersection zone ------------------------
 
-def get_polyfit(vari, xf, yf, pdeg, nbsub):
-    if vari > 1: # y=p(x)
+def get_polyfit(vari, varj, xf, yf, pdeg, nbsub):
+    if vari >= varj: # y=p(x)
         coeff = np.polyfit(xf,yf,pdeg)
         yfunc = np.poly1d(coeff)
         xpf = np.linspace(xf[0],xf[nbsub],50)
@@ -614,8 +614,9 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein):
                         nbsub1=xf1.shape[0]-1
                         yf1=j1ext[min_ind1:max_ind1+1]
                         vari1=max(xf1)-min(xf1) # variation of i1 in pts used for polyfit                    
-      
-                        xpf1,ypf1=get_polyfit(vari1, xf1, yf1, pdeg, nbsub1) # polyfit LKF1
+                        varj1=max(yf1)-min(yf1)
+
+                        xpf1,ypf1=get_polyfit(vari1,varj1,xf1,yf1,pdeg,nbsub1) # polyfit LKF1
       
                         min_ind2=max(0, index2-dlt)
 #                        max_ind2=min(index2+dlt,nb2-1)
@@ -624,14 +625,18 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein):
                         nbsub2=xf2.shape[0]-1
                         yf2=j2ext[min_ind2:max_ind2+1]
                         vari2=max(xf2)-min(xf2) # variation of i2 in pts used for polyfit
+                        varj2=max(yf2)-min(yf2)
 
-                        xpf2,ypf2=get_polyfit(vari2, xf2, yf2, pdeg, nbsub2) # polyfit LKF2
+                        xpf2,ypf2=get_polyfit(vari2,varj2,xf2,yf2,pdeg,nbsub2) # polyfit LKF2
+
                         print(ind1,ind2)
-                        if ind1 == 1 and ind2 == 5:
+                        if ind1 == 16 and ind2 == 25:
                             print(index2,iint,jint)
                             print(index2,i2ext[index2],j2ext[index2])
                             print(xf2)
                             print(yf2)
+                            print('var1 g',vari1,varj1)
+                            print('var2 o',vari2,varj2)
                             plt.plot(i1ext,j1ext,'.m')
                             plt.plot(line1ext.xy[0],line1ext.xy[1], '-m')
                             plt.plot( xpf1,ypf1,'g')
