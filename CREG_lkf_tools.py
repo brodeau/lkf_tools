@@ -418,7 +418,7 @@ def CREG_lkf_density(date,creggrid,path_filein):
 
 def identify_int(index1,nb1,index2,nb2):
 # index1 and index 2 identify element closest to intersection pt
-    if index1<2 or index2<2 or index1>nb1-1 or index2>nb2-1:
+    if index1<=1 or index2<=1 or index1>=nb1-1 or index2>=nb2-1:
         int_type=2 # T or Y intersecting LKFs
     else:
         int_type=1 # X intersecting LKFs...possible conjugate faults    
@@ -670,13 +670,15 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein):
                         #--- calc intersection angle
                         int_angle=calc_int_angle(ptype1,coeff1,ptype2,coeff2)
                         #### NEED TO CHECK IF THEY INTERSECT or should I???###
+                        # ELIMINATE MULTIPT???
 
                         print(ind1,ind2)
-                        cc=1
-                        if ind1 == 122 and ind2 == 123:
+                        cc=0
+                        if ind1 == 140 and ind2 == 144:
 #                            print('var1 g',vari1,varj1)
 #                            print('var2 o',vari2,varj2)
                             print('ptype',ptype1,ptype2,int_type)
+                            print(index1,nb1,index2,nb2)
                             print(coeff1[0], coeff2[0])
                             print('angle',int_angle)
                             print('ind1',min_ind1,index1,max_ind1,nb1)
