@@ -543,7 +543,7 @@ def extra_pt_end(im1, im2, jm1, jm2):
 #
 #------------------------------------------------------------
 
-def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc):
+def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout):
     
     print('working on date:')
     print(date)

@@ -25,6 +25,7 @@ creggrid='creg12' # creg025 or creg12
 EXP='eg1p5_ef1p5'
 main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag'
 main_dirnc='/home/jfl001/data/runsLemieux_et_al_plast_pot'
+store_main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag'
 SDATE='20060301'
 EDATE='20060301'
 FREQ='24H'
@@ -32,7 +33,8 @@ suffix='0000_iceh_inst'
 
 #-----------------------------------------
 
-store_path=os.path.join(main_dir+'/'+EXP+'/')
+store_path=os.path.join(main_dir+'/'+EXP+'/Int_Angle')
+os.mkdir(store_path)
 
 list_dates=list(pd.date_range(SDATE,EDATE, freq=FREQ))
 
@@ -44,9 +46,9 @@ for i in range(len(list_dates)) :
     data_pathnc=os.path.join(main_dirnc+'/run_'+EXP+'/hourly/'+date0+suffix+'.nc')
     print(path_filein)
     print(data_pathnc)
-    #lkfs = np.load(path_filein,allow_pickle=True)
-    #fileout=date0 + '_pairs_' + EXP
-    CREG_lkf_pairs_and_angles(date0,creggrid,path_filein,data_pathnc)
+    fileout=os.path.join(store_path + '/' + date0 + '_intpairs_' + EXP + '.py')
+    print(fileout)
+    CREG_lkf_pairs_and_angles(date0,creggrid,path_filein,data_pathnc,fileout)
 
 print('CREG_driver_LKF_pairs_and_angles is done')
 print(EXP)
