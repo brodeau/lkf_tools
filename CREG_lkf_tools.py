@@ -732,14 +732,15 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc):
                             mvort2int,perc2=get_vort_info(vort2int)
 
                             if np.sign(mvort1int) != np.sign(mvort2int):
-                                print('conjugate fault lines!!!', ind1,ind2)
-                                print('conjugate fault lines!!!', mvort1int,mvort2int)
-                                print('conjugate fault lines!!!', perc1,perc2)
+                                if clean_int:
+                                    print('conjugate fault lines!!!', ind1,ind2)
+                                    print('conjugate fault lines!!!', mvort1int,mvort2int)
+                                    print('conjugate fault lines!!!', perc1,perc2)
                                 
                         #print(ind1,ind2)
                         cc=0
                         figg=1
-                        if ind1 == 55 and ind2 == 62:
+                        if ind1 == 197 and ind2 == 199:
                             print('ptype',ptype1,ptype2,int_type)
                             print(index1,nb1,index2,nb2)
                             print(coeff1[0], coeff2[0])
@@ -775,4 +776,4 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc):
                                 plt.pcolor(vortpc)
                                 plt.colorbar()
                                 #plt.savefig('testing12.png')
-                                #plt.show()
+                                plt.show()
