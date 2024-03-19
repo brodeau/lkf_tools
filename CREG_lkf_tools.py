@@ -418,7 +418,7 @@ def CREG_lkf_density(date,creggrid,path_filein):
 
 def identify_int(index1,nb1,index2,nb2):
 # index1 and index 2 identify element closest to intersection pt
-    if index1<=1 or index2<=1 or index1>=nb1-1 or index2>=nb2-1:
+    if index1<=1 or index2<=1 or index1>=nb1-2 or index2>=nb2-2:
         int_type=2 # T or Y intersecting LKFs
     else:
         int_type=1 # X intersecting LKFs...possible conjugate faults    
@@ -700,13 +700,13 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc):
                         
                         #--- identify if intersection is X, T or Y
                         int_type=identify_int(index1,nb1,index2,nb2)
-
+                        
                         #--- calc intersection angle (returns acute angle)
                         int_angle=calc_int_angle(ptype1,coeff1,ptype2,coeff2)
                         #### NEED TO CHECK IF THEY INTERSECT or should I???###
                         # ELIMINATE MULTIPT???
                         
-                        if int_type==1: # possible conjugate fault lines
+                        if int_type==1: # possible conjugate fault lines (good: 73,94)
                             #--- vorticity along LKF2 ---
                             vort2=np.zeros(ntp2)
                             for n2 in range(ntp2):
@@ -731,10 +731,10 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc):
                                 print('conjugate fault lines!!!', mvort1int,mvort2int)
                                 print('conjugate fault lines!!!', perc1,perc2)
                                 
-                        print(ind1,ind2)
+                        #print(ind1,ind2)
                         cc=0
                         figg=1
-                        if ind1 == 140 and ind2 == 144:
+                        if ind1 == 62 and ind2 == 66:
                             print('ptype',ptype1,ptype2,int_type)
                             print(index1,nb1,index2,nb2)
                             print(coeff1[0], coeff2[0])
