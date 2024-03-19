@@ -425,6 +425,29 @@ def identify_int(index1,nb1,index2,nb2):
 
     return int_type
 
+#-- mean and more info for vorticity close to intersection --
+
+def get_vort_info(vortint):
+# values of vort1 and vort2 are = vort_val=0 at start and end. 
+# it does not matter as this does not change if mean is + or -
+    meanvort=np.mean(vortint)
+    ntp=vortint.shape[0]
+    
+    nsame=0
+    nzero=0
+    ntot=0
+    for n in range(ntp):
+        if vortint[n] == 0.0:
+            nzero=nzero+1
+        else:
+            ntot=ntot+1
+            if np.sign(vortint[n]) == np.sign(meanvort):
+                nsame=nsame+1
+
+    perc=nsame*100.0/(ntot)
+
+    return meanvort,perc
+
 #---- calculate intersection angle --------------------------
 
 def calc_int_angle(ptype1,coeff1,ptype2,coeff2):
@@ -691,10 +714,23 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc):
                                 ii=int(i2[n2])+ishift-1
                                 vort2[n2]=vort[jj,ii]
 
-                                #--- extrapolate vort1 by one pt on both sides to match shape of j1ext,i1ext ---
-                                vort2=np.append(vort_val,vort2) # start
-                                vort2=np.append(vort2,vort_val) # end
+                            #--- extrapolate vort1 by one pt on both sides to match shape of j1ext,i1ext ---
+                            vort2=np.append(vort_val,vort2) # start
+                            vort2=np.append(vort2,vort_val) # end
 
+                            #--- define part of vort arrays close to intersec for calc of mean vort
+                            vort1int=vort1[min_ind1:max_ind1+1]
+                            vort2int=vort2[min_ind2:max_ind2+1]
+
+                            #--- calc mean vort and percentage of pts with same sign as mean vort
+                            mvort1int,perc1=get_vort_info(vort1int)
+                            mvort2int,perc2=get_vort_info(vort2int)
+
+                            if np.sign(mvort1int) != np.sign(mvort2int):
+                                print('conjugate fault lines!!!', ind1,ind2)
+                                print('conjugate fault lines!!!', mvort1int,mvort2int)
+                                print('conjugate fault lines!!!', perc1,perc2)
+                                
                         print(ind1,ind2)
                         cc=0
                         figg=1
