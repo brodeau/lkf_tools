@@ -522,10 +522,17 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc):
     print('working on date:')
     print(date)
 
+    pdeg=1 # degree of polynomial for fit
+
 #----- open npy file -----
 
     lkfs = np.load(path_filein,allow_pickle=True)
     print(lkfs.shape)
+
+#----- open netcdf file --
+
+    creg_nc = xr.open_dataset(data_pathnc)
+    vort = creg_nc.vort[0,:,:]/100.0
 
 #----- shift indices ---------------------
 
@@ -570,11 +577,8 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc):
     npot=0
     nt=0
 
-# 1) linestring, 2) intersection, 3) polyfit in region of intersection 4) angle
-# i1,j1 and i2,j2: i,j in physical domain. ex: i1=661,662,663...
-# ii1,jj1 and ii2,jj2: i,j in lkf array. ex: ii1=0,1,2...
-
-    pdeg=1
+#        j=jl+jshift-1
+#        i=il+ishift-1
 
     for ind1, lkf1 in enumerate(lkfs):
         #nb1=lkf1.shape[0] # nb of points in LKF
@@ -694,5 +698,3 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc):
                                 plt.xlim(iint-10, iint+10)
                                 plt.ylim(jint-10, jint+10)
                             plt.show()
-
-#--- calculate intersection angle
