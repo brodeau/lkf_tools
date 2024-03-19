@@ -1,5 +1,6 @@
 import numpy as np
 import xarray as xr
+import pandas as pd
 import os
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
@@ -602,13 +603,19 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout):
     else:
         print ("Wrong choice of grid")
 
+#---- create empty lists ----------------------
+
+    ind1lt=[] # lt for list
+    ind2lt=[]
+    nb1lt=[]
+    nb2lt=[]
+    clean_intlt=[]
+    int_anglelt=[]
+    int_typelt=[]
+    perc1lt=[]
+    perc2lt=[]
+
 #---- identify pairs of intersecting LKFs -----
-
-    npot=0
-    nt=0
-
-#        j=jl+jshift-1
-#        i=il+ishift-1
 
     for ind1, lkf1 in enumerate(lkfs):
         ntp1=lkf1.shape[0] # nb of points in LKF
@@ -653,7 +660,6 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout):
 #                ovlflag=overlap(mini1, minj1, maxi1, maxj1, mini2, minj2, maxi2, maxj2)
                 ovlflag=overlap(mini1-1, minj1-1, maxi1+1, maxj1+1, mini2-1, minj2-1, maxi2+1, maxj2+1)
                 if ovlflag:
-                    npot=npot+1
                     j2=lkf2[:,0]
                     i2=lkf2[:,1]
                     #line2=LineString(np.column_stack((i2,j2)))
@@ -674,7 +680,6 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout):
 
                     if not intersec.is_empty:
                         iint,jint,clean_int=get_ij_intersection(intersec,ind1,ind2) # get i,j at intersection point
-                        nt=nt+1
                         deltai=abs(i1ext-iint) # delta i between i1 and intersec i
                         deltaj=abs(j1ext-jint) # delta i between j1 and intersec j
                         index1=np.argmin(deltai+deltaj)
@@ -736,7 +741,23 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout):
                                     print('conjugate fault lines!!!', ind1,ind2)
                                     print('conjugate fault lines!!!', mvort1int,mvort2int)
                                     print('conjugate fault lines!!!', perc1,perc2)
-                                
+                        
+                        elif int_type==2:
+                            perc1=np.nan
+                            perc2=np.nan
+                            
+                        #--- append values in lists
+                        
+                        ind1lt.append(ind1)
+                        ind2lt.append(ind2)
+                        nb1lt.append(ntp1) # not of extended LKF1...should rename ntp1 and nb1
+                        nb2lt.append(ntp2)
+                        clean_intlt.append(clean_int)
+                        int_anglelt.append(int_angle)
+                        int_typelt.append(int_type)
+                        perc1lt.append(perc1)
+                        perc2lt.append(perc2)
+
                         #print(ind1,ind2)
                         cc=0
                         figg=1
@@ -777,3 +798,18 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout):
                                 plt.colorbar()
                                 #plt.savefig('testing12.png')
                                 plt.show()
+
+
+#--- create the panda dataframe for output file
+
+    df = pd.DataFrame(ind1lt, columns=['ind1'])
+    df.insert(1, 'ind2', ind2lt)
+    df.insert(2, 'nb1', nb1lt)
+    df.insert(3, 'nb2', nb2lt)
+    df.insert(4, 'clean int', clean_intlt)
+    df.insert(5, 'int angle', int_anglelt)
+    df.insert(6, 'int type', int_typelt)
+    df.insert(7, 'perc1', perc1lt)
+    df.insert(8, 'perc2', perc2lt)
+    print(df)
+#    df.to_csv(path_fileout, index=False)

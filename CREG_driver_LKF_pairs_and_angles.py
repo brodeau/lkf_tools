@@ -34,7 +34,8 @@ suffix='0000_iceh_inst'
 #-----------------------------------------
 
 store_path=os.path.join(main_dir+'/'+EXP+'/Int_Angle')
-os.mkdir(store_path)
+if not os.path.isdir(store_path):
+    os.mkdir(store_path)
 
 list_dates=list(pd.date_range(SDATE,EDATE, freq=FREQ))
 
