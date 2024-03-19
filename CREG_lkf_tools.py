@@ -631,13 +631,6 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc):
                     intersec=line1ext.intersection(line2ext) # inters. pt between line1,2
                     dlt=5
                     if not intersec.is_empty:
-                        #print(ind1,ind2)
-                        #if ind1 == 55 and ind2 == 62:
-                        #    plt.plot(line1ext.xy[0],line1ext.xy[1], '.m')
-                        #    plt.plot(line1.xy[0],line1.xy[1], '.r')
-                        #    plt.plot(line2ext.xy[0],line2ext.xy[1], '.b')
-                        #    plt.plot(line2.xy[0],line2.xy[1], '.c')
-                        #    plt.show()
 
                         iint,jint=get_ij_intersection(intersec) # get i,j at intersection point
                         nt=nt+1
@@ -678,23 +671,39 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc):
 
                         print(ind1,ind2)
                         cc=0
+                        figg=1
                         if ind1 == 140 and ind2 == 144:
-#                            print('var1 g',vari1,varj1)
-#                            print('var2 o',vari2,varj2)
                             print('ptype',ptype1,ptype2,int_type)
                             print(index1,nb1,index2,nb2)
                             print(coeff1[0], coeff2[0])
                             print('angle',int_angle)
                             print('ind1',min_ind1,index1,max_ind1,nb1)
                             print('ind2',min_ind2,index2,max_ind2,nb2)
-                            plt.plot(i1ext,j1ext,'.m')
-                            plt.plot(line1ext.xy[0],line1ext.xy[1], '-m')
-                            plt.plot( xpf1,ypf1,'g')
-                            plt.plot(i2ext,j2ext,'*b')
-                            plt.plot(line2ext.xy[0],line2ext.xy[1], '-b')
-                            plt.plot( xpf2,ypf2,'orange')
-                            plt.plot( intersec.x,intersec.y, 'sr')
-                            if cc==1:
-                                plt.xlim(iint-10, iint+10)
-                                plt.ylim(jint-10, jint+10)
-                            plt.show()
+                            if figg==1:
+                                plt.plot(i1ext,j1ext,'.m')
+                                plt.plot(line1ext.xy[0],line1ext.xy[1], '-m')
+                                plt.plot( xpf1,ypf1,'g')
+                                plt.plot(i2ext,j2ext,'*b')
+                                plt.plot(line2ext.xy[0],line2ext.xy[1], '-b')
+                                plt.plot( xpf2,ypf2,'orange')
+                                plt.plot( intersec.x,intersec.y, 'sr')
+                                if cc==1:
+                                    plt.xlim(iint-10, iint+10)
+                                    plt.ylim(jint-10, jint+10)
+                                plt.show()
+                            elif figg==2:
+                                maxjtp=int(max(maxj1,maxj2))
+                                minjtp=int(min(minj1,minj2))
+                                maxitp=int(max(maxi1,maxi2))
+                                minitp=int(min(mini1,mini2))
+                                # shift indices from local grid to creg grid
+                                maxj=maxjtp+jshift-1
+                                minj=minjtp+jshift-1
+                                maxi=maxitp+ishift-1
+                                mini=minitp+ishift-1
+                                print(minj,maxj,mini,maxi)
+                                vortpc=vort[minj:maxj,mini:maxi]                                
+                                plt.pcolor(vortpc)
+                                plt.colorbar()
+                                #plt.savefig('testing12.png')
+                                plt.show()
