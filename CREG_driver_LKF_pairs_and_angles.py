@@ -24,10 +24,11 @@ import calendar
 creggrid='creg12' # creg025 or creg12
 EXP='eg1p5_ef1p5'
 main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag'
-
+main_dirnc='/home/jfl001/data/runsLemieux_et_al_plast_pot'
 SDATE='20060301'
 EDATE='20060301'
 FREQ='24H'
+suffix='0000_iceh_inst'
 
 #-----------------------------------------
 
@@ -40,10 +41,12 @@ for i in range(len(list_dates)) :
     filein='lkf_' + date0 + '_' + EXP + '_001.npy'
     tpdir=date0 + '_' + EXP
     path_filein=os.path.join(main_dir+'/'+EXP+'/'+tpdir+'/'+filein)
+    data_pathnc=os.path.join(main_dirnc+'/run_'+EXP+'/hourly/'+date0+suffix+'.nc')
     print(path_filein)
+    print(data_pathnc)
     #lkfs = np.load(path_filein,allow_pickle=True)
     #fileout=date0 + '_pairs_' + EXP
-    CREG_lkf_pairs_and_angles(date0,creggrid,path_filein)
+    CREG_lkf_pairs_and_angles(date0,creggrid,path_filein,data_pathnc)
 
 print('CREG_driver_LKF_pairs_and_angles is done')
 print(EXP)

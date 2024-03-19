@@ -20,15 +20,15 @@ import calendar
 #nj = 2198 ;
 cregflag=1 # used to customize code for CREG applications.
 creggrid='creg12' # creg025 or creg12
-EXP='run_eg1.5_ef1.5'
+EXP='run_eg1p5_ef1p5'
 main_dir='/home/jfl001/data/runsLemieux_et_al_plast_pot/'
 main_dir_grid='/home/socn000/data/eccc-ppp5/env_rhel-8-icelake-64/datafiles/constants/oce/repository/master/CONCEPTS/'
 store_main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag'
 kvalue=7 # value for kernel
 produce_plot=False
-FREQ='24H'
 SDATE='20070101'
 EDATE='20070531'
+FREQ='24H'
 suffix='0000_iceh_inst'
 
 #----- check kernel value ----------------
@@ -50,29 +50,14 @@ elif (creggrid == 'creg12'):
 else:
     print ("Wrong choice of grid")
 
-if (EXP == 'run_eg1.5_ef1.5'):
-    output_label='eg1p5_ef1p5'
-elif (EXP == 'run_eg1.0_ef1.5'):
-    output_label='eg1p0_ef1p5'
-elif (EXP == 'run_eg2.25_ef1.5'):
-    output_label='eg2p25_ef1p5'
-elif (EXP == 'run_eg2.0_ef2.0'):
-    output_label='eg2p0_ef2p0'
-elif (EXP == 'run_eg1.33_ef2.0'):
-    output_label='eg1p33_ef2p0'
-elif (EXP == 'run_eg3.0_ef2.0'):
-    output_label='eg3p0_ef2p0'
-else:
-    output_label=EXP
-
-store_path=os.path.join(store_main_dir+'/'+output_label+'/')
+store_path=os.path.join(store_main_dir+'/'+EXP+'/')
 
 list_dates=list(pd.date_range(SDATE,EDATE, freq=FREQ))
 
 for i in range(len(list_dates)) :
     date0 = (list_dates[i] + timedelta(days=-0)).strftime('%Y%m%d%H')
     data_path=os.path.join(main_dir+'/'+EXP+'/hourly/'+date0+suffix+'.nc')
-    fileout=date0 + '_' + output_label
+    fileout=date0 + '_' + EXP
     print(fileout)
     CREG_lkf_detect(date0, creggrid, grid_path, data_path, store_path, fileout, kvalue, produce_plot)
 
