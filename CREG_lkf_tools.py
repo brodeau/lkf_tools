@@ -480,22 +480,25 @@ def overlap(ibl1, jbl1, itr1, jtr1, ibl2, jbl2, itr2, jtr2):
 
 #---- get i,j at intersection point -----------------------
 
-def get_ij_intersection(intersec):
+def get_ij_intersection(intersec, ind1, ind2):
     if intersec.geom_type == 'Point':
         iint=intersec.x
         jint=intersec.y
+        clean_int=True
     elif intersec.geom_type == 'LineString': #take 1st pt of string
         iint=intersec.xy[0][0]
         jint=intersec.xy[1][0]
+        clean_int=True
     elif intersec.geom_type == 'MultiPoint': #take 1st pt of multipt
         iint=intersec.geoms[0].x
         jint=intersec.geoms[0].y
+        clean_int=False
     else:
         iint=intersec.geoms[0].xy[0][0]
         jint=intersec.geoms[0].xy[1][0]
-        #print('wowowo',intersec.geoms[0].xy[0][0],intersec.geoms[0].xy[1][0])
+        clean_int=False
 
-    return iint,jint
+    return iint,jint,clean_int
 
 #---- polyfit over intersection zone ------------------------
 
@@ -545,8 +548,11 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc):
     print('working on date:')
     print(date)
 
-    pdeg=1 # degree of polynomial for fit
+#--- define parameters ---
+
     vort_val=0.0 # value used to extrapolate vort at both ends of LKF
+    pdeg=1 # degree of polynomial for fit
+    dlt=5 # nb of pts on each side of intersection pt for polyfit
 
 #----- open npy file -----
 
@@ -665,10 +671,9 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc):
 
                     #intersec=line1.intersection(line2) # inters. pt between line1,2
                     intersec=line1ext.intersection(line2ext) # inters. pt between line1,2
-                    dlt=5
-                    if not intersec.is_empty:
 
-                        iint,jint=get_ij_intersection(intersec) # get i,j at intersection point
+                    if not intersec.is_empty:
+                        iint,jint,clean_int=get_ij_intersection(intersec,ind1,ind2) # get i,j at intersection point
                         nt=nt+1
                         deltai=abs(i1ext-iint) # delta i between i1 and intersec i
                         deltaj=abs(j1ext-jint) # delta i between j1 and intersec j
@@ -734,13 +739,14 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc):
                         #print(ind1,ind2)
                         cc=0
                         figg=1
-                        if ind1 == 62 and ind2 == 66:
+                        if ind1 == 55 and ind2 == 62:
                             print('ptype',ptype1,ptype2,int_type)
                             print(index1,nb1,index2,nb2)
                             print(coeff1[0], coeff2[0])
                             print('angle',int_angle)
                             print('ind1',min_ind1,index1,max_ind1,nb1)
                             print('ind2',min_ind2,index2,max_ind2,nb2)
+                            print('clean intersect=',clean_int)
                             if figg==1:
                                 plt.plot(i1ext,j1ext,'.m')
                                 plt.plot(line1ext.xy[0],line1ext.xy[1], '-m')
@@ -748,7 +754,8 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc):
                                 plt.plot(i2ext,j2ext,'*b')
                                 plt.plot(line2ext.xy[0],line2ext.xy[1], '-b')
                                 plt.plot( xpf2,ypf2,'orange')
-                                plt.plot( intersec.x,intersec.y, 'sr')
+                                if clean_int:
+                                    plt.plot( intersec.x,intersec.y, 'sr')
                                 if cc==1:
                                     plt.xlim(iint-10, iint+10)
                                     plt.ylim(jint-10, jint+10)
@@ -768,4 +775,4 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc):
                                 plt.pcolor(vortpc)
                                 plt.colorbar()
                                 #plt.savefig('testing12.png')
-                                plt.show()
+                                #plt.show()
