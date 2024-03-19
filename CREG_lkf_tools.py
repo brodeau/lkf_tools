@@ -523,6 +523,7 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc):
     print(date)
 
     pdeg=1 # degree of polynomial for fit
+    vort_val=0.0 # value used to extrapolate vort at both ends of LKF
 
 #----- open npy file -----
 
@@ -581,14 +582,26 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc):
 #        i=il+ishift-1
 
     for ind1, lkf1 in enumerate(lkfs):
-        #nb1=lkf1.shape[0] # nb of points in LKF
+        ntp1=lkf1.shape[0] # nb of points in LKF
         maxj1=np.max(lkf1[:,0])
         minj1=np.min(lkf1[:,0])
         maxi1=np.max(lkf1[:,1])
         mini1=np.min(lkf1[:,1])
         j1=lkf1[:,0]
         i1=lkf1[:,1]
-        line1=LineString(np.column_stack((i1,j1)))
+
+        #--- vorticity along LKF1 ---
+        vort1=np.zeros(ntp1)
+        for n1 in range(ntp1):
+            jj=int(j1[n1])+jshift-1
+            ii=int(i1[n1])+ishift-1
+            vort1[n1]=vort[jj,ii]
+
+        #--- extrapolate vort1 by one pt on both sides to match shape of j1ext,i1ext ---
+        vort1=np.append(vort_val,vort1) # start
+        vort1=np.append(vort1,vort_val) # end
+
+        #line1=LineString(np.column_stack((i1,j1)))
         
         #--- extrapolate LKF1 by one pt on both sides ---
         ist,jst=extra_pt_start(i1[0], i1[1], j1[0], j1[1])
@@ -603,7 +616,7 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc):
 
         for ind2, lkf2 in enumerate(lkfs):
             if ind2 > ind1:
-                #nb2=lkf2.shape[0] # nb of points in LKF
+                ntp2=lkf2.shape[0] # nb of points in LKF
                 maxj2=np.max(lkf2[:,0])
                 minj2=np.min(lkf2[:,0])
                 maxi2=np.max(lkf2[:,1])
@@ -614,7 +627,7 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc):
                     npot=npot+1
                     j2=lkf2[:,0]
                     i2=lkf2[:,1]
-                    line2=LineString(np.column_stack((i2,j2)))
+                    #line2=LineString(np.column_stack((i2,j2)))
                     
                     #--- extrapolate LKF1 by one pt on both sides ---
                     ist,jst=extra_pt_start(i2[0], i2[1], j2[0], j2[1])
@@ -664,10 +677,23 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc):
                         
                         #--- identify if intersection is X, T or Y
                         int_type=identify_int(index1,nb1,index2,nb2)
-                        #--- calc intersection angle
+
+                        #--- calc intersection angle (returns acute angle)
                         int_angle=calc_int_angle(ptype1,coeff1,ptype2,coeff2)
                         #### NEED TO CHECK IF THEY INTERSECT or should I???###
                         # ELIMINATE MULTIPT???
+                        
+                        if int_type==1: # possible conjugate fault lines
+                            #--- vorticity along LKF2 ---
+                            vort2=np.zeros(ntp2)
+                            for n2 in range(ntp2):
+                                jj=int(j2[n2])+jshift-1
+                                ii=int(i2[n2])+ishift-1
+                                vort2[n2]=vort[jj,ii]
+
+                                #--- extrapolate vort1 by one pt on both sides to match shape of j1ext,i1ext ---
+                                vort2=np.append(vort_val,vort2) # start
+                                vort2=np.append(vort2,vort_val) # end
 
                         print(ind1,ind2)
                         cc=0
