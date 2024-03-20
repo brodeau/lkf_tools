@@ -519,6 +519,24 @@ def get_polyfit(vari, varj, xf, yf, pdeg, nbsub):
         
     return xpf,ypf,ptype,coeff
 
+def TPget_polyfit(vari, varj, xf, yf, pdeg):
+    if vari >= varj: # y=p(x)
+        coeff = np.polyfit(xf,yf,pdeg)
+        yfunc = np.poly1d(coeff)
+        xpf = np.linspace(xf[0],xf[-1],50)
+#        xpf = np.linspace(xf[0],xf[nbsub],50)
+        print('xpf',xpf)
+        ypf=yfunc(xpf)
+        ptype=1
+    else:
+        coeff = np.polyfit(yf,xf,pdeg) # x=p(y)
+        xfunc = np.poly1d(coeff)
+        ypf = np.linspace(yf[0],yf[-1],50)
+        xpf=xfunc(ypf)
+        ptype=2
+        
+    return xpf,ypf,ptype,coeff
+
 #---- add extra pt at start --------------------------------
 
 def extra_pt_start(i0, i1, j0, j1):
@@ -689,7 +707,7 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout):
                         
                         #--- define part of array close to intersec for polyfit
                         min_ind1=max(0, index1-dlt)
-                        max_ind1=min(index1+dlt,nb1)
+                        max_ind1=min(index1+dlt,nb1) # check if this is ok (might be nb1-1)
                         xf1=i1ext[min_ind1:max_ind1+1]
                         nbsub1=xf1.shape[0]-1
                         yf1=j1ext[min_ind1:max_ind1+1]
@@ -699,7 +717,7 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout):
                         xpf1,ypf1,ptype1,coeff1=get_polyfit(vari1,varj1,xf1,yf1,pdeg,nbsub1) # polyfit LKF1
       
                         min_ind2=max(0, index2-dlt)
-                        max_ind2=min(index2+dlt,nb2)
+                        max_ind2=min(index2+dlt,nb2) # check if this is ok (might be nb2-1)
                         xf2=i2ext[min_ind2:max_ind2+1]
                         nbsub2=xf2.shape[0]-1
                         yf2=j2ext[min_ind2:max_ind2+1]
@@ -808,3 +826,71 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout):
     df.insert(7, 'perc1', perc1lt)
     df.insert(8, 'perc2', perc2lt)
     df.to_csv(fileout, index=False)
+
+
+#----  CREG_lkf_angles_with_grid ----------------------------
+#
+# Calculate angle of LKF with grid at mid LKF point
+#
+#------------------------------------------------------------
+
+def CREG_lkf_angles_with_grid(date,creggrid,path_filein,fileout):
+    
+    print('working on date:')
+    print(date)
+
+#--- define parameters ---
+
+    pdeg=1 # degree of polynomial for fit
+    dlt=5 # nb of pts on each side of LKF mid-point for polyfit
+
+#----- open npy file -----
+
+    lkfs = np.load(path_filein,allow_pickle=True)
+    print(lkfs.shape)
+
+#---- create empty lists ----------------------
+
+    ind1lt=[] # lt for list
+    nb1lt=[]
+    ianglelt=[]
+    janglelt=[]
+
+#---- identify pairs of intersecting LKFs -----
+
+    #for ind1, lkf1 in enumerate(lkfs):
+    for ll in range(1):
+        #nb1=lkf1.shape[0]
+        #j1=lkf1[:,0]
+        #i1=lkf1[:,1]
+        
+        nb1=11
+        j1=np.arange(nb1)
+        i1=np.arange(nb1)
+
+        #--- find mid-point of LKF ---
+        nmid=int(np.floor(nb1/2))
+
+        #--- find start and end of LKF for polyfit ---
+        nmin=max(0, nmid-dlt)
+        nmax=min(nmid+dlt,nb1-1)
+
+        #--- form x(or i) and y(or j) vectors for polyfit ---
+        xf1=i1[nmin:nmax+1] # note that xf1=i1[n1,n2] uses in fact i1[n1,n2-1]
+        yf1=j1[nmin:nmax+1]
+        
+        #--- var of xf1 and yf1 vectors to decide type (y=f(x) or =f(y) polyfit ---
+        vari1=max(xf1)-min(xf1) # variation of i1 in pts used for polyfit                    
+        varj1=max(yf1)-min(yf1)
+        nbsub1=xf1.shape[0]-1 # jfl...-1 or not?
+
+        print('xf1',xf1)
+        #--- get polyfit in region around mid-point ---
+        xpf1,ypf1,ptype1,coeff1=TPget_polyfit(vari1,varj1,xf1,yf1,pdeg) # polyfit LKF1
+        
+        #print('test',nb1,nmid,nmin,nmax)
+        print('test',ptype1)
+        
+
+
+
