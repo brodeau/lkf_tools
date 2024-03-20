@@ -618,7 +618,7 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout):
 #---- identify pairs of intersecting LKFs -----
 
     for ind1, lkf1 in enumerate(lkfs):
-        ntp1=lkf1.shape[0] # nb of points in LKF
+        nb1short=lkf1.shape[0] # true nb of points in LKF
         maxj1=np.max(lkf1[:,0])
         minj1=np.min(lkf1[:,0])
         maxi1=np.max(lkf1[:,1])
@@ -627,8 +627,8 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout):
         i1=lkf1[:,1]
 
         #--- vorticity along LKF1 ---
-        vort1=np.zeros(ntp1)
-        for n1 in range(ntp1):
+        vort1=np.zeros(nb1short)
+        for n1 in range(nb1short):
             jj=int(j1[n1])+jshift-1
             ii=int(i1[n1])+ishift-1
             vort1[n1]=vort[jj,ii]
@@ -647,12 +647,12 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout):
         iend,jend=extra_pt_end(i1[-1], i1[-2], j1[-1], j1[-2])
         j1ext=np.append(j1ext,jend)
         i1ext=np.append(i1ext,iend)
-        nb1=i1ext.shape[0] # nb of points in LKF
+        nb1=i1ext.shape[0] # nb of pts (including extra pts) in LKF1
         line1ext=LineString(np.column_stack((i1ext,j1ext)))
 
         for ind2, lkf2 in enumerate(lkfs):
             if ind2 > ind1:
-                ntp2=lkf2.shape[0] # nb of points in LKF
+                nb2short=lkf2.shape[0] # true nb of points in LKF
                 maxj2=np.max(lkf2[:,0])
                 minj2=np.min(lkf2[:,0])
                 maxi2=np.max(lkf2[:,1])
@@ -672,7 +672,7 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout):
                     iend,jend=extra_pt_end(i2[-1], i2[-2], j2[-1], j2[-2])
                     j2ext=np.append(j2ext,jend)
                     i2ext=np.append(i2ext,iend)
-                    nb2=i2ext.shape[0]
+                    nb2=i2ext.shape[0] # nb of pts (including extra pts) in LKF2
                     line2ext=LineString(np.column_stack((i2ext,j2ext)))
 
                     #intersec=line1.intersection(line2) # inters. pt between line1,2
@@ -713,13 +713,11 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout):
                         
                         #--- calc intersection angle (returns acute angle)
                         int_angle=calc_int_angle(ptype1,coeff1,ptype2,coeff2)
-                        #### NEED TO CHECK IF THEY INTERSECT or should I???###
-                        # ELIMINATE MULTIPT???
                         
-                        if int_type==1: # possible conjugate fault lines (good: 73,94)
+                        if int_type==1: # possible conjugate fault lines
                             #--- vorticity along LKF2 ---
-                            vort2=np.zeros(ntp2)
-                            for n2 in range(ntp2):
+                            vort2=np.zeros(nb2short)
+                            for n2 in range(nb2short):
                                 jj=int(j2[n2])+jshift-1
                                 ii=int(i2[n2])+ishift-1
                                 vort2[n2]=vort[jj,ii]
@@ -736,11 +734,9 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout):
                             mvort1int,perc1=get_vort_info(vort1int)
                             mvort2int,perc2=get_vort_info(vort2int)
 
-                            if np.sign(mvort1int) != np.sign(mvort2int):
-                                if clean_int:
-                                    print('conjugate fault lines!!!', ind1,ind2)
-                                    print('conjugate fault lines!!!', mvort1int,mvort2int)
-                                    print('conjugate fault lines!!!', perc1,perc2)
+#                            if np.sign(mvort1int) != np.sign(mvort2int):
+#                                if clean_int:
+#                                    print('conjugate fault lines!!!', perc1,perc2)
                         
                         elif int_type==2:
                             perc1=np.nan
@@ -750,8 +746,8 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout):
                         
                         ind1lt.append(ind1)
                         ind2lt.append(ind2)
-                        nb1lt.append(ntp1) # not of extended LKF1...should rename ntp1 and nb1
-                        nb2lt.append(ntp2)
+                        nb1lt.append(nb1short)
+                        nb2lt.append(nb2short)
                         clean_intlt.append(clean_int)
                         int_anglelt.append(int_angle)
                         int_typelt.append(int_type)
@@ -761,7 +757,7 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout):
                         #print(ind1,ind2)
                         cc=0
                         figg=1
-                        if ind1 == 197 and ind2 == 199:
+                        if ind1 == 197999 and ind2 == 199:
                             print('ptype',ptype1,ptype2,int_type)
                             print(index1,nb1,index2,nb2)
                             print(coeff1[0], coeff2[0])
@@ -811,5 +807,4 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout):
     df.insert(6, 'int type', int_typelt)
     df.insert(7, 'perc1', perc1lt)
     df.insert(8, 'perc2', perc2lt)
-    print(df)
-#    df.to_csv(path_fileout, index=False)
+    df.to_csv(fileout, index=False)
