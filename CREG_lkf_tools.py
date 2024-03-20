@@ -503,29 +503,11 @@ def get_ij_intersection(intersec, ind1, ind2):
 
 #---- polyfit over intersection zone ------------------------
 
-def get_polyfit(vari, varj, xf, yf, pdeg, nbsub):
-    if vari >= varj: # y=p(x)
-        coeff = np.polyfit(xf,yf,pdeg)
-        yfunc = np.poly1d(coeff)
-        xpf = np.linspace(xf[0],xf[nbsub],50)
-        ypf=yfunc(xpf)
-        ptype=1
-    else:
-        coeff = np.polyfit(yf,xf,pdeg) # x=p(y)
-        xfunc = np.poly1d(coeff)
-        ypf = np.linspace(yf[0],yf[nbsub],50)
-        xpf=xfunc(ypf)
-        ptype=2
-        
-    return xpf,ypf,ptype,coeff
-
-def TPget_polyfit(vari, varj, xf, yf, pdeg):
+def get_polyfit(vari, varj, xf, yf, pdeg):
     if vari >= varj: # y=p(x)
         coeff = np.polyfit(xf,yf,pdeg)
         yfunc = np.poly1d(coeff)
         xpf = np.linspace(xf[0],xf[-1],50)
-#        xpf = np.linspace(xf[0],xf[nbsub],50)
-        print('xpf',xpf)
         ypf=yfunc(xpf)
         ptype=1
     else:
@@ -709,22 +691,20 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout):
                         min_ind1=max(0, index1-dlt)
                         max_ind1=min(index1+dlt,nb1) # check if this is ok (might be nb1-1)
                         xf1=i1ext[min_ind1:max_ind1+1]
-                        nbsub1=xf1.shape[0]-1
                         yf1=j1ext[min_ind1:max_ind1+1]
                         vari1=max(xf1)-min(xf1) # variation of i1 in pts used for polyfit                    
                         varj1=max(yf1)-min(yf1)
 
-                        xpf1,ypf1,ptype1,coeff1=get_polyfit(vari1,varj1,xf1,yf1,pdeg,nbsub1) # polyfit LKF1
+                        xpf1,ypf1,ptype1,coeff1=get_polyfit(vari1,varj1,xf1,yf1,pdeg) # polyfit LKF1
       
                         min_ind2=max(0, index2-dlt)
                         max_ind2=min(index2+dlt,nb2) # check if this is ok (might be nb2-1)
                         xf2=i2ext[min_ind2:max_ind2+1]
-                        nbsub2=xf2.shape[0]-1
                         yf2=j2ext[min_ind2:max_ind2+1]
                         vari2=max(xf2)-min(xf2) # variation of i2 in pts used for polyfit
                         varj2=max(yf2)-min(yf2)
 
-                        xpf2,ypf2,ptype2,coeff2=get_polyfit(vari2,varj2,xf2,yf2,pdeg,nbsub2) # polyfit LKF2
+                        xpf2,ypf2,ptype2,coeff2=get_polyfit(vari2,varj2,xf2,yf2,pdeg) # polyfit LKF2
                         
                         #--- identify if intersection is X, T or Y
                         int_type=identify_int(index1,nb1,index2,nb2)
@@ -882,14 +862,14 @@ def CREG_lkf_angles_with_grid(date,creggrid,path_filein,fileout):
         #--- var of xf1 and yf1 vectors to decide type (y=f(x) or =f(y) polyfit ---
         vari1=max(xf1)-min(xf1) # variation of i1 in pts used for polyfit                    
         varj1=max(yf1)-min(yf1)
-        nbsub1=xf1.shape[0]-1 # jfl...-1 or not?
 
         print('xf1',xf1)
         #--- get polyfit in region around mid-point ---
-        xpf1,ypf1,ptype1,coeff1=TPget_polyfit(vari1,varj1,xf1,yf1,pdeg) # polyfit LKF1
+        xpf1,ypf1,ptype1,coeff1=get_polyfit(vari1,varj1,xf1,yf1,pdeg) # polyfit LKF1
         
         #print('test',nb1,nmid,nmin,nmax)
-        print('test',ptype1)
+        print('xpf1',xpf1)
+        print('ypf1',ypf1)
         
 
 
