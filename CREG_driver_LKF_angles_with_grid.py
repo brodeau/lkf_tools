@@ -26,7 +26,7 @@ EXP='eg1p5_ef1p5'
 main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag'
 store_main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag'
 SDATE='20060301'
-EDATE='20060302'
+EDATE='20060331'
 FREQ='24H'
 suffix='0000_iceh_inst'
 
