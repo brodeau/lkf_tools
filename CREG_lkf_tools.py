@@ -458,10 +458,19 @@ def calc_int_angle(ptype1,coeff1,ptype2,coeff2):
 
     if ptype1==1 and ptype2==2:
         denom=max(minval,abs(m2))
-        m2=np.sign(m2)*1.0/denom # convert dx/dy to -dy/dx 
+        if np.sign(m2) == 0:
+            sfact=1.0
+        else:
+            sfact=np.sign(m2)
+        m2=sfact*1.0/denom # convert dx/dy to -dy/dx 
+        print('m2',m2,np.sign(m2),denom)
     elif ptype1==2 and ptype2==1:
         denom=max(minval,abs(m1))
-        m1=np.sign(m1)*1.0/denom # convert dx/dy to -dy/dx 
+        if np.sign(m1) == 0:
+            sfact=1.0
+        else:
+            sfact=np.sign(m1)
+        m1=sfact*1.0/denom # convert dx/dy to -dy/dx 
  
     deno=max(minval,abs(1+m1*m2)) # avoid div by zero
     int_angle=np.arctan(abs((m1-m2)/deno))
@@ -838,15 +847,15 @@ def CREG_lkf_angles_with_grid(date,creggrid,path_filein,fileout):
 
 #---- identify pairs of intersecting LKFs -----
 
-    #for ind1, lkf1 in enumerate(lkfs):
-    for ll in range(1):
-        #nb1=lkf1.shape[0]
-        #j1=lkf1[:,0]
-        #i1=lkf1[:,1]
+ #for ll in range(1):
+    for ind1, lkf1 in enumerate(lkfs):
+        nb1=lkf1.shape[0]
+        j1=lkf1[:,0]
+        i1=lkf1[:,1]
         
-        nb1=11
-        j1=np.arange(nb1)
-        i1=np.arange(nb1)
+        #nb1=21
+        #j1=np.arange(nb1)
+        #i1=np.arange(nb1)
 
         #--- find mid-point of LKF ---
         nmid=int(np.floor(nb1/2))
@@ -863,14 +872,32 @@ def CREG_lkf_angles_with_grid(date,creggrid,path_filein,fileout):
         vari1=max(xf1)-min(xf1) # variation of i1 in pts used for polyfit                    
         varj1=max(yf1)-min(yf1)
 
-        print('xf1',xf1)
         #--- get polyfit in region around mid-point ---
         xpf1,ypf1,ptype1,coeff1=get_polyfit(vari1,varj1,xf1,yf1,pdeg) # polyfit LKF1
         
-        #print('test',nb1,nmid,nmin,nmax)
-        print('xpf1',xpf1)
-        print('ypf1',ypf1)
-        
+        #--- calc angle with respect to x (or i) axis ---
+        ptype2=1 #y=mx+b=b
+        coeff2=np.zeros(2)  #coeff2[0]=m=0, coeff2[1]=0 #not used
+        anglex=calc_int_angle(ptype1,coeff1,ptype2,coeff2)
+        print(ind1,'ax',anglex)
 
+        #--- calc angle with respect to y (or j) axis ---
+        ptype2=2 #x=my+b
+        coeff2=np.zeros(2)  #coeff2[0]=m=0, coeff2[1]=0 #not used
+        angley=calc_int_angle(ptype1,coeff1,ptype2,coeff2)
+        print(ind1,'ay',angley)
 
+        #--- define y=cte aligned with x axis for plotting ---
+        if ind1 == 23:
+            nmin=max(0, nmid-dlt-dlt)
+            nmax=min(nmid+dlt+dlt,nb1-1)
+            xref=i1[nmin:nmax+1]
+            ntp=xref.shape[0]
+            yref=np.zeros(ntp)
+            yref[:]=j1[nmid]
+            print('youhou',nb1,xref.shape, yref.shape)
+            plt.plot(xf1,yf1, '.b')
+            plt.plot(xpf1,ypf1,'orange')
+            plt.plot(xref,yref)
+            #plt.show()
 
