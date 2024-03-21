@@ -622,6 +622,9 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout):
     int_typelt=[]
     perc1lt=[]
     perc2lt=[]
+    mvort1intlt=[]
+    mvort2intlt=[]
+    conjpairlt=[]
 
 #---- identify pairs of intersecting LKFs -----
 
@@ -740,13 +743,17 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout):
                             mvort1int,perc1=get_vort_info(vort1int)
                             mvort2int,perc2=get_vort_info(vort2int)
 
-#                            if np.sign(mvort1int) != np.sign(mvort2int):
-#                                if clean_int:
-#                                    print('conjugate fault lines!!!', perc1,perc2)
+                            conjpair=False
+                            if np.sign(mvort1int) != np.sign(mvort2int):
+                                if clean_int:
+                                    conjpair=True
                         
                         elif int_type==2:
                             perc1=np.nan
                             perc2=np.nan
+                            mvort1int=np.nan
+                            mvort2int=np.nan
+                            conjpair=False
                             
                         #--- append values in lists
                         
@@ -759,8 +766,10 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout):
                         int_typelt.append(int_type)
                         perc1lt.append(perc1)
                         perc2lt.append(perc2)
+                        mvort1intlt.append(mvort1int)
+                        mvort2intlt.append(mvort2int)
+                        conjpairlt.append(conjpair)
 
-                        #print(ind1,ind2)
                         cc=0
                         figg=1
                         if ind1 == 203 and ind2 == 21000:
