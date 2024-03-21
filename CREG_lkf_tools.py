@@ -822,8 +822,10 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout):
     df.insert(6, 'int_type', int_typelt)
     df.insert(7, 'perc1', perc1lt)
     df.insert(8, 'perc2', perc2lt)
+    df.insert(9, 'mean_vort1', mvort1intlt)
+    df.insert(10, 'mean_vort2', mvort2intlt)
+    df.insert(11, 'conj_pair', conjpairlt)
     df.to_csv(fileout, index=False)
-
 
 #----  CREG_lkf_angles_with_grid ----------------------------
 #

@@ -29,7 +29,7 @@ for i in range(len(list_dates)) :
         df2 = pd.read_csv(path_filein)
         df1 = pd.concat([df1, df2])
 
-#--- define bins ---
+#--- define bins 0-90 deg ---
 nbbins=90
 delta=1.0
 mybins=np.zeros(nbbins+1)
@@ -40,9 +40,7 @@ for b in range(nbbins+1):
 for b in range(nbbins):
     binc[b]=0.5*(mybins[b]+mybins[b+1])
 
-print(mybins)
-
-#--- define bins ---
+#--- define bins 0-45 deg ---
 nbbins=45
 delta=1.0
 myotherbins=np.zeros(nbbins+1)
@@ -53,7 +51,13 @@ for b in range(nbbins+1):
 for b in range(nbbins):
     otherbinc[b]=0.5*(mybins[b]+mybins[b+1])
 
-print(myotherbins)
+#--- calc mean values ---
+mean_x_angle=df1['x_angle'].mean()
+print('mean angle with x axis', mean_x_angle)
+mean_y_angle=df1['y_angle'].mean()
+print('mean angle with y axis', mean_y_angle)
+mean_min_angle=df1['min_angle'].mean()
+print('mean min angle with x or y axis', mean_min_angle)
 
 plt.figure(1)
 counts, bins, bars = plt.hist(df1['x_angle'], bins=mybins, density=True, color = "dodgerblue", ec="dodgerblue")
