@@ -59,7 +59,7 @@ for i in range(len(list_dates)) :
     date0ext=date0 + '_000'
     filein='lkf_' + date0ext + '_' + EXP + '_001.npy'
     tpdir=date0ext + '_' + EXP
-    path_filein=os.path.join(main_dir+'/'+creggrid+'/'+EXP+'/'+tpdir+'/'+filein)
+    path_filein=os.path.join(main_dir+'/'+creggrid+'/'+EXP+'/detectedLKFs/'+tpdir+'/'+filein)
     print(path_filein)
     tpdensity=CREG_lkf_density(date0,creggrid,path_filein)
     n=n+1

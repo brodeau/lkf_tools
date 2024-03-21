@@ -43,7 +43,7 @@ for i in range(len(list_dates)) :
     date0 = (list_dates[i] + timedelta(days=-0)).strftime('%Y%m%d%H')
     filein='lkf_' + date0 + '_' + EXP + '_001.npy'
     tpdir=date0 + '_' + EXP
-    path_filein=os.path.join(main_dir+'/'+EXP+'/'+tpdir+'/'+filein)
+    path_filein=os.path.join(main_dir+'/'+EXP+'/detectedLKFs/'+tpdir+'/'+filein)
     data_pathnc=os.path.join(main_dirnc+'/run_'+EXP+'/hourly/'+date0+suffix+'.nc')
     print(path_filein)
     print(data_pathnc)

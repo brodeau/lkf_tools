@@ -55,8 +55,8 @@ for i in range(len(list_dates)) :
     filein='lkf_' + date0ext + '_' + EXP + '_001.npy'
     fileout='lkf_' + date0ext + '_' + EXP + '_' + fraclabel +'.npy'
     tpdir=date0ext + '_' + EXP
-    path_filein=os.path.join(main_dir+'/'+creggrid+'/'+EXP+'/'+tpdir+'/'+filein)
-    path_fileout=os.path.join(main_dir+'/'+creggrid+'/'+EXP+'/'+tpdir+'/'+fileout)
+    path_filein=os.path.join(main_dir+'/'+creggrid+'/'+EXP+'/detectedLKFs/'+tpdir+'/'+filein)
+    path_fileout=os.path.join(main_dir+'/'+creggrid+'/'+EXP+'/detectedLKFs/'+tpdir+'/'+fileout)
     data_path=os.path.join(main_dirnc+creggrid+'/'+EXP+'/netcdf/'+date0ext+'.nc')
     path_filedist=os.path.join(dir_util +'/dist_'+creggrid+'.pkl')
 

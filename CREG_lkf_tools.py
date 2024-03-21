@@ -843,6 +843,7 @@ def CREG_lkf_angles_with_grid(date,creggrid,path_filein,fileout):
     nb1lt=[]
     xanglelt=[]
     yanglelt=[]
+    minanglelt=[]
 
 #---- identify pairs of intersecting LKFs -----
 
@@ -878,13 +879,13 @@ def CREG_lkf_angles_with_grid(date,creggrid,path_filein,fileout):
         ptype2=1 #y=mx+b=b
         coeff2=np.zeros(2)  #coeff2[0]=m=0, coeff2[1]=0 #not used
         anglex=calc_int_angle(ptype1,coeff1,ptype2,coeff2)
-#        print(ind1,'ax',anglex)
 
         #--- calc angle with respect to y (or j) axis ---
         ptype2=2 #x=my+b
         coeff2=np.zeros(2)  #coeff2[0]=m=0, coeff2[1]=0 #not used
         angley=calc_int_angle(ptype1,coeff1,ptype2,coeff2)
-#        print(ind1,'ay',angley)
+
+        min_angle=min(anglex,angley)
 
         #--- define y=cte aligned with x axis for plotting ---
         if ind1 == 17588:
@@ -906,6 +907,7 @@ def CREG_lkf_angles_with_grid(date,creggrid,path_filein,fileout):
         nb1lt.append(nb1)
         xanglelt.append(anglex)
         yanglelt.append(angley)
+        minanglelt.append(min_angle)
 
 #--- create the panda dataframe for output file
 
@@ -913,4 +915,5 @@ def CREG_lkf_angles_with_grid(date,creggrid,path_filein,fileout):
     df.insert(1, 'nb1', nb1lt)
     df.insert(2, 'x_angle', xanglelt)
     df.insert(3, 'y_angle', yanglelt)
+    df.insert(4, 'min_angle', minanglelt)
     df.to_csv(fileout, index=False)

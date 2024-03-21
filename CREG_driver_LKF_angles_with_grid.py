@@ -25,8 +25,8 @@ creggrid='creg12' # creg025 or creg12
 EXP='eg1p5_ef1p5'
 main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag'
 store_main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag'
-SDATE='20060301'
-EDATE='20060331'
+SDATE='20060101'
+EDATE='20060531'
 FREQ='24H'
 suffix='0000_iceh_inst'
 
@@ -42,7 +42,7 @@ for i in range(len(list_dates)) :
     date0 = (list_dates[i] + timedelta(days=-0)).strftime('%Y%m%d%H')
     filein='lkf_' + date0 + '_' + EXP + '_001.npy'
     tpdir=date0 + '_' + EXP
-    path_filein=os.path.join(main_dir+'/'+EXP+'/'+tpdir+'/'+filein)
+    path_filein=os.path.join(main_dir+'/'+EXP+'/detectedLKFs/'+tpdir+'/'+filein)
     print(path_filein)
     fileout=os.path.join(store_path + '/' + date0 + '_anggrid_' + EXP + '.py')
     print(fileout)

@@ -50,7 +50,7 @@ elif (creggrid == 'creg12'):
 else:
     print ("Wrong choice of grid")
 
-store_path=os.path.join(store_main_dir+'/'+EXP+'/')
+store_path=os.path.join(store_main_dir+'/'+EXP+'/detectedLKFs/')
 
 list_dates=list(pd.date_range(SDATE,EDATE, freq=FREQ))
 

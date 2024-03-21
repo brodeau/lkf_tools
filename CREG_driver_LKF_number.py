@@ -31,7 +31,7 @@ FREQ='24H'
 
 #-----------------------------------------
 
-nbLKFdir=os.path.join(main_dir+'/'+EXP+'/nbLKF/')
+nbLKFdir=os.path.join(main_dir+'/'+EXP+'/nbLKFs/')
 fileout='number_lkf_'+SDATE+'_'+EDATE+'.npy'
 path_fileout=os.path.join(nbLKFdir+fileout)
 
@@ -46,7 +46,7 @@ for i in range(len(list_dates)) :
     date0 = (list_dates[i] + timedelta(days=-0)).strftime('%Y%m%d%H')
     filein='lkf_' + date0 + '_' + EXP + '_001.npy'
     tpdir=date0 + '_' + EXP
-    path_filein=os.path.join(main_dir+'/'+EXP+'/'+tpdir+'/'+filein)
+    path_filein=os.path.join(main_dir+'/'+EXP+'/detectedLKFs/'+tpdir+'/'+filein)
     print(path_filein)
     lkfs = np.load(path_filein,allow_pickle=True)
     tpnb=lkfs.shape[0]
