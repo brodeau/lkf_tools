@@ -11,9 +11,12 @@ EXP='eg1p5_ef1p5'
 main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag'
 zdir='Int_Angle'
 SDATE='20050101'
-EDATE='20050111'
+EDATE='20050531'
 FREQ='24H'
 addlabel='intpairs'
+
+nbmin=10
+percmin=50.0
 
 #-----------------------------------------
 
@@ -40,25 +43,41 @@ for b in range(nbbins+1):
 for b in range(nbbins):
     binc[b]=0.5*(mybins[b]+mybins[b+1])
 
-#--- calc mean values ---
-#mean_x_angle=df1['x_angle'].mean()
-#print('mean angle with x axis', mean_x_angle)
-
 nrow=len(df1)
-#print('nrow=',nrow)
 
-#print(df1['clean_int'])
-#for n in range(nrow):
-#    print(df1['clean_int'][n])
-#    aa=1
+# WATCHOUT ONLY ACUTE ANGLES!!!!!!!!!!!!!!!!!!!!!!!
 
-for row in df1.iterrows():
-    print(row['conj_pair'])
+all_angles=[]
+conj_angles=[]
+for index,row in df1.iterrows():
+    if row.nb1 > nbmin and row.nb2 > nbmin:
+        if row.clean_int:
+            all_angles.append(row.int_angle)
+            if row.conj_pair:
+                conj_angles.append(row.int_angle)
+
+nb_all=len(all_angles)
+nb_conj=len(conj_angles)
+
+print('total nb=', len(df1))
+print('nb rejected=', len(df1)-nb_all)
+print('nb all intersections=', nb_all)
+print('nb conj pairs=', nb_conj)
+
+mean_ang_int=np.mean(all_angles)
+print('mean angle all intersection=', mean_ang_int)
+mean_ang_conj=np.mean(conj_angles)
+print('mean angle conjugate pairs=', mean_ang_conj)
+
+plt.figure(1)
+counts, bins, bars = plt.hist(all_angles, bins=mybins, density=True, color = "dodgerblue", ec="dodgerblue")
+plt.xlabel('angle of intersection', fontsize=14)
+plt.ylabel('PDF', fontsize=14)
+
+plt.figure(2)
+counts, bins, bars = plt.hist(conj_angles, bins=mybins, density=True, color = "dodgerblue", ec="dodgerblue")
+plt.xlabel('angle of conjugate pair', fontsize=14)
+plt.ylabel('PDF', fontsize=14)
 
 
-#plt.figure(1)
-#counts, bins, bars = plt.hist(df1['x_angle'], bins=mybins, density=True, color = "dodgerblue", ec="dodgerblue")
-#plt.xlabel('angle', fontsize=14)
-#plt.ylabel('PDF (angle with x axis)', fontsize=14)
-
-#plt.show()
+plt.show()
