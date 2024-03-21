@@ -40,14 +40,32 @@ for b in range(nbbins+1):
 for b in range(nbbins):
     binc[b]=0.5*(mybins[b]+mybins[b+1])
 
+print(mybins)
+
+#--- define bins ---
+nbbins=45
+delta=1.0
+myotherbins=np.zeros(nbbins+1)
+otherbinc=np.zeros(nbbins)
+for b in range(nbbins+1):
+    myotherbins[b]=b*delta
+
+for b in range(nbbins):
+    otherbinc[b]=0.5*(mybins[b]+mybins[b+1])
+
+print(myotherbins)
+
 plt.figure(1)
 counts, bins, bars = plt.hist(df1['x_angle'], bins=mybins, density=True, color = "dodgerblue", ec="dodgerblue")
-print(counts,np.sum(counts))
 plt.xlabel('angle', fontsize=14)
 plt.ylabel('PDF (angle with x axis)', fontsize=14)
 plt.figure(2)
 counts, bins, bars = plt.hist(df1['y_angle'], bins=mybins, density=True, color = "dodgerblue", ec="dodgerblue")
 plt.xlabel('angle', fontsize=14)
 plt.ylabel('PDF (angle with y axis)', fontsize=14)
+plt.figure(3)
+counts, bins, bars = plt.hist(df1['min_angle'], bins=myotherbins, density=True, color = "dodgerblue", ec="dodgerblue")
+plt.xlabel('Minimum angle with x or y axis', fontsize=14)
+plt.ylabel('PDF', fontsize=14)
 
 plt.show()
