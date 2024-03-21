@@ -697,7 +697,7 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout):
                         
                         #--- define part of array close to intersec for polyfit
                         min_ind1=max(0, index1-dlt)
-                        max_ind1=min(index1+dlt,nb1) # check if this is ok (might be nb1-1)
+                        max_ind1=min(index1+dlt,nb1-1)
                         xf1=i1ext[min_ind1:max_ind1+1]
                         yf1=j1ext[min_ind1:max_ind1+1]
                         vari1=max(xf1)-min(xf1) # variation of i1 in pts used for polyfit                    
@@ -706,7 +706,7 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout):
                         xpf1,ypf1,ptype1,coeff1=get_polyfit(vari1,varj1,xf1,yf1,pdeg) # polyfit LKF1
       
                         min_ind2=max(0, index2-dlt)
-                        max_ind2=min(index2+dlt,nb2) # check if this is ok (might be nb2-1)
+                        max_ind2=min(index2+dlt,nb2-1)
                         xf2=i2ext[min_ind2:max_ind2+1]
                         yf2=j2ext[min_ind2:max_ind2+1]
                         vari2=max(xf2)-min(xf2) # variation of i2 in pts used for polyfit
@@ -763,7 +763,7 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout):
                         #print(ind1,ind2)
                         cc=0
                         figg=1
-                        if ind1 == 197999 and ind2 == 199:
+                        if ind1 == 203 and ind2 == 21000:
                             print('ptype',ptype1,ptype2,int_type)
                             print(index1,nb1,index2,nb2)
                             print(coeff1[0], coeff2[0])
