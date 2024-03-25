@@ -22,11 +22,11 @@ import calendar
 #ni = 1580 ; creg12
 #nj = 2198 ;
 creggrid='creg12' # creg025 or creg12
-EXP='eg1p5_ef1p5'
+EXP='eg2p25_ef1p5'
 main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag'
 
-SDATE='20061219'
-EDATE='20061221'
+SDATE='20050101'
+EDATE='20050531'
 FREQ='24H'
 
 #-----------------------------------------
@@ -55,7 +55,7 @@ for i in range(len(list_dates)) :
 
 # Create the pandas DataFrame
 df = pd.DataFrame(datevec, columns=['date'])
-df.insert(1, 'nb of LKFS', nbvec)
+df.insert(1, 'nb_of_LKFS', nbvec)
 print(df)
 
 df.to_csv(path_fileout, index=False)
