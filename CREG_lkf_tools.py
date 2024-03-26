@@ -942,7 +942,11 @@ def haversine(re,lat1, lon1, lat2, lon2):
     :param lon2: longitude du deuxieme point
     :return: distance en metres
     '''
-    lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
+    #lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
+    lat1=lat1*np.pi/180.0 # convert to rad
+    lat2=lat2*np.pi/180.0 # convert to rad
+    lon1=lon1*np.pi/180.0 # convert to rad
+    lon2=lon2*np.pi/180.0 # convert to rad
     # haversine formula
     dlon = lon2 - lon1
     dlat = lat2 - lat1
@@ -965,7 +969,7 @@ def CREG_lkf_length(date,creggrid,path_filein,fileout):
 
 #--- define parameters ---
 
-    Rearth = 6371*1000  # Radius of earth in kilometers
+    Rearth = 6371.0  # Radius of earth in kilometers
 
 #----- open npy file -----
 
@@ -978,19 +982,27 @@ def CREG_lkf_length(date,creggrid,path_filein,fileout):
     nb1lt=[]
     lengthlt=[]
 
-#---- identify pairs of intersecting LKFs -----
+#---- calc lengths of all LKFs in input file -----
 
     for ind1, lkf1 in enumerate(lkfs):
         nb1=lkf1.shape[0]
-        j1=lkf1[:,0]
-        i1=lkf1[:,1]
-        
+        lat=lkf1[:,3]
+        lon=lkf1[:,2]
+
+        length=0.0 # initialize
+        for n in range(nb1-1): # last dlength is from n=nb1-2 to n+1=nb1-1
+            lat1=lat[n]
+            lon1=lon[n]
+            lat2=lat[n+1]
+            lon2=lon[n+1]
+
+            dlength=haversine(Rearth,lat1, lon1, lat2, lon2)
+            length=length+dlength
 
         #--- append values in lists
-                        
         ind1lt.append(ind1)
         nb1lt.append(nb1)
-        lenthlt.append(length)
+        lengthlt.append(length)
 
 #--- create the panda dataframe for output file
 
