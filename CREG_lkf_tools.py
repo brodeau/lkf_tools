@@ -928,3 +928,73 @@ def CREG_lkf_angles_with_grid(date,creggrid,path_filein,fileout):
     df.insert(3, 'y_angle', yanglelt)
     df.insert(4, 'min_angle', minanglelt)
     df.to_csv(fileout, index=False)
+
+#------------------------------------------------------------
+#  Functions for CREG_lkf_length
+#------------------------------------------------------------
+
+def haversine(re,lat1, lon1, lat2, lon2):
+    '''
+    Calcule la distance entre deux points sur la sphere (terre)
+    :param lat1: latitude du premier point
+    :param lon1: longitude du premier point
+    :param lat2: latitude du deuxieme point
+    :param lon2: longitude du deuxieme point
+    :return: distance en metres
+    '''
+    lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
+    # haversine formula
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
+    a = np.sin(dlat/2)**2 + np.cos(lat1) * np.cos(lat2) * np.sin(dlon/2)**2
+    c = 2 * np.arcsin(np.sqrt(a))
+    return c * re
+
+#----  CREG_lkf_length --------------------------------------
+#
+# Calculate length of LKF. There is no polynomial fit used. 
+# The length is calculated from one pixel to the next using 
+# the haversine formula.
+#
+#------------------------------------------------------------
+
+def CREG_lkf_length(date,creggrid,path_filein,fileout):
+    
+    print('working on date:')
+    print(date)
+
+#--- define parameters ---
+
+    Rearth = 6371*1000  # Radius of earth in kilometers
+
+#----- open npy file -----
+
+    lkfs = np.load(path_filein,allow_pickle=True)
+    print(lkfs.shape)
+
+#---- create empty lists ----------------------
+
+    ind1lt=[] # lt for list
+    nb1lt=[]
+    lengthlt=[]
+
+#---- identify pairs of intersecting LKFs -----
+
+    for ind1, lkf1 in enumerate(lkfs):
+        nb1=lkf1.shape[0]
+        j1=lkf1[:,0]
+        i1=lkf1[:,1]
+        
+
+        #--- append values in lists
+                        
+        ind1lt.append(ind1)
+        nb1lt.append(nb1)
+        lenthlt.append(length)
+
+#--- create the panda dataframe for output file
+
+    df = pd.DataFrame(ind1lt, columns=['ind1'])
+    df.insert(1, 'nb1', nb1lt)
+    df.insert(2, 'length', lengthlt)
+    df.to_csv(fileout, index=False)

@@ -21,8 +21,8 @@ import calendar
 #nj = 2198 ;
 creggrid='creg025' # creg025 or creg12
 EXP='run1f'
-main_dir='/home/jfl001/data/Lemieux2022/LKF_diag'
-main_dirnc='/home/jfl001/data/runsLemieux_et_al_2022/'
+main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag'
+main_dirnc='/home/jfl001/data/runsLemieux_et_al_plast_pot/'
 dir_util='/home/jfl001/Lemieux2022/UTIL'
 dsearch=5 # +- dsearch cells around one LKF cell (dist is capped if searching too far!!!)
 frac=0.5 # half width is defined as eps_tot < frac*LKFepsmax 
