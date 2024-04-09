@@ -18,16 +18,16 @@ import calendar
 #nj = 735 ;
 #ni = 1580 ; creg12
 #nj = 2198 ;
-cregflag=1 # used to customize code for CREG applications.
+cregflag=1 # 1: output includes vorticity, 2: no vorticity
 creggrid='creg12' # creg025 or creg12
 EXP='run_eg1p5_ef1p5'
 main_dir='/home/jfl001/data/runsLemieux_et_al_plast_pot/'
 main_dir_grid='/home/socn000/data/eccc-ppp5/env_rhel-8-icelake-64/datafiles/constants/oce/repository/master/CONCEPTS/'
 store_main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag'
 kvalue=7 # value for kernel
-produce_plot=False
+produce_plot=True
 SDATE='20070101'
-EDATE='20070531'
+EDATE='20070101'
 FREQ='24H'
 suffix='0000_iceh_inst'
 
@@ -59,7 +59,7 @@ for i in range(len(list_dates)) :
     data_path=os.path.join(main_dir+'/'+EXP+'/hourly/'+date0+suffix+'.nc')
     fileout=date0 + '_' + EXP
     print(fileout)
-    CREG_lkf_detect(date0, creggrid, grid_path, data_path, store_path, fileout, kvalue, produce_plot)
+    CREG_lkf_detect(date0, creggrid, cregflag, grid_path, data_path, store_path, fileout, kvalue, produce_plot)
 
 print('Detection done for experiment:')
 print(EXP)
