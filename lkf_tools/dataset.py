@@ -137,6 +137,10 @@ class process_dataset(object):
                     div = self.data.div[it+itr,:,:]/100.0 # from %day^-1 to day^-1
                     shr = self.data.shr[it+itr,:,:]/100.0 # from %day^-1 to day^-1
                     vor = self.data.vor[it+itr,:,:]/100.0 # from %day^-1 to day^-1
+                elif (self.creg == 2):
+                    div = self.data.div[it+itr,:,:]/100.0 # from %day^-1 to day^-1
+                    shr = self.data.shr[it+itr,:,:]/100.0 # from %day^-1 to day^-1
+                    vor = self.data.shr[it+itr,:,:]/100.0 # from %day^-1 to day^-1
                 else:
                 # Check if deformation rates are given
                     if hasattr(self.data,'div') and hasattr(self.data,'shr') and hasattr(self.data,'vor'):

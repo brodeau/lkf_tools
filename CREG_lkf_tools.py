@@ -17,18 +17,20 @@ from lkf_tools.dataset import *
 #
 #------------------------------------------------------------
 
-def CREG_lkf_detect(date, creggrid, grid_path, data_path, store_path, fileout, kvalue, produce_plot):
+def CREG_lkf_detect(date, creggrid, cregflag, grid_path, data_path, store_path, fileout, kvalue, produce_plot):
 
     print(fileout)
-
-    cregflag=1 # used to customize code for CREG applications.
 
 #----- open netcdf file -----
 
     creg_nc = xr.open_dataset(data_path)
 
-    creg_nc = creg_nc.rename({'divu':'div', 'shear':'shr', 'vort':'vor', 'aice':'A', 
-                              'uvel':'U', 'vvel':'V'})
+    if cregflag == 1:
+        creg_nc = creg_nc.rename({'divu':'div', 'shear':'shr', 'vort':'vor', 'aice':'A', 
+                                  'uvel':'U', 'vvel':'V'})
+    elif cregflag == 2:
+        creg_nc = creg_nc.rename({'divu':'div', 'shear':'shr', 'aice':'A', 
+                                  'uvel':'U', 'vvel':'V'})
 
 #----- open grid coordinate file -----
 
