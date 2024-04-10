@@ -26,10 +26,16 @@ def CREG_lkf_detect(date, creggrid, cregflag, grid_path, data_path, store_path, 
     creg_nc = xr.open_dataset(data_path)
 
     if cregflag == 1:
-        creg_nc = creg_nc.rename({'divu':'div', 'shear':'shr', 'vort':'vor', 'aice':'A', 
+        variables = ['divu','shear','vort','aice','uvel','vvel']
+        creg_nc = xr.open_dataset(data_path)
+        creg_nc=creg_nc[variables]
+        creg_nc = creg_nc.rename({'nj':'y','ni':'x','divu':'div', 'shear':'shr', 'vort':'vor', 'aice':'A', 
                                   'uvel':'U', 'vvel':'V'})
     elif cregflag == 2:
-        creg_nc = creg_nc.rename({'divu':'div', 'shear':'shr', 'aice':'A', 
+        variables = ['divu','shear','aice','uvel','vvel']
+        creg_nc = xr.open_dataset(data_path)
+        creg_nc=creg_nc[variables]
+        creg_nc = creg_nc.rename({'nj':'y','ni':'x','divu':'div', 'shear':'shr', 'aice':'A', 
                                   'uvel':'U', 'vvel':'V'})
 
 #----- open grid coordinate file -----
@@ -39,11 +45,16 @@ def CREG_lkf_detect(date, creggrid, cregflag, grid_path, data_path, store_path, 
 #           are not needed for detect. I would have to check this if I use lkf_tracking
 #           ULAT and ULON here are in fact at the T point. This is why I use nav_lat and 
 #           nav_lon to define these. 
+#
+#           For some reasons .rename does not allow ULON and ULAT...it says there is a conflict.
+#           ULONtp and ULATtp work fine. I had to make small modifs to dataset.py
 
+    variables = ['e1t', 'e2t', 'nav_lon', 'nav_lat']
     grid_nc = xr.open_dataset(grid_path)
-    grid_nc = grid_nc.rename({'e1t':'DXU', 'e2t':'DYV', 'nav_lon':'ULON', 'nav_lat':'ULAT'})
+    grid_nc = grid_nc[variables]
+    grid_nc = grid_nc.rename({'e1t':'DXU', 'e2t':'DYV', 'nav_lat':'ULATtp', 'nav_lon':'ULONtp'})
 
-    creg_nc = xr.Dataset.merge(creg_nc, grid_nc)
+    creg_nc = xr.Dataset.merge(creg_nc, grid_nc,compat='override')
 
 #creg_nc = creg_nc.rename({'ni':'x', 'nj':'y','divu':'div', 'shear':'shr', 'aice':'A', 
 #                          'uvel':'U', 'vvel':'V', 'TLON':'ULON', 'TLAT':'ULAT'})

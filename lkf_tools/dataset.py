@@ -73,8 +73,8 @@ class process_dataset(object):
 
         # Store variables
         self.time = self.data.time
-        self.lon = self.data.ULON
-        self.lat = self.data.ULAT
+        self.lon = self.data.ULONtp
+        self.lat = self.data.ULATtp
         
         self.lon = self.lon.where(self.lon<=1e30); self.lat = self.lat.where(self.lat<=1e30);
         self.lon = self.lon.where(self.lon<180,other=self.lon-360)
