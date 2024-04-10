@@ -11,6 +11,5 @@ set -ex
 
 cd /home/jfl001/Lemieux_et_al_plast_pot/lkf_package
 
-#./lance_calc_dist.sh
-
 python3 -u CREG_driver_LKF_detect.py
+#python3 -u RIPSanal_driver_LKF_detect.py
