@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# ord_soumet ./Soumet_CREG_driver_LKF_detect.sh -cm 10G -w 360 -jn 'lkf_detect'
+# ord_soumet ./Soumet_driver_LKF_detect.sh -cm 10G -w 360 -jn 'lkf_detect'
 
 #. ssmuse-sh -p /fs/ssm/eccc/cmd/cmds/env/python/py39_2022.05.24_rhel-8-icelake-64
 
