@@ -108,6 +108,8 @@ class process_dataset(object):
         :param indexes: time indexes that should be detected. If None all time steps are detected
         """
 
+        thr_aice = 0.1 # detect LKFs only if aice > thr_aice
+
         # Check for already dectected features
         if force_redetect:
             self.lkf_filelist = [i for i in os.listdir(self.lkfpath) if i.startswith('lkf') and i.endswith('.npy')]
@@ -157,7 +159,7 @@ class process_dataset(object):
                         shr = np.sqrt((dudx-dvdy)**2 + (dudy + dvdx)**2) * 3600. *24. # in day^-1
                         vor = 0.5*(dudy-dvdx) * 3600. *24. # in day^-1
                 eps_tot = np.sqrt(div**2+shr**2)
-                eps_tot = eps_tot.where((aice>0) & (aice<=1))
+                eps_tot = eps_tot.where((aice>thr_aice) & (aice<=1))
 
 #               jfl replaced line below by line above...does not work because of nans?
 #                eps_tot = eps_tot.where((aice[1:-1,1:-1]>0) & (aice[1:-1,1:-1]<=1))

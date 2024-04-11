@@ -20,14 +20,16 @@ import calendar
 #nj = 2198 ;
 cregflag=2 # 1: output includes vorticity, 2: no vorticity
 creggrid='creg12' # creg025 or creg12
-EXP='control'
-main_dir='/home/chh005/data/ppp6/maestro_archives/IC4/RXFC24LONG19V1/SAM2'
+#EXP='control'
+#main_dir='/home/chh005/data/ppp6/maestro_archives/IC4/RXFC24LONG19V1/SAM2'
+EXP='exp1'
+main_dir='/home/phb001/data/ppp6/maestro_archives/riops-a/rx-multicat-leads-1/SAM2'
 main_dir_grid='/home/socn000/data/eccc-ppp5/env_rhel-8-icelake-64/datafiles/constants/oce/repository/master/CONCEPTS/'
 store_main_dir='/home/jfl001/data/LKF_rips_analysis'
 kvalue=7 # value for kernel
-produce_plot=False
-SDATEa='20200108' # start date analysis...history file start 7 days before
-EDATEa='20200108' # end   date analysis...history file start 7 days before
+produce_plot=True
+SDATEa='20200930' # start date analysis...history file start 7 days before
+EDATEa='20200930' # end   date analysis...history file start 7 days before
 FREQ='168H'
 suffix='_003_iau' # IMPORTANT...verify a specific hour
 
