@@ -846,7 +846,7 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout):
 #
 #------------------------------------------------------------
 
-def CREG_lkf_angles_with_grid(date,creggrid,path_filein,fileout):
+def CREG_lkf_angles_with_grid(date,creggrid,path_filein,fileout,dlt):
     
     print('working on date:')
     print(date)
@@ -854,7 +854,6 @@ def CREG_lkf_angles_with_grid(date,creggrid,path_filein,fileout):
 #--- define parameters ---
 
     pdeg=1 # degree of polynomial for fit
-    dlt=5 # nb of pts on each side of LKF mid-point for polyfit
 
 #----- open npy file -----
 
