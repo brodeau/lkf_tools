@@ -565,7 +565,7 @@ def extra_pt_end(im1, im2, jm1, jm2):
 #
 #------------------------------------------------------------
 
-def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout):
+def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout,dlt):
     
     print('working on date:')
     print(date)
@@ -574,7 +574,6 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout):
 
     vort_val=0.0 # value used to extrapolate vort at both ends of LKF
     pdeg=1 # degree of polynomial for fit
-    dlt=5 # nb of pts on each side of intersection pt for polyfit
 
 #----- open npy file -----
 

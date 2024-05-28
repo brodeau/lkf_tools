@@ -21,17 +21,23 @@ import calendar
 #nj = 735 ;
 #ni = 1580 ; creg12
 #nj = 2198 ;
+
+# Important: given intersection point ip with coordinates (ip,jp), polyfit on LKF is done for the region ip-delta to ip + delta. 
+
 creggrid='creg12' # creg025 or creg12
-EXP='eg1p5_ef1p5'
+EXP='run_eg1p5_ef1p5'
 main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag'
 main_dirnc='/home/jfl001/data/runsLemieux_et_al_plast_pot'
 store_main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag'
 SDATE='20050101'
-EDATE='20050531'
+EDATE='20050101'
 FREQ='24H'
 suffix='0000_iceh_inst'
+delta=5
 
 #-----------------------------------------
+
+dlabel=str(delta)
 
 store_path=os.path.join(main_dir+'/'+EXP+'/Int_Angle')
 if not os.path.isdir(store_path):
@@ -44,12 +50,12 @@ for i in range(len(list_dates)) :
     filein='lkf_' + date0 + '_' + EXP + '_001.npy'
     tpdir=date0 + '_' + EXP
     path_filein=os.path.join(main_dir+'/'+EXP+'/detectedLKFs/'+tpdir+'/'+filein)
-    data_pathnc=os.path.join(main_dirnc+'/run_'+EXP+'/hourly/'+date0+suffix+'.nc')
+    data_pathnc=os.path.join(main_dirnc+'/'+EXP+'/hourly/'+date0+suffix+'.nc')
     print(path_filein)
     print(data_pathnc)
-    fileout=os.path.join(store_path + '/' + date0 + '_intpairs_' + EXP + '.py')
+    fileout=os.path.join(store_path + '/' + date0 + '_intpairs_' + EXP + '_delta' + dlabel +'.py')
     print(fileout)
-    CREG_lkf_pairs_and_angles(date0,creggrid,path_filein,data_pathnc,fileout)
+    CREG_lkf_pairs_and_angles(date0,creggrid,path_filein,data_pathnc,fileout,delta)
 
 print('CREG_driver_LKF_pairs_and_angles is done')
 print(EXP)
