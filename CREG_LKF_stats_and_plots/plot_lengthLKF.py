@@ -7,17 +7,18 @@ from datetime import timedelta
 #import pickle
 import calendar
 
-EXP1='exp1'
-label1='exp1'
-EXP2='control'
-label2='control'
-#EXP3='eg2p25_ef1p5'
-#label3='e_g=2.25'
-main_dir='/home/jfl001/data/LKF_rips_analysis'
+EXP1='run_eg1p33_ef2p0'
+label1='e_f=2.0, e_g=1.33'
+EXP2='run_eg2p0_ef2p0'
+label2='e_f=2.0, e_g=2.0'
+EXP3='run_eg3p0_ef2p0'
+label3='e_f=2.0, e_g=3.0'
+
+main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag/'
 zdir='Length'
-SDATE='20200101'
-EDATE='20201230'
-FREQ='168H'
+SDATE='20050101'
+EDATE='20050531'
+FREQ='24H'
 addlabel='length'
 
 #-----------------------------------------
@@ -28,8 +29,8 @@ mlength1=[] # mean length
 tlength1=[] # total length
 mlength2=[] # mean length
 tlength2=[] # total length
-#mlength3=[] # mean length
-#tlength3=[] # total length
+mlength3=[] # mean length
+tlength3=[] # total length
 datesl=[] # lits of dates
 for i in range(len(list_dates)) :
     date0 = (list_dates[i] + timedelta(days=-0)).strftime('%Y%m%d%H')
@@ -46,34 +47,42 @@ for i in range(len(list_dates)) :
     mlength2.append(df2['length'].mean())
     tlength2.append(df2['length'].sum())
 
-#    filein3=date0+'_'+addlabel+'_'+EXP3+'.py'
-#    path_filein3=os.path.join(main_dir+'/'+EXP3+'/'+zdir+'/'+filein3)
-#    df3 = pd.read_csv(path_filein3)
-#    mlength3.append(df3['length'].mean())
-#    tlength3.append(df3['length'].sum())
+    filein3=date0+'_'+addlabel+'_'+EXP3+'.py'
+    path_filein3=os.path.join(main_dir+'/'+EXP3+'/'+zdir+'/'+filein3)
+    df3 = pd.read_csv(path_filein3)
+    mlength3.append(df3['length'].mean())
+    tlength3.append(df3['length'].sum())
 
+#--- calc mean values for the whole time series
+
+print('mean of mean length')
+print(np.mean(mlength1),np.mean(mlength2),np.mean(mlength3))
+print('mean of total length')
+print(np.mean(tlength1),np.mean(tlength2),np.mean(tlength3))
 
 #--- create the panda dataframes for plotting
 
 dfpm = pd.DataFrame(datesl, columns=['date'])
 dfpm.insert(1, 'mean_length1', mlength1)
 dfpm.insert(2, 'mean_length2', mlength2)
+dfpm.insert(3, 'mean_length3', mlength3)
 
 dfpt = pd.DataFrame(datesl, columns=['date'])
 dfpt.insert(1, 'total_length1', tlength1)
 dfpt.insert(2, 'total_length2', tlength2)
+dfpt.insert(3, 'total_length3', tlength3)
 
 
-ax = dfpm.plot(x = 'date', y =['mean_length1', 'mean_length2'], color =['dodgerblue', 'orange'])
-ax.legend([EXP1, EXP2])
+ax = dfpm.plot(x = 'date', y =['mean_length1', 'mean_length2', 'mean_length3'], color =['dodgerblue', 'orange', 'darkviolet'])
+ax.legend([label1, label2, label3])
 ax.set_xlabel("", fontsize='2')
 ax.set_ylabel("Mean length of LKFs (km)", fontsize=14)
-plt.savefig('Mean_length_LKFs_2020.png')
+plt.savefig('FIGS/Mean_length_LKFs_ef2p0_2005.png')
 
-ax = dfpt.plot(x = 'date', y =['total_length1', 'total_length2'], color =['dodgerblue', 'orange'])
-ax.legend([EXP1, EXP2])
+ax = dfpt.plot(x = 'date', y =['total_length1', 'total_length2', 'total_length3'], color =['dodgerblue', 'orange', 'darkviolet'])
+ax.legend([label1, label2, label3])
 ax.set_xlabel("", fontsize='2')
 ax.set_ylabel("Total length of LKFs (km)", fontsize=14)
-plt.savefig('Total_length_LKFs_2020.png')
+plt.savefig('FIGS/Total_length_LKFs_ef2p0_2005.png')
 
 #plt.show()

@@ -19,15 +19,26 @@ import cartopy.feature
 #nj = 735 ;
 #ni = 1580 ; creg12
 #nj = 2198 ;
-creggrid='creg025' # creg025 or creg12
-EXP='run8fb'
-main_dir='/home/jfl001/data/Lemieux2022/LKF_diag'
-SDATE='20050201'
-EDATE='20050228'
+creggrid='creg12' # creg025 or creg12
+
+#EXP='run_eg1p0_ef1p5'
+#EXP='run_eg1p5_ef1p5'
+#EXP='run_eg2p25_ef1p5'
+#EXP='run_eg1p16_ef1p75'
+#EXP='run_eg1p75_ef1p75'
+#EXP='run_eg2p63_ef1p75'
+#EXP='run_eg1p33_ef2p0'
+#EXP='run_eg2p0_ef2p0'
+EXP='run_eg3p0_ef2p0'
+year='2005'
+
+main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag'
+SDATE=year+'0101'
+EDATE=year+'0531'
 
 #-----------------------------------------
 
-densitydir=os.path.join(main_dir+'/'+creggrid+'/'+EXP+'/DENSITY/')
+densitydir=os.path.join(main_dir+'/'+EXP+'/DENSITY/')
 filein='density_lkf_'+SDATE+'_'+EDATE+'.npy'
 path_filein=os.path.join(densitydir+filein)
 
@@ -58,14 +69,14 @@ ax.set_extent(extent)
 
 im = ax.pcolormesh(lon,lat,density,
                            transform=ccrs.PlateCarree(),
-                           vmin=0,vmax=0.2,
+                           vmin=0,vmax=0.1,
                            cmap=cmap)
 
 ax.add_feature(cartopy.feature.LAND, zorder=100, edgecolor='k')
 Figure1.colorbar(im, orientation='vertical', shrink=0.8)
 
-
-Figure1.savefig("test.png")
+fileout='FIGS/density_'+EXP+'_'+year+'.png'
+Figure1.savefig(fileout)
 plt.close(Figure1)
 
 

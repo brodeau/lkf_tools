@@ -25,13 +25,23 @@ import calendar
 # mp-delta to mp + delta. 
 
 creggrid='creg12' # creg025 or creg12
-EXP='run_eg1p5_ef1p5'
+ 
+#EXP='run_eg1p0_ef1p5'
+#EXP='run_eg1p5_ef1p5'
+#EXP='run_eg2p25_ef1p5'
+#EXP='run_eg1p16_ef1p75'
+#EXP='run_eg1p75_ef1p75'
+#EXP='run_eg2p63_ef1p75'
+#EXP='run_eg1p33_ef2p0'
+#EXP='run_eg2p0_ef2p0'
+EXP='run_eg3p0_ef2p0'
+
 main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag'
 SDATE='20050101'
-EDATE='20050101'
+EDATE='20050531'
 FREQ='24H'
 suffix='0000_iceh_inst'
-delta=5 
+delta=10 
 
 #-----------------------------------------
 

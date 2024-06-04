@@ -9,12 +9,21 @@ import matplotlib.pyplot as plt
 #import cartopy.crs as ccrs
 
 creggrid='creg025' # creg025 or creg12
-EXP='run9f'
-SDATE='20050201'
-EDATE='20050228'
-main_dir='/home/jfl001/data/Lemieux2022/LKF_diag'
-fig_dir='/home/jfl001/data/Lemieux2022/LKF_diag/Histo_width'
-#mybins=np.linspace(0, 15, 101)
+#----- INPUT -----
+EXP='run_eg1p0_ef1p5'
+#EXP='run_eg1p5_ef1p5'
+#EXP='run_eg2p25_ef1p5'
+#EXP='run_eg1p16_ef1p75'
+#EXP='run_eg1p75_ef1p75'
+#EXP='run_eg2p63_ef1p75'
+#EXP='run_eg1p33_ef2p0'
+#EXP='run_eg2p0_ef2p0'
+#EXP='run_eg3p0_ef2p0'
+
+SDATE='20050101'
+EDATE='20050531'
+main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag'
+fraclabel='0p5'
 
 nbbins=71
 delta=0.2
@@ -31,12 +40,12 @@ print(binc)
 
 #----- define paths and file names --------
 
-filein1='hwidth1_lkf_'+SDATE+'_'+EDATE+'.npy'
-path_filein1=os.path.join(main_dir+'/'+creggrid+'/'+EXP+'/WIDTH/'+filein1)
-filein2='hwidth2_lkf_'+SDATE+'_'+EDATE+'.npy'
-path_filein2=os.path.join(main_dir+'/'+creggrid+'/'+EXP+'/WIDTH/'+filein2)
-fileout='histo_width_lkf_'+SDATE+'_'+EDATE+'_'+EXP+'.png'
-path_fileout=os.path.join(fig_dir+'/'+fileout)
+filein1='hwidth1_lkf_'+SDATE+'_'+EDATE+'_'+fraclabel+'.npy'
+path_filein1=os.path.join(main_dir+'/'+EXP+'/WIDTH/'+filein1)
+filein2='hwidth2_lkf_'+SDATE+'_'+EDATE+'_'+fraclabel+'.npy'
+path_filein2=os.path.join(main_dir+'/'+EXP+'/WIDTH/'+filein2)
+fileout='histo_width_lkf_'+SDATE+'_'+EDATE+'_'+EXP+'_'+fraclabel+'.png'
+path_fileout=os.path.join('FIGS/'+fileout)
 
 #----- open npy files -----
 
