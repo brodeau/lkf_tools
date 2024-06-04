@@ -17,24 +17,32 @@ import calendar
 #------------------------------------------------------------
 
 #----- INPUT -----
-creggrid='creg025' # creg025 or creg12
-EXP='run7f'
-main_dir='/home/jfl001/data/Lemieux2022/LKF_diag'
+#EXP='run_eg1p0_ef1p5'
+#EXP='run_eg1p5_ef1p5'
+EXP='run_eg2p25_ef1p5'
+#EXP='run_eg1p16_ef1p75'
+#EXP='run_eg1p75_ef1p75'
+#EXP='run_eg2p63_ef1p75'
+#EXP='run_eg1p33_ef2p0'
+#EXP='run_eg2p0_ef2p0'
+#EXP='run_eg3p0_ef2p0'
+main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag'
 
 FREQ='24H'
-SDATE='20050201'
-EDATE='20050228'
+SDATE='20050101'
+EDATE='20050531'
 suffix='_000'
+fraclabel='0p5'
 #-----------------------------------------
 
-widthdir=os.path.join(main_dir+'/'+creggrid+'/'+EXP+'/WIDTH/')
+widthdir=os.path.join(main_dir+'/'+EXP+'/WIDTH/')
 
 if not os.path.isdir(widthdir):
     os.makedirs(widthdir)
 
-fileout1='hwidth1_lkf_'+SDATE+'_'+EDATE+'.npy'
+fileout1='hwidth1_lkf_'+SDATE+'_'+EDATE+'_'+fraclabel+'.npy'
 path_fileout1=os.path.join(widthdir+fileout1)
-fileout2='hwidth2_lkf_'+SDATE+'_'+EDATE+'.npy'
+fileout2='hwidth2_lkf_'+SDATE+'_'+EDATE+'_'+fraclabel+'.npy'
 path_fileout2=os.path.join(widthdir+fileout2)
 
 list_dates=list(pd.date_range(SDATE,EDATE, freq=FREQ))
@@ -44,17 +52,17 @@ hwidth2=[]
 tpvect=[]
 for i in range(len(list_dates)):
     date0 = (list_dates[i] + timedelta(days=-0)).strftime('%Y%m%d%H')
-    date0ext=date0 + '_000'
-    filein='lkf_' + date0ext + '_' + EXP + '_a.npy' # a for analysed
-    tpdir=date0ext + '_' + EXP
+    date0ext=date0
+    filein='lkf_'+date0ext+'_'+EXP+'_'+fraclabel+'.npy' # a for analysed
+    tpdir=date0ext+'_'+EXP
     
     tpvect=[]
-    path_filein=os.path.join(main_dir+'/'+creggrid+'/'+EXP+'/'+tpdir+'/'+filein)
+    path_filein=os.path.join(main_dir+'/'+EXP+'/detectedLKFs/'+tpdir+'/'+filein)
     tpvect=CREG_lkf_concatenate_width (date0, path_filein, hwidth=1)
     hwidth1.extend(tpvect)
 
     tpvect=[]
-    path_filein=os.path.join(main_dir+'/'+creggrid+'/'+EXP+'/'+tpdir+'/'+filein)
+    path_filein=os.path.join(main_dir+'/'+EXP+'/detectedLKFs/'+tpdir+'/'+filein)
     tpvect=CREG_lkf_concatenate_width (date0, path_filein, hwidth=2)
     hwidth2.extend(tpvect)
 

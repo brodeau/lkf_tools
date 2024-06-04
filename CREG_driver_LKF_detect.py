@@ -20,14 +20,24 @@ import calendar
 #nj = 2198 ;
 cregflag=1 # 1: output includes vorticity, 2: no vorticity
 creggrid='creg12' # creg025 or creg12
-EXP='run_eg1p5_ef1p5'
+
+#EXP='run_eg1p0_ef1p5'
+#EXP='run_eg1p5_ef1p5'
+#EXP='run_eg2p25_ef1p5'
+#EXP='run_eg1p16_ef1p75'
+EXP='run_eg1p75_ef1p75'
+#EXP='run_eg2p63_ef1p75'
+#EXP='run_eg1p33_ef2p0'
+#EXP='run_eg2p0_ef2p0'
+#EXP='run_eg3p0_ef2p0'
+
 main_dir='/home/jfl001/data/runsLemieux_et_al_plast_pot/'
 main_dir_grid='/home/socn000/data/eccc-ppp5/env_rhel-8-icelake-64/datafiles/constants/oce/repository/master/CONCEPTS/'
 store_main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag'
 kvalue=7 # value for kernel
 produce_plot=False
-SDATE='20070101'
-EDATE='20070101'
+SDATE='20060101'
+EDATE='20060531'
 FREQ='24H'
 suffix='0000_iceh_inst'
 

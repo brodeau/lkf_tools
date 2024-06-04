@@ -7,13 +7,25 @@ from datetime import timedelta
 #import pickle
 import calendar
 
-EXP='eg1p5_ef1p5'
+#EXP='run_eg1p0_ef1p5'
+#EXP='run_eg1p5_ef1p5'
+#EXP='run_eg2p25_ef1p5'
+#EXP='run_eg1p16_ef1p75'
+#EXP='run_eg1p75_ef1p75'
+#EXP='run_eg2p63_ef1p75'
+#EXP='run_eg1p33_ef2p0'
+#EXP='run_eg2p0_ef2p0'
+EXP='run_eg3p0_ef2p0'
+
 main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag'
 zdir='Angle_grid'
-SDATE='20060101'
-EDATE='20060531'
+SDATE='20050101'
+EDATE='20050531'
 FREQ='24H'
 addlabel='anggrid'
+dlabel='10'
+
+ajouter year dans fileout
 
 #-----------------------------------------
 
@@ -21,7 +33,7 @@ list_dates=list(pd.date_range(SDATE,EDATE, freq=FREQ))
 
 for i in range(len(list_dates)) :
     date0 = (list_dates[i] + timedelta(days=-0)).strftime('%Y%m%d%H')
-    filein=date0+'_'+addlabel+'_'+EXP+'.py'
+    filein=date0+'_'+addlabel+'_'+EXP+ '_delta' + dlabel +'.py'
     path_filein=os.path.join(main_dir+'/'+EXP+'/'+zdir+'/'+filein)
     if i==0: # date0 is SDATE
         df1 = pd.read_csv(path_filein)
@@ -30,8 +42,8 @@ for i in range(len(list_dates)) :
         df1 = pd.concat([df1, df2])
 
 #--- define bins 0-90 deg ---
-nbbins=90
-delta=1.0
+nbbins=36 #2.5*36=90
+delta=2.5
 mybins=np.zeros(nbbins+1)
 binc=np.zeros(nbbins)
 for b in range(nbbins+1):
@@ -41,8 +53,8 @@ for b in range(nbbins):
     binc[b]=0.5*(mybins[b]+mybins[b+1])
 
 #--- define bins 0-45 deg ---
-nbbins=45
-delta=1.0
+nbbins=18 #2.5*18=45
+delta=2.5
 myotherbins=np.zeros(nbbins+1)
 otherbinc=np.zeros(nbbins)
 for b in range(nbbins+1):
@@ -71,5 +83,9 @@ plt.figure(3)
 counts, bins, bars = plt.hist(df1['min_angle'], bins=myotherbins, density=True, color = "dodgerblue", ec="dodgerblue")
 plt.xlabel('Minimum angle with x or y axis', fontsize=14)
 plt.ylabel('PDF', fontsize=14)
+plt.ylim(0,0.08)
+plt.xlim(0,45)
+fileout='FIGS/PDF_min_angle_grid_'+EXP+'_delta' + dlabel +'.png'
+plt.savefig(fileout)
 
 plt.show()

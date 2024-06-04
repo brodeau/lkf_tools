@@ -9,7 +9,7 @@ conda activate lkf_tools
 
 set -ex
 
-cd /home/jfl001/Lemieux2022/LKF_diag/lkf_tools
+cd /home/jfl001/Lemieux_et_al_plast_pot/lkf_package_tool
 
 #./lance_calc_dist.sh
 
