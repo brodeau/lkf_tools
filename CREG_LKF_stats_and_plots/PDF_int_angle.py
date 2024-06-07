@@ -28,6 +28,8 @@ addlabel='intpairs'
 dlabel='10'
 
 nbmin=10
+percmin=75 # perc of pts with same sign vorticity for identifying conj fault lines
+perclabel=str(percmin)
 
 #-----------------------------------------
 
@@ -60,25 +62,33 @@ nrow=len(df1)
 
 all_angles=[]
 conj_angles=[]
+conj_angles_w_percmin=[]
 for index,row in df1.iterrows():
     if row.nb1 > nbmin and row.nb2 > nbmin:
         if row.clean_int:
             all_angles.append(row.int_angle)
             if row.conj_pair:
                 conj_angles.append(row.int_angle)
+                if row.perc1 > percmin and row.perc2 > percmin:
+                    conj_angles_w_percmin.append(row.int_angle)
+            
 
 nb_all=len(all_angles)
 nb_conj=len(conj_angles)
+nb_conj_w_percmin=len(conj_angles_w_percmin)
 
 print('total nb=', len(df1))
 print('nb rejected=', len(df1)-nb_all)
 print('nb all intersections=', nb_all)
 print('nb conj pairs=', nb_conj)
+print('nb conj pairs with percmin threshold=', nb_conj_w_percmin)
 
 mean_ang_int=np.mean(all_angles)
 print('mean angle all intersection=', mean_ang_int)
 mean_ang_conj=np.mean(conj_angles)
 print('mean angle conjugate pairs=', mean_ang_conj)
+mean_ang_conj_w_percmin=np.mean(conj_angles_w_percmin)
+print('mean angle conjugate pairs with percmin=', mean_ang_conj_w_percmin)
 
 plt.figure(1)
 counts, bins, bars = plt.hist(all_angles, bins=mybins, density=True, color = "dodgerblue", ec="dodgerblue")
@@ -97,5 +107,14 @@ plt.ylim(0,0.06)
 plt.xlim(0,90)
 fileout2='FIGS/PDF_conj_angle_'+EXP+'_'+year+'_delta' + dlabel +'.png'
 plt.savefig(fileout2)
+
+plt.figure(3)
+counts, bins, bars = plt.hist(conj_angles_w_percmin, bins=mybins, density=True, color = "dodgerblue", ec="dodgerblue")
+plt.xlabel('angle of conjugate pair', fontsize=14)
+plt.ylabel('PDF', fontsize=14)
+plt.ylim(0,0.06)
+plt.xlim(0,90)
+fileout3='FIGS/PDF_conj_angle_'+EXP+'_'+year+'_delta' + dlabel +'percmin_'+perclabel+'.png'
+plt.savefig(fileout3)
 
 plt.show()

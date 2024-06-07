@@ -867,9 +867,8 @@ def CREG_lkf_angles_with_grid(date,creggrid,path_filein,fileout,dlt):
     yanglelt=[]
     minanglelt=[]
 
-#---- identify pairs of intersecting LKFs -----
+#---- loop through detected LKFs --------------
 
- #for ll in range(1):
     for ind1, lkf1 in enumerate(lkfs):
         nb1=lkf1.shape[0]
         j1=lkf1[:,0]
