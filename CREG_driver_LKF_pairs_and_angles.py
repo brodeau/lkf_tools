@@ -38,7 +38,6 @@ EXP='run_eg3p0_ef2p0'
 
 main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag'
 main_dirnc='/home/jfl001/data/runsLemieux_et_al_plast_pot'
-store_main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag'
 SDATE='20050101'
 EDATE='20050531'
 FREQ='24H'
