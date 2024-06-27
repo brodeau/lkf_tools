@@ -502,7 +502,7 @@ def overlap(ibl1, jbl1, itr1, jtr1, ibl2, jbl2, itr2, jtr2):
 
 #---- get i,j at intersection point -----------------------
 
-def get_ij_intersection(intersec, ind1, ind2):
+def get_ij_intersection(intersec):
     if intersec.geom_type == 'Point':
         iint=intersec.x
         jint=intersec.y
@@ -625,8 +625,8 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout,dlt)
 
 #---- create empty lists ----------------------
 
-    ind1lt=[] # lt for list
-    ind2lt=[]
+    ilkf1lt=[] # lt for list
+    ilkf2lt=[]
     nb1lt=[]
     nb2lt=[]
     clean_intlt=[]
@@ -640,7 +640,12 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout,dlt)
 
 #---- identify pairs of intersecting LKFs -----
 
-    for ind1, lkf1 in enumerate(lkfs):
+# ilkf1: index of 1st intersecting lkf among n detected lkfs
+# ilkf2: index of 2nd intersecting lkf among n detected lkfs
+# index1: index along (extended) ilkf1 detected 1kf
+# index2: index along (extended) ilkf2 detected 1kf
+
+    for ilkf1, lkf1 in enumerate(lkfs):
         nb1short=lkf1.shape[0] # true nb of points in LKF
         maxj1=np.max(lkf1[:,0])
         minj1=np.min(lkf1[:,0])
@@ -673,8 +678,8 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout,dlt)
         nb1=i1ext.shape[0] # nb of pts (including extra pts) in LKF1
         line1ext=LineString(np.column_stack((i1ext,j1ext)))
 
-        for ind2, lkf2 in enumerate(lkfs):
-            if ind2 > ind1:
+        for ilkf2, lkf2 in enumerate(lkfs):
+            if ilkf2 > ilkf1:
                 nb2short=lkf2.shape[0] # true nb of points in LKF
                 maxj2=np.max(lkf2[:,0])
                 minj2=np.min(lkf2[:,0])
@@ -702,7 +707,7 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout,dlt)
                     intersec=line1ext.intersection(line2ext) # inters. pt between line1,2
 
                     if not intersec.is_empty:
-                        iint,jint,clean_int=get_ij_intersection(intersec,ind1,ind2) # get i,j at intersection point
+                        iint,jint,clean_int=get_ij_intersection(intersec) # get i,j at intersection point
                         deltai=abs(i1ext-iint) # delta i between i1 and intersec i
                         deltaj=abs(j1ext-jint) # delta i between j1 and intersec j
                         index1=np.argmin(deltai+deltaj)
@@ -769,8 +774,8 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout,dlt)
                             
                         #--- append values in lists
                         
-                        ind1lt.append(ind1)
-                        ind2lt.append(ind2)
+                        ilkf1lt.append(ilkf1)
+                        ilkf2lt.append(ilkf2)
                         nb1lt.append(nb1short)
                         nb2lt.append(nb2short)
                         clean_intlt.append(clean_int)
@@ -784,13 +789,13 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout,dlt)
 
                         cc=0
                         figg=1
-                        if ind1 == 203 and ind2 == 21000:
+                        if ilkf1 == 203 and ilkf2 == 21000:
                             print('ptype',ptype1,ptype2,int_type)
                             print(index1,nb1,index2,nb2)
                             print(coeff1[0], coeff2[0])
                             print('angle',int_angle)
-                            print('ind1',min_ind1,index1,max_ind1,nb1)
-                            print('ind2',min_ind2,index2,max_ind2,nb2)
+                            print('ilkf1',min_ind1,index1,max_ind1,nb1)
+                            print('ilkf2',min_ind2,index2,max_ind2,nb2)
                             print('clean intersect=',clean_int)
                             if figg==1:
                                 plt.plot(i1ext,j1ext,'.m')
@@ -825,8 +830,8 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout,dlt)
 
 #--- create the panda dataframe for output file
 
-    df = pd.DataFrame(ind1lt, columns=['ind1'])
-    df.insert(1, 'ind2', ind2lt)
+    df = pd.DataFrame(ilkf1lt, columns=['ilkf1'])
+    df.insert(1, 'ilkf2', ilkf2lt)
     df.insert(2, 'nb1', nb1lt)
     df.insert(3, 'nb2', nb2lt)
     df.insert(4, 'clean_int', clean_intlt)
@@ -861,7 +866,7 @@ def CREG_lkf_angles_with_grid(date,creggrid,path_filein,fileout,dlt):
 
 #---- create empty lists ----------------------
 
-    ind1lt=[] # lt for list
+    ilkf1lt=[] # lt for list
     nb1lt=[]
     xanglelt=[]
     yanglelt=[]
@@ -869,7 +874,7 @@ def CREG_lkf_angles_with_grid(date,creggrid,path_filein,fileout,dlt):
 
 #---- loop through detected LKFs --------------
 
-    for ind1, lkf1 in enumerate(lkfs):
+    for ilkf1, lkf1 in enumerate(lkfs):
         nb1=lkf1.shape[0]
         j1=lkf1[:,0]
         i1=lkf1[:,1]
@@ -909,7 +914,7 @@ def CREG_lkf_angles_with_grid(date,creggrid,path_filein,fileout,dlt):
         min_angle=min(anglex,angley)
 
         #--- define y=cte aligned with x axis for plotting ---
-        if ind1 == 17588:
+        if ilkf1 == 17588:
             nmin=max(0, nmid-dlt-dlt)
             nmax=min(nmid+dlt+dlt,nb1-1)
             xref=i1[nmin:nmax+1]
@@ -924,7 +929,7 @@ def CREG_lkf_angles_with_grid(date,creggrid,path_filein,fileout,dlt):
 
         #--- append values in lists
                         
-        ind1lt.append(ind1)
+        ilkf1lt.append(ilkf1)
         nb1lt.append(nb1)
         xanglelt.append(anglex)
         yanglelt.append(angley)
@@ -932,7 +937,7 @@ def CREG_lkf_angles_with_grid(date,creggrid,path_filein,fileout,dlt):
 
 #--- create the panda dataframe for output file
 
-    df = pd.DataFrame(ind1lt, columns=['ind1'])
+    df = pd.DataFrame(ilkf1lt, columns=['ilkf1'])
     df.insert(1, 'nb1', nb1lt)
     df.insert(2, 'x_angle', xanglelt)
     df.insert(3, 'y_angle', yanglelt)
@@ -994,7 +999,7 @@ def CREG_lkf_length(date,creggrid,path_filein,fileout):
 
 #---- calc lengths of all LKFs in input file -----
 
-    for ind1, lkf1 in enumerate(lkfs):
+    for ilkf1, lkf1 in enumerate(lkfs):
         nb1=lkf1.shape[0]
         lat=lkf1[:,3]
         lon=lkf1[:,2]
@@ -1010,13 +1015,13 @@ def CREG_lkf_length(date,creggrid,path_filein,fileout):
             length=length+dlength
 
         #--- append values in lists
-        ind1lt.append(ind1)
+        ilkf1lt.append(ilkf1)
         nb1lt.append(nb1)
         lengthlt.append(length)
 
 #--- create the panda dataframe for output file
 
-    df = pd.DataFrame(ind1lt, columns=['ind1'])
+    df = pd.DataFrame(ilkf1lt, columns=['ilkf1'])
     df.insert(1, 'nb1', nb1lt)
     df.insert(2, 'length', lengthlt)
     df.to_csv(fileout, index=False)
