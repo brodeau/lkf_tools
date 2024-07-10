@@ -630,7 +630,7 @@ def extra_pt_end(im1, im2, jm1, jm2):
 #
 #------------------------------------------------------------
 
-def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout,dlt):
+def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout1,fileout2,dlt):
     
     print('working on date:')
     print(date)
@@ -703,6 +703,13 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout,dlt)
     mvort2intlt=[]
     conjpairlt=[]
     conjanglt=[]
+
+    xangle1lt=[]
+    yangle1lt=[]
+    minangle1lt=[]
+    xangle2lt=[]
+    yangle2lt=[]
+    minangle2lt=[]
 
 #---- identify pairs of intersecting LKFs -----
 
@@ -806,6 +813,30 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout,dlt)
                         #--- calc intersection angle (returns acute angle)
                         int_angle=calc_int_angle(ptype1,coeff1,ptype2,coeff2)
                         
+                        #--- lkf1 calc angle with respect to x (or i) axis ---
+                        ptypeTP=1 #y=mx+b=b
+                        coeffTP=np.zeros(2)  #coeffTP[0]=m=0, coeffTP[1]=0 #not used
+                        anglex1=calc_int_angle(ptype1,coeff1,ptypeTP,coeffTP)
+
+                        #--- lkf1 calc angle with respect to y (or j) axis ---
+                        ptypeTP=2 #x=my+b
+                        coeffTP=np.zeros(2)  #coeffTP[0]=m=0, coeffTP[1]=0 #not used
+                        angley1=calc_int_angle(ptype1,coeff1,ptypeTP,coeffTP)
+
+                        min_angle1=min(anglex1,angley1)
+
+                        #--- lkf2 calc angle with respect to x (or i) axis ---
+                        ptypeTP=1 #y=mx+b=b
+                        coeffTP=np.zeros(2)  #coeffTP[0]=m=0, coeffTP[1]=0 #not used
+                        anglex2=calc_int_angle(ptype2,coeff2,ptypeTP,coeffTP)
+
+                        #--- lkf2 calc angle with respect to y (or j) axis ---
+                        ptypeTP=2 #x=my+b
+                        coeffTP=np.zeros(2)  #coeffTP[0]=m=0, coeffTP[1]=0 #not used
+                        angley2=calc_int_angle(ptype2,coeff2,ptypeTP,coeffTP)
+
+                        min_angle2=min(anglex2,angley2)
+
                         if int_type==1: # possible conjugate fault lines
                             #--- vorticity along LKF2 ---
                             vort2=np.zeros(nb2short)
@@ -857,6 +888,13 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout,dlt)
                         mvort2intlt.append(mvort2int)
                         conjpairlt.append(conjpair)
                         conjanglt.append(conjangle)
+
+                        xangle1lt.append(anglex1)
+                        yangle1lt.append(angley1)
+                        minangle1lt.append(min_angle1)
+                        xangle2lt.append(anglex2)
+                        yangle2lt.append(angley2)
+                        minangle2lt.append(min_angle2)
 
                         # For DEBUG ---------------------------------
                         cc=0
@@ -920,7 +958,7 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout,dlt)
                                 plt.show()
 
 
-#--- create the panda dataframe for output file
+#--- create the panda dataframe for output file 1 (angle at int)
 
     df = pd.DataFrame(ilkf1lt, columns=['ilkf1'])
     df.insert(1, 'ilkf2', ilkf2lt)
@@ -935,7 +973,21 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout,dlt)
     df.insert(10, 'mean_vort2', mvort2intlt)
     df.insert(11, 'conj_pair', conjpairlt)
     df.insert(12, 'conj_angle', conjanglt)
-    df.to_csv(fileout, index=False)
+    df.to_csv(fileout1, index=False)
+
+#--- create the panda dataframe for output file 2 (angle with grid at int pt)
+
+    df1 = pd.DataFrame(ilkf1lt, columns=['ilkf1'])
+    df1.insert(1, 'ilkf2', ilkf2lt)
+    df1.insert(2, 'nb1', nb1lt)
+    df1.insert(3, 'nb2', nb2lt)
+    df1.insert(4, 'x_angle1', xangle1lt)
+    df1.insert(5, 'y_angle1', yangle1lt)
+    df1.insert(6, 'min_angle1', minangle1lt)
+    df1.insert(7, 'x_angle2', xangle2lt)
+    df1.insert(8, 'y_angle2', yangle2lt)
+    df1.insert(9, 'min_angle2', minangle2lt)
+    df1.to_csv(fileout2, index=False)
 
 #----  CREG_lkf_angles_with_grid ----------------------------
 #
@@ -972,10 +1024,6 @@ def CREG_lkf_angles_with_grid(date,creggrid,path_filein,fileout,dlt):
         j1=lkf1[:,0]
         i1=lkf1[:,1]
         
-        #nb1=21
-        #j1=np.arange(nb1)
-        #i1=np.arange(nb1)
-
         #--- find mid-point of LKF ---
         nmid=int(np.floor(nb1/2))
 
