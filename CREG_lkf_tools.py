@@ -1,4 +1,5 @@
 import numpy as np
+import math
 import xarray as xr
 import pandas as pd
 import os
@@ -490,6 +491,70 @@ def calc_int_angle(ptype1,coeff1,ptype2,coeff2):
 
     return int_angle
 
+def calc_conj_angle(ptype1,coeff1, mvort1int,ptype2,coeff2, mvort2int):
+    m1=coeff1[0]
+    m2=coeff2[0]
+    minval=1e-12    
+
+    if ptype1==1 and ptype2==2:
+        denom=max(minval,abs(m2))
+        if np.sign(m2) == 0:
+            sfact=1.0
+        else:
+            sfact=np.sign(m2)
+        m2=sfact*1.0/denom # convert dx/dy to -dy/dx 
+    elif ptype1==2 and ptype2==1:
+        denom=max(minval,abs(m1))
+        if np.sign(m1) == 0:
+            sfact=1.0
+        else:
+            sfact=np.sign(m1)
+        m1=sfact*1.0/denom # convert dx/dy to -dy/dx 
+ 
+    if mvort1int >= 0 :
+        mplus=m1 # slope of LKF with positive vort
+        mminus=m2 # slope of LKF with negative vort
+    else:
+        mplus=m2 # slope of LKF with positive vort
+        mminus=m1 # slope of LKF with negative vort
+        
+    # conj angle measured counterclockwise from positive vort LKF to negative one 
+
+    if mplus >= 0 :
+        if mminus >= 0:
+            if mplus <= mminus : # top right quadrant acute
+                phiplus=math.atan(mplus)*180/np.pi # convert to deg
+                phiminus=math.atan(mminus)*180/np.pi # convert to deg
+                angle_tp = phiminus - phiplus
+            elif mplus > mminus : # top right quadrant obtuse
+                phiplus=math.atan(mplus)*180/np.pi # convert to deg
+                phiminus=math.atan(mminus)*180/np.pi # convert to deg
+                angle_tp=180 - ( phiplus - phiminus )
+        
+        elif mminus < 0: # top quadrants acute or obtuse
+            phiplus=math.atan(mplus)*180/np.pi # convert to deg
+            phiminus=-1.0*math.atan(mminus)*180/np.pi # convert to deg
+            angle_tp=180 - ( phiplus + phiminus )
+
+    elif mplus < 0 :
+        if mminus >= 0: # right quadrants acute or obtuse
+            phiplus=-1.0*math.atan(mplus)*180/np.pi # convert to deg
+            phiminus=math.atan(mminus)*180/np.pi # convert to deg
+            angle_tp=phiplus + phiminus
+
+        elif mminus < 0: 
+            if mplus <= mminus : # bottom right quadrant acute
+                phiplus=-1.0*math.atan(mplus)*180/np.pi # convert to deg
+                phiminus=-1.0*math.atan(mminus)*180/np.pi # convert to deg
+                angle_tp=phiplus - phiminus
+            elif mplus > mminus : # bottom right quadrant obtuse
+                phiplus=-1.0*math.atan(mplus)*180/np.pi # convert to deg
+                phiminus=-1.0*math.atan(mminus)*180/np.pi # convert to deg
+                angle_tp=180 - (phiplus - phiminus)
+
+#    print('in routine', mplus, mminus, angle_tp)
+    return angle_tp
+
 #---- check if two rectangles overlap -----------------------
 
 def overlap(ibl1, jbl1, itr1, jtr1, ibl2, jbl2, itr2, jtr2):
@@ -637,6 +702,7 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout,dlt)
     mvort1intlt=[]
     mvort2intlt=[]
     conjpairlt=[]
+    conjanglt=[]
 
 #---- identify pairs of intersecting LKFs -----
 
@@ -709,10 +775,10 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout,dlt)
                     if not intersec.is_empty:
                         iint,jint,clean_int=get_ij_intersection(intersec) # get i,j at intersection point
                         deltai=abs(i1ext-iint) # delta i between i1 and intersec i
-                        deltaj=abs(j1ext-jint) # delta i between j1 and intersec j
+                        deltaj=abs(j1ext-jint) # delta j between j1 and intersec j
                         index1=np.argmin(deltai+deltaj)
                         deltai=abs(i2ext-iint) # delta i between i2 and intersec i
-                        deltaj=abs(j2ext-jint) # delta i between j2 and intersec j
+                        deltaj=abs(j2ext-jint) # delta j between j2 and intersec j
                         index2=np.argmin(deltai+deltaj)
                         
                         #--- define part of array close to intersec for polyfit
@@ -761,9 +827,12 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout,dlt)
                             mvort2int,perc2=get_vort_info(vort2int)
 
                             conjpair=False
+                            conjangle=np.nan
                             if np.sign(mvort1int) != np.sign(mvort2int):
                                 if clean_int:
                                     conjpair=True
+                                    conjangle=calc_conj_angle(ptype1,coeff1, mvort1int,ptype2,coeff2, mvort2int)
+                                    #print('conj',ilkf1,ilkf2,nb1short,nb2short)
                         
                         elif int_type==2:
                             perc1=np.nan
@@ -771,6 +840,7 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout,dlt)
                             mvort1int=np.nan
                             mvort2int=np.nan
                             conjpair=False
+                            conjangle=np.nan
                             
                         #--- append values in lists
                         
@@ -786,14 +856,18 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout,dlt)
                         mvort1intlt.append(mvort1int)
                         mvort2intlt.append(mvort2int)
                         conjpairlt.append(conjpair)
+                        conjanglt.append(conjangle)
 
+                        # For DEBUG ---------------------------------
                         cc=0
-                        figg=1
-                        if ilkf1 == 203 and ilkf2 == 21000:
+                        figg=2
+                        if ilkf1 == 203 and ilkf2 == 24100:
+                            print('int angle=', int_angle)
                             print('ptype',ptype1,ptype2,int_type)
                             print(index1,nb1,index2,nb2)
                             print(coeff1[0], coeff2[0])
                             print('angle',int_angle)
+                            print('conj angle',conjangle,180-conjangle)
                             print('ilkf1',min_ind1,index1,max_ind1,nb1)
                             print('ilkf2',min_ind2,index2,max_ind2,nb2)
                             print('clean intersect=',clean_int)
@@ -821,7 +895,25 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout,dlt)
                                 maxi=maxitp+ishift-1
                                 mini=minitp+ishift-1
                                 print(minj,maxj,mini,maxi)
-                                vortpc=vort[minj:maxj,mini:maxi]                                
+                                print('ptype1',ptype1,mvort1int)
+                                print('ptype2',ptype2,mvort2int)
+                                for n1 in range(nb1short):
+                                    jj=int(j1[n1])+jshift-1
+                                    ii=int(i1[n1])+ishift-1
+                                    if mvort1int > 0 :
+                                        vort[jj,ii]=2
+                                    else :
+                                        vort[jj,ii]=-2
+                    
+                                for n2 in range(nb2short):
+                                    jj=int(j2[n2])+jshift-1
+                                    ii=int(i2[n2])+ishift-1
+                                    if mvort2int > 0 :
+                                        vort[jj,ii]=4
+                                    else :
+                                        vort[jj,ii]=-4
+                                    
+                                vortpc=vort[minj:maxj,mini:maxi]
                                 plt.pcolor(vortpc)
                                 plt.colorbar()
                                 #plt.savefig('testing12.png')
@@ -842,6 +934,7 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout,dlt)
     df.insert(9, 'mean_vort1', mvort1intlt)
     df.insert(10, 'mean_vort2', mvort2intlt)
     df.insert(11, 'conj_pair', conjpairlt)
+    df.insert(12, 'conj_angle', conjanglt)
     df.to_csv(fileout, index=False)
 
 #----  CREG_lkf_angles_with_grid ----------------------------
