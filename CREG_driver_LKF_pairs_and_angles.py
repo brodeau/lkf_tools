@@ -27,14 +27,14 @@ import calendar
 creggrid='creg12' # creg025 or creg12
 
 #EXP='run_eg1p0_ef1p5'
-#EXP='run_eg1p5_ef1p5'
+EXP='run_eg1p5_ef1p5'
 #EXP='run_eg2p25_ef1p5'
 #EXP='run_eg1p16_ef1p75'
 #EXP='run_eg1p75_ef1p75'
 #EXP='run_eg2p63_ef1p75'
 #EXP='run_eg1p33_ef2p0'
 #EXP='run_eg2p0_ef2p0'
-EXP='run_eg3p0_ef2p0'
+#EXP='run_eg3p0_ef2p0'
 
 main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag'
 main_dirnc='/home/jfl001/data/runsLemieux_et_al_plast_pot'
@@ -48,9 +48,13 @@ delta=10
 
 dlabel=str(delta)
 
-store_path=os.path.join(main_dir+'/'+EXP+'/Int_Angle')
-if not os.path.isdir(store_path):
-    os.mkdir(store_path)
+store_path1=os.path.join(main_dir+'/'+EXP+'/Int_Angle')
+if not os.path.isdir(store_path1):
+    os.mkdir(store_path1)
+
+store_path2=os.path.join(main_dir+'/'+EXP+'/Angle_grid_at_int')
+if not os.path.isdir(store_path2):
+    os.mkdir(store_path2)
 
 list_dates=list(pd.date_range(SDATE,EDATE, freq=FREQ))
 
@@ -62,9 +66,10 @@ for i in range(len(list_dates)) :
     data_pathnc=os.path.join(main_dirnc+'/'+EXP+'/hourly/'+date0+suffix+'.nc')
     print(path_filein)
     print(data_pathnc)
-    fileout=os.path.join(store_path + '/' + date0 + '_intpairs_' + EXP + '_delta' + dlabel +'.py')
-    print(fileout)
-    CREG_lkf_pairs_and_angles(date0,creggrid,path_filein,data_pathnc,fileout,delta)
+    fileout1=os.path.join(store_path1 + '/' + date0 + '_intpairs_' + EXP + '_delta' + dlabel +'.py')
+    fileout2=os.path.join(store_path2 + '/' + date0 + '_anggrid_at_int_' + EXP + '_delta' + dlabel +'.py')
+    print(fileout1)
+    CREG_lkf_pairs_and_angles(date0,creggrid,path_filein,data_pathnc,fileout1,fileout2,delta)
 
 print('CREG_driver_LKF_pairs_and_angles is done')
 print(EXP)

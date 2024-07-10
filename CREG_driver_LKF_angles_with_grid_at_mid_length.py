@@ -47,7 +47,7 @@ delta=10
 
 dlabel=str(delta)
 
-store_path=os.path.join(main_dir+'/'+EXP+'/Angle_grid')
+store_path=os.path.join(main_dir+'/'+EXP+'/Angle_grid_at_mid_length')
 if not os.path.isdir(store_path):
     os.mkdir(store_path)
 
@@ -59,7 +59,7 @@ for i in range(len(list_dates)) :
     tpdir=date0 + '_' + EXP
     path_filein=os.path.join(main_dir+'/'+EXP+'/detectedLKFs/'+tpdir+'/'+filein)
     print(path_filein)
-    fileout=os.path.join(store_path + '/' + date0 + '_anggrid_' + EXP + '_delta' + dlabel +'.py')
+    fileout=os.path.join(store_path + '/' + date0 + '_anggrid_ml' + EXP + '_delta' + dlabel +'.py')
     print(fileout)
     CREG_lkf_angles_with_grid(date0,creggrid,path_filein,fileout,delta)
 
