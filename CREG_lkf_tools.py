@@ -519,6 +519,7 @@ def calc_conj_angle(ptype1,coeff1, mvort1int,ptype2,coeff2, mvort2int):
         mminus=m1 # slope of LKF with negative vort
         
     # conj angle measured counterclockwise from positive vort LKF to negative one 
+    # phiplus and phiminus are postive angles measured from the x axis
 
     if mplus >= 0 :
         if mminus >= 0:
@@ -529,30 +530,30 @@ def calc_conj_angle(ptype1,coeff1, mvort1int,ptype2,coeff2, mvort2int):
             elif mplus > mminus : # top right quadrant obtuse
                 phiplus=math.atan(mplus)*180/np.pi # convert to deg
                 phiminus=math.atan(mminus)*180/np.pi # convert to deg
-                angle_tp=180 - ( phiplus - phiminus )
+                angle_tp = 180 -  phiplus + phiminus 
         
         elif mminus < 0: # top quadrants acute or obtuse
             phiplus=math.atan(mplus)*180/np.pi # convert to deg
             phiminus=-1.0*math.atan(mminus)*180/np.pi # convert to deg
-            angle_tp=180 - ( phiplus + phiminus )
+            angle_tp = 180 - ( phiplus + phiminus )
 
     elif mplus < 0 :
         if mminus >= 0: # right quadrants acute or obtuse
             phiplus=-1.0*math.atan(mplus)*180/np.pi # convert to deg
             phiminus=math.atan(mminus)*180/np.pi # convert to deg
-            angle_tp=phiplus + phiminus
+            angle_tp = phiplus + phiminus
 
         elif mminus < 0: 
             if mplus <= mminus : # bottom right quadrant acute
                 phiplus=-1.0*math.atan(mplus)*180/np.pi # convert to deg
                 phiminus=-1.0*math.atan(mminus)*180/np.pi # convert to deg
-                angle_tp=phiplus - phiminus
+                angle_tp = phiplus - phiminus
+
             elif mplus > mminus : # bottom right quadrant obtuse
                 phiplus=-1.0*math.atan(mplus)*180/np.pi # convert to deg
                 phiminus=-1.0*math.atan(mminus)*180/np.pi # convert to deg
-                angle_tp=180 - (phiplus - phiminus)
+                angle_tp = 180 - phiminus + phiplus
 
-#    print('in routine', mplus, mminus, angle_tp)
     return angle_tp
 
 #---- check if two rectangles overlap -----------------------
@@ -863,7 +864,7 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout1,fil
                                 if clean_int:
                                     conjpair=True
                                     conjangle=calc_conj_angle(ptype1,coeff1, mvort1int,ptype2,coeff2, mvort2int)
-                                    #print('conj',ilkf1,ilkf2,nb1short,nb2short)
+                                    #print('conj',ilkf1,ilkf2,conjangle, ptype1, ptype2,mvort1int,mvort2int)
                         
                         elif int_type==2:
                             perc1=np.nan
@@ -897,15 +898,16 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout1,fil
                         minangle2lt.append(min_angle2)
 
                         # For DEBUG ---------------------------------
-                        cc=0
-                        figg=2
-                        if ilkf1 == 203 and ilkf2 == 24100:
+                        cc=1
+                        figg=1
+                        if ilkf1 == 192 and ilkf2 == 20100:
                             print('int angle=', int_angle)
                             print('ptype',ptype1,ptype2,int_type)
                             print(index1,nb1,index2,nb2)
                             print(coeff1[0], coeff2[0])
                             print('angle',int_angle)
                             print('conj angle',conjangle,180-conjangle)
+                            print('min angle grid',min_angle1,min_angle2)
                             print('ilkf1',min_ind1,index1,max_ind1,nb1)
                             print('ilkf2',min_ind2,index2,max_ind2,nb2)
                             print('clean intersect=',clean_int)
