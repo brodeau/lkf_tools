@@ -108,7 +108,7 @@ class process_dataset(object):
         :param indexes: time indexes that should be detected. If None all time steps are detected
         """
 
-        thr_aice = 0.1 # detect LKFs only if aice > thr_aice
+        thr_aice = 0.15 # detect LKFs only if aice > thr_aice
 
         # Check for already dectected features
         if force_redetect:
