@@ -1137,7 +1137,7 @@ def CREG_lkf_length(date,creggrid,path_filein,fileout):
 
 #---- create empty lists ----------------------
 
-    ind1lt=[] # lt for list
+    ilkf1lt=[] # lt for list
     nb1lt=[]
     lengthlt=[]
 
