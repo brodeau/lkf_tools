@@ -989,6 +989,7 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout1,fil
     df1.insert(7, 'x_angle2', xangle2lt)
     df1.insert(8, 'y_angle2', yangle2lt)
     df1.insert(9, 'min_angle2', minangle2lt)
+    df1.insert(10, 'conj_pair', conjpairlt)
     df1.to_csv(fileout2, index=False)
 
 #----  CREG_lkf_angles_with_grid ----------------------------
