@@ -12,10 +12,10 @@ import calendar
 #EXP='run_eg2p25_ef1p5'
 #EXP='run_eg1p16_ef1p75'
 #EXP='run_eg1p75_ef1p75'
-EXP='run_eg2p63_ef1p75'
+#EXP='run_eg2p63_ef1p75'
 #EXP='run_eg1p33_ef2p0'
 #EXP='run_eg2p0_ef2p0'
-#EXP='run_eg3p0_ef2p0'
+EXP='run_eg3p0_ef2p0'
 
 
 main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag'
@@ -45,9 +45,11 @@ for i in range(len(list_dates)) :
         df2 = pd.read_csv(path_filein)
         df1 = pd.concat([df1, df2])
 
-#--- define bins 0-90 deg ---
+#--- define bins 0-180 deg ---
 nbbins=36
-delta=2.5
+delta=5
+#nbbins=72
+#delta=2.5
 mybins=np.zeros(nbbins+1)
 binc=np.zeros(nbbins)
 for b in range(nbbins+1):
@@ -58,7 +60,7 @@ for b in range(nbbins):
 
 nrow=len(df1)
 
-# WATCHOUT ONLY ACUTE ANGLES!!!!!!!!!!!!!!!!!!!!!!!
+# WATCHOUT ONLY ACUTE ANGLES for all_angles !!!!!!!!!!!!!!!!!!!!!!!
 
 all_angles=[]
 conj_angles=[]
@@ -68,9 +70,9 @@ for index,row in df1.iterrows():
         if row.clean_int:
             all_angles.append(row.int_angle)
             if row.conj_pair:
-                conj_angles.append(row.int_angle)
+                conj_angles.append(row.conj_angle)
                 if row.perc1 > percmin and row.perc2 > percmin:
-                    conj_angles_w_percmin.append(row.int_angle)
+                    conj_angles_w_percmin.append(row.conj_angle)
             
 
 nb_all=len(all_angles)
@@ -95,7 +97,7 @@ counts, bins, bars = plt.hist(all_angles, bins=mybins, density=True, color = "do
 plt.xlabel('angle of intersection', fontsize=14)
 plt.ylabel('PDF', fontsize=14)
 plt.ylim(0,0.06)
-plt.xlim(0,90)
+plt.xlim(0,180)
 fileout1='FIGS/PDF_int_angle_'+EXP+'_'+year+'_delta' + dlabel +'.png'
 plt.savefig(fileout1)
 
@@ -103,8 +105,8 @@ plt.figure(2)
 counts, bins, bars = plt.hist(conj_angles, bins=mybins, density=True, color = "dodgerblue", ec="dodgerblue")
 plt.xlabel('angle of conjugate pair', fontsize=14)
 plt.ylabel('PDF', fontsize=14)
-plt.ylim(0,0.06)
-plt.xlim(0,90)
+plt.ylim(0,0.03)
+plt.xlim(0,180)
 fileout2='FIGS/PDF_conj_angle_'+EXP+'_'+year+'_delta' + dlabel +'.png'
 plt.savefig(fileout2)
 
@@ -112,8 +114,8 @@ plt.figure(3)
 counts, bins, bars = plt.hist(conj_angles_w_percmin, bins=mybins, density=True, color = "dodgerblue", ec="dodgerblue")
 plt.xlabel('angle of conjugate pair', fontsize=14)
 plt.ylabel('PDF', fontsize=14)
-plt.ylim(0,0.06)
-plt.xlim(0,90)
+plt.ylim(0,0.03)
+plt.xlim(0,180)
 fileout3='FIGS/PDF_conj_angle_'+EXP+'_'+year+'_delta' + dlabel +'percmin_'+perclabel+'.png'
 plt.savefig(fileout3)
 
