@@ -13,8 +13,9 @@ EXP2='run_eg1p75_ef1p75'
 label2='e_f=1.75, e_g=1.75'
 EXP3='run_eg2p63_ef1p75'
 label3='e_f=1.75, e_g=2.63'
+year='2005'
 
-suffix='20050101_20050531.npy'
+suffix=year+'0101_'+year+'0531.npy'
 #-----------------
 
 file1=os.path.join(main_dir+'/'+EXP1+'/nbLKFs/number_lkf_'+suffix)
@@ -37,5 +38,6 @@ ax.legend([label1, label2, label3])
 ax.set_xlabel("", fontsize='2')
 ax.set_ylabel("Nb of LKFs")
 
-plt.savefig('FIGS/Nb_LKFs_ef1p75_2005.png')
-#plt.show()
+fileout='FIGS/Nb_LKFs_ef1p75_'+year+'.png'
+plt.savefig(fileout)
+plt.show()
