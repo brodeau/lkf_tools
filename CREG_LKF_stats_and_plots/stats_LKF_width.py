@@ -64,12 +64,10 @@ print(np.mean(hwidth2))
 print(np.mean(width))
 
 print('perc of large LKFs:')
-ns1=np.sum(hwidth1 == dsearch)
-ns2=np.sum(hwidth2 == dsearch)
-ns=np.sum(width == 2*dsearch)
+ns=np.sum(width >= 2*dsearch - 1e-10) # includes diag LKFs
+#-1e-10 to make sure width=2dsearch is considered
 
-print('perc1=', ns1, npoints, ns1*100.0/npoints)
-print('perc2=', ns2, npoints, ns2*100.0/npoints)
+
 print('perc=', ns, npoints, ns*100.0/npoints)
 
 counts, bins, bars = plt.hist(width, bins=mybins, color = "dodgerblue", ec="dodgerblue")#, norm_hist=True)
