@@ -10,11 +10,11 @@ import matplotlib.pyplot as plt
 
 creggrid='creg025' # creg025 or creg12
 #----- INPUT -----
-EXP='run_eg1p0_ef1p5'
+#EXP='run_eg1p0_ef1p5'
 #EXP='run_eg1p5_ef1p5'
 #EXP='run_eg2p25_ef1p5'
 #EXP='run_eg1p16_ef1p75'
-#EXP='run_eg1p75_ef1p75'
+EXP='run_eg1p75_ef1p75'
 #EXP='run_eg2p63_ef1p75'
 #EXP='run_eg1p33_ef2p0'
 #EXP='run_eg2p0_ef2p0'
@@ -24,6 +24,7 @@ SDATE='20050101'
 EDATE='20050531'
 main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag'
 fraclabel='0p5'
+dsearch=5 # make sure the same than in runs
 
 nbbins=71
 delta=0.2
@@ -62,6 +63,15 @@ print(np.mean(hwidth1))
 print(np.mean(hwidth2))
 print(np.mean(width))
 
+print('perc of large LKFs:')
+ns1=np.sum(hwidth1 == dsearch)
+ns2=np.sum(hwidth2 == dsearch)
+ns=np.sum(width == 2*dsearch)
+
+print('perc1=', ns1, npoints, ns1*100.0/npoints)
+print('perc2=', ns2, npoints, ns2*100.0/npoints)
+print('perc=', ns, npoints, ns*100.0/npoints)
+
 counts, bins, bars = plt.hist(width, bins=mybins, color = "dodgerblue", ec="dodgerblue")#, norm_hist=True)
 #plt.hist(hwidth2, bins=mybins, alpha=0.3, color = "magenta", ec="magenta")
 #plt.hist(Ddef2, bins=mybins, alpha=0.3, color = "orange", ec="orange", )
@@ -81,7 +91,7 @@ plt.xlabel('LKF width', fontsize=14)
 plt.ylabel('Fraction of counts', fontsize=14)
 plt.xlim([0, 15]) 
 plt.ylim([0, 0.45]) 
-plt.savefig(path_fileout)
+#plt.savefig(path_fileout)
 #plt.savefig('youhhh.png')
 
 
