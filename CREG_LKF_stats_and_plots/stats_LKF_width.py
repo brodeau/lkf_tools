@@ -41,11 +41,13 @@ print(binc)
 
 #----- define paths and file names --------
 
-filein1='hwidth1_lkf_'+SDATE+'_'+EDATE+'_'+fraclabel+'.npy'
+dsstr=str(dsearch)
+
+filein1='hwidth1_lkf_'+SDATE+'_'+EDATE+'_f'+fraclabel+'_ds'+dsstr+'.npy'
 path_filein1=os.path.join(main_dir+'/'+EXP+'/WIDTH/'+filein1)
-filein2='hwidth2_lkf_'+SDATE+'_'+EDATE+'_'+fraclabel+'.npy'
+filein2='hwidth2_lkf_'+SDATE+'_'+EDATE+'_f'+fraclabel+'_ds'+dsstr+'.npy'
 path_filein2=os.path.join(main_dir+'/'+EXP+'/WIDTH/'+filein2)
-fileout='histo_width_lkf_'+SDATE+'_'+EDATE+'_'+EXP+'_'+fraclabel+'.png'
+fileout='histo_width_lkf_'+SDATE+'_'+EDATE+'_'+EXP+'_f'+fraclabel+'_ds'+dsstr+'.png'
 path_fileout=os.path.join('FIGS/'+fileout)
 
 #----- open npy files -----

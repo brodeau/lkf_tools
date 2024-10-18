@@ -22,9 +22,9 @@ import calendar
 creggrid='creg12' # creg025 or creg12
 #EXP='run_eg1p0_ef1p5'
 #EXP='run_eg1p5_ef1p5'
-EXP='run_eg2p25_ef1p5'
+#EXP='run_eg2p25_ef1p5'
 #EXP='run_eg1p16_ef1p75'
-#EXP='run_eg1p75_ef1p75'
+EXP='run_eg1p75_ef1p75'
 #EXP='run_eg2p63_ef1p75'
 #EXP='run_eg1p33_ef2p0'
 #EXP='run_eg2p0_ef2p0'
@@ -38,7 +38,7 @@ mindist=0.0 # LKF point is analysed if dist from land > mindist (km)
 
 FREQ='24H'
 SDATE='20050101'
-EDATE='20050531'
+EDATE='20050110'
 suffix='0000_iceh_inst'
 
 #----- label for width criterion ---------------------------
@@ -53,6 +53,8 @@ else:
     print('frac value is not allowed')
     exit()
 
+dsstr=str(dsearch)
+
 #-----------------------------------------------------------
 
 list_dates=list(pd.date_range(SDATE,EDATE, freq=FREQ))
@@ -61,7 +63,7 @@ for i in range(len(list_dates)) :
     date0 = (list_dates[i] + timedelta(days=-0)).strftime('%Y%m%d%H')
     date0ext=date0
     filein='lkf_' + date0ext + '_' + EXP + '_001.npy'
-    fileout='lkf_' + date0ext + '_' + EXP + '_' + fraclabel +'.npy'
+    fileout='lkf_' + date0ext + '_' + EXP + '_f' + fraclabel +'_ds'+dsstr+'.npy'
     tpdir=date0ext + '_' + EXP
     path_filein=os.path.join(main_dir+'/'+EXP+'/detectedLKFs/'+tpdir+'/'+filein)
     path_fileout=os.path.join(main_dir+'/'+EXP+'/detectedLKFs/'+tpdir+'/'+fileout)
