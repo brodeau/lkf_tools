@@ -18,7 +18,7 @@ from lkf_tools.dataset import *
 #
 #------------------------------------------------------------
 
-def CREG_lkf_detect(date, creggrid, cregflag, grid_path, data_path, store_path, fileout, kvalue, produce_plot):
+def CREG_lkf_detect(date, creggrid, cregflag, grid_path, data_path, store_path, fileout, kvalue, produce_plot, pack_ice_mask):
 
     print(fileout)
 
@@ -77,7 +77,7 @@ def CREG_lkf_detect(date, creggrid, cregflag, grid_path, data_path, store_path, 
 
     print('call process_dataset')
 
-    lkf_data = process_dataset(fileout,creg=cregflag,  output_path=store_path,
+    lkf_data = process_dataset(fileout,creg=cregflag, usepmask=pack_ice_mask, output_path=store_path,
                                xarray=creg_nc, skeleton_kernel=kvalue, t_red=1)
 
     lkf_data.detect_lkfs(indexes=[0])

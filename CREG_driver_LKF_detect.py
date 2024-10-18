@@ -33,11 +33,12 @@ EXP='run_eg1p75_ef1p75'
 
 main_dir='/home/jfl001/data/runsLemieux_et_al_plast_pot/'
 main_dir_grid='/home/socn000/data/eccc-ppp5/env_rhel-8-icelake-64/datafiles/constants/oce/repository/master/CONCEPTS/'
-store_main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag'
+store_main_dirTP='/home/jfl001/data/Lemieux_et_al_plast_pot'
 kvalue=7 # value for kernel
 produce_plot=False
-SDATE='20060101'
-EDATE='20060531'
+pack_ice_mask=False
+SDATE='20050101'
+EDATE='20050101'
 FREQ='24H'
 suffix='0000_iceh_inst'
 
@@ -60,6 +61,11 @@ elif (creggrid == 'creg12'):
 else:
     print ("Wrong choice of grid")
 
+if (pack_ice_mask):
+    store_main_dir=store_main_dirTP+'/LKF_diag_pack'
+else:
+    store_main_dir=store_main_dirTP+'/LKF_diag'
+
 store_path=os.path.join(store_main_dir+'/'+EXP+'/detectedLKFs/')
 
 list_dates=list(pd.date_range(SDATE,EDATE, freq=FREQ))
@@ -69,7 +75,7 @@ for i in range(len(list_dates)) :
     data_path=os.path.join(main_dir+'/'+EXP+'/hourly/'+date0+suffix+'.nc')
     fileout=date0 + '_' + EXP
     print(fileout)
-    CREG_lkf_detect(date0, creggrid, cregflag, grid_path, data_path, store_path, fileout, kvalue, produce_plot)
+    CREG_lkf_detect(date0, creggrid, cregflag, grid_path, data_path, store_path, fileout, kvalue, produce_plot, pack_ice_mask)
 
 print('Detection done for experiment:')
 print(EXP)
