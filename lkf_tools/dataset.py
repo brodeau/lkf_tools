@@ -31,7 +31,7 @@ class process_dataset(object):
     """
     Class to process deformation and drift dataset to LKF data set.
     """
-    def __init__(self,netcdf_file,creg,output_path='./', xarray=None,
+    def __init__(self,netcdf_file,creg,usepmask,output_path='./', xarray=None,
                  max_kernel=5,min_kernel=1, dog_thres=0.01,skeleton_kernel=0,
                  dis_thres=4,ellp_fac=2,angle_thres=45,eps_thres=1.25,lmin=3,
                  latlon=True,return_eps=True,red_fac=1,t_red=3):
@@ -64,6 +64,7 @@ class process_dataset(object):
         self.red_fac = red_fac
         self.t_red = t_red
         self.creg = creg
+        self.usepmask = usepmask
 
         # Read netcdf file
         if xarray is None:
@@ -109,6 +110,11 @@ class process_dataset(object):
         """
 
         thr_aice = 0.15 # detect LKFs only if aice > thr_aice
+
+        # open pack ice mask HARD CODED!!!
+        if (self.usepmask):
+            path_filemask='/home/jfl001/data/Lemieux_et_al_plast_pot/UTIL/mask_pack_ice.npy'
+            pmask = np.load(path_filemask,allow_pickle=True) # 1 or 0
 
         # Check for already dectected features
         if force_redetect:
@@ -159,7 +165,10 @@ class process_dataset(object):
                         shr = np.sqrt((dudx-dvdy)**2 + (dudy + dvdx)**2) * 3600. *24. # in day^-1
                         vor = 0.5*(dudy-dvdx) * 3600. *24. # in day^-1
                 eps_tot = np.sqrt(div**2+shr**2)
-                eps_tot = eps_tot.where((aice>thr_aice) & (aice<=1))
+                if (self.usepmask):
+                    eps_tot = eps_tot.where((aice>thr_aice) & (aice<=1) & (pmask==1) )
+                else:
+                    eps_tot = eps_tot.where((aice>thr_aice) & (aice<=1))
 
 #               jfl replaced line below by line above...does not work because of nans?
 #                eps_tot = eps_tot.where((aice[1:-1,1:-1]>0) & (aice[1:-1,1:-1]<=1))
