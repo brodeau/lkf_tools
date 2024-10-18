@@ -189,6 +189,7 @@ def CREG_lkf_calc_width(date,creggrid,path_filedist,path_filein,path_fileout,dat
 
 #---- analyse  lkfs -----
 
+    out_lkfs=[]
     l=0
     for ilkf in lkfs:
         nb=ilkf.shape[0] # nb of points in LKF i
@@ -293,13 +294,14 @@ def CREG_lkf_calc_width(date,creggrid,path_filedist,path_filein,path_fileout,dat
 
         zlkf=np.c_[zlkf, halfw1] # add halfw vectors to zlkf
         zlkf=np.c_[zlkf, halfw2]
-        lkfs[l,]=zlkf        
+        
+        out_lkfs.append(zlkf)
 
         l=l+1
 
 #----- save output file -----
 
-    np.save(path_fileout,lkfs,allow_pickle=True)
+    np.save(path_fileout,out_lkfs,allow_pickle=True)
 
 #----  CREG_lkf_concatenate_width ---------------------------
 #
@@ -318,10 +320,11 @@ def CREG_lkf_concatenate_width (date,path_filein, hwidth):
     lt=0
     lr=0
     lkfs = np.load(path_filein,allow_pickle=True)
-    print(lkfs.shape)
-    
-    for ilkf in lkfs:
+            
+    for i in range(len(lkfs)) :
+        ilkf=lkfs[i]
         nb=ilkf.shape[0] # nb of points in LKF i
+
         for n in range(nb):
             lt=lt+1
             if hwidth == 1:
@@ -339,7 +342,7 @@ def CREG_lkf_concatenate_width (date,path_filein, hwidth):
                     
             else:
                 print('wrong hwidth value') 
-            
+
     print('final number of LKF points:')
     print(l)
     print('number of rejected LKF points:')

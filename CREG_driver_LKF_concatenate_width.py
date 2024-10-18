@@ -19,9 +19,9 @@ import calendar
 #----- INPUT -----
 #EXP='run_eg1p0_ef1p5'
 #EXP='run_eg1p5_ef1p5'
-EXP='run_eg2p25_ef1p5'
+#EXP='run_eg2p25_ef1p5'
 #EXP='run_eg1p16_ef1p75'
-#EXP='run_eg1p75_ef1p75'
+EXP='run_eg1p75_ef1p75'
 #EXP='run_eg2p63_ef1p75'
 #EXP='run_eg1p33_ef2p0'
 #EXP='run_eg2p0_ef2p0'
@@ -30,19 +30,22 @@ main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag'
 
 FREQ='24H'
 SDATE='20050101'
-EDATE='20050531'
+EDATE='20050110'
 suffix='_000'
 fraclabel='0p5'
+dsearch=5 # +- dsearch cells around one LKF cell (dist is capped if searching too far!!!)
 #-----------------------------------------
+
+dsstr=str(dsearch)
 
 widthdir=os.path.join(main_dir+'/'+EXP+'/WIDTH/')
 
 if not os.path.isdir(widthdir):
     os.makedirs(widthdir)
 
-fileout1='hwidth1_lkf_'+SDATE+'_'+EDATE+'_'+fraclabel+'.npy'
+fileout1='hwidth1_lkf_'+SDATE+'_'+EDATE+'_f'+fraclabel+'_ds'+dsstr+'.npy'
 path_fileout1=os.path.join(widthdir+fileout1)
-fileout2='hwidth2_lkf_'+SDATE+'_'+EDATE+'_'+fraclabel+'.npy'
+fileout2='hwidth2_lkf_'+SDATE+'_'+EDATE+'_f'+fraclabel+'_ds'+dsstr+'.npy'
 path_fileout2=os.path.join(widthdir+fileout2)
 
 list_dates=list(pd.date_range(SDATE,EDATE, freq=FREQ))
@@ -53,7 +56,7 @@ tpvect=[]
 for i in range(len(list_dates)):
     date0 = (list_dates[i] + timedelta(days=-0)).strftime('%Y%m%d%H')
     date0ext=date0
-    filein='lkf_'+date0ext+'_'+EXP+'_'+fraclabel+'.npy' # a for analysed
+    filein='lkf_'+date0ext+'_'+EXP+'_f'+fraclabel+'_ds'+dsstr+'.npy'
     tpdir=date0ext+'_'+EXP
     
     tpvect=[]
