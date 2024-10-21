@@ -20,6 +20,11 @@ EXP='run_eg1p75_ef1p75'
 #EXP='run_eg2p0_ef2p0'
 #EXP='run_eg3p0_ef2p0'
 
+#EXP='run_eg1p75_ef1p16'
+#EXP='run_eg1p75_ef1p5'
+#EXP='run_eg1p75_ef2p0'
+#EXP='run_eg1p75_ef2p63'
+
 SDATE='20050101'
 EDATE='20050531'
 main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag'

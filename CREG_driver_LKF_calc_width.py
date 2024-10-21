@@ -24,11 +24,17 @@ creggrid='creg12' # creg025 or creg12
 #EXP='run_eg1p5_ef1p5'
 #EXP='run_eg2p25_ef1p5'
 #EXP='run_eg1p16_ef1p75'
-EXP='run_eg1p75_ef1p75'
+#EXP='run_eg1p75_ef1p75'
 #EXP='run_eg2p63_ef1p75'
 #EXP='run_eg1p33_ef2p0'
 #EXP='run_eg2p0_ef2p0'
-#EXP='run_eg3p0_ef2p0'
+EXP='run_eg3p0_ef2p0'
+
+#EXP='run_eg1p75_ef1p16'
+#EXP='run_eg1p75_ef1p5'
+#EXP='run_eg1p75_ef2p0'
+#EXP='run_eg1p75_ef2p63'
+
 main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag'
 main_dirnc='/home/jfl001/data/runsLemieux_et_al_plast_pot/'
 dir_util='/home/jfl001/Lemieux2022/UTIL'
@@ -38,7 +44,7 @@ mindist=0.0 # LKF point is analysed if dist from land > mindist (km)
 
 FREQ='24H'
 SDATE='20050101'
-EDATE='20050110'
+EDATE='20050531'
 suffix='0000_iceh_inst'
 
 #----- label for width criterion ---------------------------

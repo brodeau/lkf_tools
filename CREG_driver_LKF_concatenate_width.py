@@ -26,11 +26,17 @@ EXP='run_eg1p75_ef1p75'
 #EXP='run_eg1p33_ef2p0'
 #EXP='run_eg2p0_ef2p0'
 #EXP='run_eg3p0_ef2p0'
+
+#EXP='run_eg1p75_ef1p16'
+#EXP='run_eg1p75_ef1p5'
+#EXP='run_eg1p75_ef2p0'
+#EXP='run_eg1p75_ef2p63'
+
 main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag'
 
 FREQ='24H'
 SDATE='20050101'
-EDATE='20050110'
+EDATE='20050531'
 suffix='_000'
 fraclabel='0p5'
 dsearch=5 # +- dsearch cells around one LKF cell (dist is capped if searching too far!!!)
