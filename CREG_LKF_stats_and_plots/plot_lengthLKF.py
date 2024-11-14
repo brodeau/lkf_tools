@@ -7,22 +7,19 @@ from datetime import timedelta
 #import pickle
 import calendar
 
+#EXP1='run_eg1p75_ef1p5'
+#label1='e_f=1.5, e_g=1.75'
 EXP1='run_eg1p16_ef1p75'
-label1='e_f=1.75, e_g=1.16'
+label1='e$_\mathrm{F}$=1.75, e$_\mathrm{G}$=1.16'
 EXP2='run_eg1p75_ef1p75'
-label2='e_f=1.75, e_g=1.75'
+label2='e$_\mathrm{F}$=1.75, e$_\mathrm{G}$=1.75'
 EXP3='run_eg2p63_ef1p75'
-label3='e_f=1.75, e_g=2.63'
-
-#EXP1='run_eg1p33_ef2p0'
-#label1='e_f=2.0, e_g=1.33'
-#EXP2='run_eg2p0_ef2p0'
-#label2='e_f=2.0, e_g=2.0'
-#EXP3='run_eg3p0_ef2p0'
-#label3='e_f=2.0, e_g=3.0'
+label3='e$_\mathrm{F}$=1.75, e$_\mathrm{G}$=2.63'
+#EXP3='run_eg1p75_ef2p0'
+#label3='e_f=2.0, e_g=1.75'
 
 
-main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag/'
+main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag_pack/'
 zdir='Length'
 year='2005'
 SDATE=year+'0101'
@@ -83,17 +80,21 @@ dfpt.insert(3, 'total_length3', tlength3)
 
 
 ax = dfpm.plot(x = 'date', y =['mean_length1', 'mean_length2', 'mean_length3'], color =['dodgerblue', 'orange', 'darkviolet'])
-ax.legend([label1, label2, label3])
+ax.legend([label1, label2, label3],loc='lower right')
 ax.set_xlabel("", fontsize='2')
 ax.set_ylabel("Mean length of LKFs (km)", fontsize=14)
+ax.set_ylim(0, 400) 
 fileout='FIGS/Mean_length_LKFs_ef1p75_'+year+'.png'
+#fileout='FIGS/Mean_length_LKFs_eg1p75_'+year+'.png'
 plt.savefig(fileout)
 
 ax = dfpt.plot(x = 'date', y =['total_length1', 'total_length2', 'total_length3'], color =['dodgerblue', 'orange', 'darkviolet'])
-ax.legend([label1, label2, label3])
+ax.legend([label1, label2, label3],loc='upper right')
 ax.set_xlabel("", fontsize='2')
 ax.set_ylabel("Total length of LKFs (km)", fontsize=14)
+ax.set_ylim(0, 60000)
 fileout='FIGS/Total_length_LKFs_ef1p75_'+year+'.png'
+#fileout='FIGS/Total_length_LKFs_eg1p75_'+year+'.png'
 plt.savefig(fileout)
 
 plt.show()

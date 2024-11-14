@@ -6,13 +6,13 @@ import matplotlib.pyplot as plt
 
 #----- INPUT -----
 #PATH_OUT='/home/jfl001/data/Lemieux2022/LKF_diag/Histo_width'
-main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag'
+main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag_pack'
 EXP1='run_eg1p16_ef1p75'
-label1='e_f=1.75, e_g=1.16'
+label1='e$_\mathrm{F}$=1.75, e$_\mathrm{G}$=1.16'
 EXP2='run_eg1p75_ef1p75'
-label2='e_f=1.75, e_g=1.75'
+label2='e$_\mathrm{F}$=1.75, e$_\mathrm{G}$=1.75'
 EXP3='run_eg2p63_ef1p75'
-label3='e_f=1.75, e_g=2.63'
+label3='e$_\mathrm{F}$=1.75, e$_\mathrm{G}$=2.63'
 year='2005'
 
 suffix=year+'0101_'+year+'0531.npy'
@@ -37,7 +37,9 @@ df3.plot(ax=ax, x = 'date', y = 'nb_of_LKFS', color = "darkviolet")
 ax.legend([label1, label2, label3])
 ax.set_xlabel("", fontsize='2')
 ax.set_ylabel("Nb of LKFs")
+ax.set_ylim(0, 250)
 
-fileout='FIGS/Nb_LKFs_ef1p75_'+year+'.png'
+
+fileout='FIGS/Nb_LKFs_ef1p75_'+year+'_pack.png'
 plt.savefig(fileout)
 plt.show()

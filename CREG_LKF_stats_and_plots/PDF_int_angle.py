@@ -12,13 +12,12 @@ import calendar
 #EXP='run_eg2p25_ef1p5'
 #EXP='run_eg1p16_ef1p75'
 #EXP='run_eg1p75_ef1p75'
-#EXP='run_eg2p63_ef1p75'
+EXP='run_eg2p63_ef1p75'
 #EXP='run_eg1p33_ef2p0'
 #EXP='run_eg2p0_ef2p0'
-EXP='run_eg3p0_ef2p0'
+#EXP='run_eg3p0_ef2p0'
 
-
-main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag'
+zmask=2 # 1: Arctic mask, 2: pack ice mask
 zdir='Int_Angle'
 year='2005'
 SDATE=year+'0101'
@@ -28,8 +27,15 @@ addlabel='intpairs'
 dlabel='10'
 
 nbmin=10
-percmin=75 # perc of pts with same sign vorticity for identifying conj fault lines
+percmin=50 # perc of pts with same sign vorticity for identifying conj fault lines
 perclabel=str(percmin)
+
+if zmask == 1:
+    main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag'
+    mlabel = 'Arctic'
+elif zmask == 2:
+    main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag_pack'
+    mlabel = 'pack'
 
 #-----------------------------------------
 
@@ -98,16 +104,16 @@ plt.xlabel('angle of intersection', fontsize=14)
 plt.ylabel('PDF', fontsize=14)
 plt.ylim(0,0.06)
 plt.xlim(0,180)
-fileout1='FIGS/PDF_int_angle_'+EXP+'_'+year+'_delta' + dlabel +'.png'
+fileout1='FIGS/PDF_int_angle_'+EXP+'_'+year+'_delta' + dlabel +'_'+mlabel+'.png'
 plt.savefig(fileout1)
 
 plt.figure(2)
-counts, bins, bars = plt.hist(conj_angles, bins=mybins, density=True, color = "dodgerblue", ec="dodgerblue")
-plt.xlabel('angle of conjugate pair', fontsize=14)
+counts, bins, bars = plt.hist(conj_angles, bins=mybins, density=True, color = "dodgerblue", ec="dodgerblue",alpha=0.5,edgecolor='black')
+plt.xlabel("$\\theta_c$", fontsize=16)
 plt.ylabel('PDF', fontsize=14)
-plt.ylim(0,0.03)
+plt.ylim(0,0.035)
 plt.xlim(0,180)
-fileout2='FIGS/PDF_conj_angle_'+EXP+'_'+year+'_delta' + dlabel +'.png'
+fileout2='FIGS/PDF_conj_angle_'+EXP+'_'+year+'_delta' + dlabel +'_'+mlabel+'.png'
 plt.savefig(fileout2)
 
 plt.figure(3)
@@ -116,7 +122,7 @@ plt.xlabel('angle of conjugate pair', fontsize=14)
 plt.ylabel('PDF', fontsize=14)
 plt.ylim(0,0.03)
 plt.xlim(0,180)
-fileout3='FIGS/PDF_conj_angle_'+EXP+'_'+year+'_delta' + dlabel +'percmin_'+perclabel+'.png'
+fileout3='FIGS/PDF_conj_angle_'+EXP+'_'+year+'_delta' + dlabel +'percmin_'+perclabel+'_'+mlabel+'.png'
 plt.savefig(fileout3)
 
 plt.show()

@@ -10,14 +10,14 @@ import calendar
 #EXP='run_eg1p0_ef1p5'
 #EXP='run_eg1p5_ef1p5'
 #EXP='run_eg2p25_ef1p5'
-#EXP='run_eg1p16_ef1p75'
+EXP='run_eg1p16_ef1p75'
 #EXP='run_eg1p75_ef1p75'
-EXP='run_eg2p63_ef1p75'
+#EXP='run_eg2p63_ef1p75'
 #EXP='run_eg1p33_ef2p0'
 #EXP='run_eg2p0_ef2p0'
 #EXP='run_eg3p0_ef2p0'
 year='2005'
-main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag'
+zmask=2 # 1: Arctic mask, 2: pack ice mask
 zdir='Angle_grid_at_int'
 SDATE=year+'0101'
 EDATE=year+'0531'
@@ -25,6 +25,13 @@ FREQ='24H'
 addlabel='anggrid_at_int_'
 dlabel='10'
 nbmin=10
+
+if zmask == 1:
+    main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag'
+    mlabel = 'Arctic'
+elif zmask == 2:
+    main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag_pack'
+    mlabel = 'pack'
 
 #-----------------------------------------
 
@@ -82,12 +89,12 @@ print('mean min angle with x or y axis', mean_min_angle)
 #plt.xlabel('angle', fontsize=14)
 #plt.ylabel('PDF (angle with y axis)', fontsize=14)
 plt.figure(3)
-counts, bins, bars = plt.hist(min_angles, bins=myotherbins, density=True, color = "dodgerblue", ec="dodgerblue")
-plt.xlabel('Minimum angle with x or y axis', fontsize=14)
+counts, bins, bars = plt.hist(min_angles, bins=myotherbins, density=True, color = "dodgerblue", ec="dodgerblue",alpha=0.5,edgecolor='black')
+plt.xlabel("$\\theta_{min}$", fontsize=16)
 plt.ylabel('PDF', fontsize=14)
-plt.ylim(0,0.08)
+plt.ylim(0,0.12)
 plt.xlim(0,45)
-fileout='FIGS/PDF_min_angle_grid_at_int_conj_pair_'+EXP+'_delta' + dlabel +'.png'
+fileout='FIGS/PDF_min_angle_grid_at_int_conj_pair_'+EXP+'_delta' + dlabel +'_'+mlabel+'.png'
 plt.savefig(fileout)
 
 plt.show()

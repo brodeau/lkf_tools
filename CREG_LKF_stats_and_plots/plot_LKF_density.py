@@ -26,13 +26,13 @@ creggrid='creg12' # creg025 or creg12
 #EXP='run_eg2p25_ef1p5'
 #EXP='run_eg1p16_ef1p75'
 #EXP='run_eg1p75_ef1p75'
-#EXP='run_eg2p63_ef1p75'
+EXP='run_eg2p63_ef1p75'
 #EXP='run_eg1p33_ef2p0'
 #EXP='run_eg2p0_ef2p0'
-EXP='run_eg3p0_ef2p0'
+#EXP='run_eg3p0_ef2p0'
 year='2005'
 
-main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag'
+main_dir='/home/jfl001/data/Lemieux_et_al_plast_pot/LKF_diag_pack'
 SDATE=year+'0101'
 EDATE=year+'0531'
 
@@ -69,7 +69,7 @@ ax.set_extent(extent)
 
 im = ax.pcolormesh(lon,lat,density,
                            transform=ccrs.PlateCarree(),
-                           vmin=0,vmax=0.1,
+                           vmin=0,vmax=0.08,
                            cmap=cmap)
 
 ax.add_feature(cartopy.feature.LAND, zorder=100, edgecolor='k')
