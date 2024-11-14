@@ -1,58 +1,121 @@
 import os,sys
 import numpy as np
 import matplotlib as mpl
-mpl.use('Agg')
+#mpl.use('Agg')
 import matplotlib.pyplot as plt
 
 #----- INPUT -----
-model='creg025' # creg12 ou creg025
 #col1='b'
 #col2='r'
 #col3='c'
-label1='$P_{ref}$'
-label2='$P_{ref}$*1.25'
-label3='$P_{ref}$*1.5'
-PATH_OUT='/home/jfl001/data/Lemieux2022/LKF_diag/Histo_width'
+label1='$e_{F}=1.5$'
+label2='$e_{F}$=1.75'
+label3='$e_{F}$=2.0'
+dsearch=5
 #-----------------
 
-fileout=PATH_OUT + '/mean_width_Feb2005_'+model+'.png'
+dsstr=str(dsearch)
 
-y1=np.zeros(4) # Pstar
-y2=np.zeros(4) # 1.25Pstar
-y3=np.zeros(4) # 1.5Pstar
-x=np.zeros(4)
+fileout1='FIGS/mean_width_ef_fixed_2005_ds'+dsstr+'_pack.png'
+fileout2='FIGS/mean_width_eg_fixed_2005_ds'+dsstr+'_pack.png'
 
-x[0]=1.25
-x[1]=1.5
-x[2]=1.75
-x[3]=2.0
+y1=np.zeros(3) # ef=1.5
+y2=np.zeros(3) # ef=1.75
+y3=np.zeros(3) # ef=2.0
+x1=np.zeros(3)
+x2=np.zeros(3)
+x3=np.zeros(3)
 
-y1[0]=4.34
-y1[1]=4.59
-y1[2]=4.89
-y1[3]=4.98
+x1[0]=1.0
+x1[1]=1.5
+x1[2]=2.25
 
-y2[0]=4.21
-y2[1]=4.55
-y2[2]=4.87
-y2[3]=4.94
+x2[0]=1.16
+x2[1]=1.75
+x2[2]=2.63
 
-y3[0]=4.21
-y3[1]=4.45
-y3[2]=4.76
-y3[3]=4.91
+x3[0]=1.33
+x3[1]=2.0
+x3[2]=3.0
 
-#foutKEa=os.path.join(PATH_OUT + 'tsKEam_' +model +'_' +EXP1s +'_' +EXP2s +'_' +EXP3s +'_' +EXP4s +'.png')
+if dsearch == 5:
+
+    y1[0]=3.60 # 1.5
+    y1[1]=4.64
+    y1[2]=4.49
+
+    y2[0]=3.87 # 1.75
+    y2[1]=4.97
+    y2[2]=5.06
+
+    y3[0]=4.12 # 2.0
+    y3[1]=5.29
+    y3[2]=5.58
+
+elif dsearch == 6:
+
+    y1[0]= 0.0 #1.5
+#    y1[1]=4.62
+#    y1[2]=4.68
+
+#    y2[0]=3.83 # 1.75
+#    y2[1]=4.98
+#    y2[2]=5.27
+
+#    y3[0]=4.08 # 2.0
+#    y3[1]=5.32
+#    y3[2]=5.80
+
 plt.figure(1)
-plt.plot(x, y1, marker='o')
-plt.plot(x, y2, marker='o')
-plt.plot(x, y3, marker='o')
-plt.ylim(4, 5)
-plt.xlim(1.1, 2.1)
+plt.plot(x1, y1, marker='o', color = "dodgerblue")
+plt.plot(x2, y2, marker='s', color = "orange")
+plt.plot(x3, y3, marker='*', color = "darkviolet")
+plt.ylim(3, 6)
+plt.xlim(0.9, 3.1)
 plt.legend([label1, label2, label3], loc ="lower right")
-plt.ylabel('Mean LKF width [nb of grid cells]')
-plt.xlabel('e', fontsize=14)
+plt.ylabel('Mean LKF width [nb of pixels]', fontsize=12)
+plt.xlabel('$e_G$', fontsize=14)
 #plt.xticks(x, mylabels)
 #plt.locator_params(axis='x', nbins=7)
 #plt.xticks(rotation=45)
-plt.savefig(fileout)
+plt.savefig(fileout1)
+#plt.show()
+
+y4=np.zeros(5) # eg=1.75
+x4=np.zeros(5)
+
+x4[0]=1.16
+x4[1]=1.5
+x4[2]=1.75
+x4[3]=2.0
+x4[4]=2.63
+
+if dsearch == 5:
+
+    y4[0]=3.87
+    y4[1]=4.71
+    y4[2]=4.97
+    y4[3]=4.92
+    y4[4]=4.63
+
+elif dsearch == 6:
+
+    y4[0]=3.99
+#    y4[1]=4.78
+#    y4[2]=4.98
+#    y4[3]=4.92
+#    y4[4]=4.62
+
+label4='$e_{g}$=1.75'
+plt.figure(2)
+plt.plot(x4, y4, marker='o')
+plt.ylim(3.4, 5.6)
+plt.xlim(0.9, 3.1)
+plt.legend([label4], loc ="lower right")
+plt.ylabel('Mean LKF width [nb of grid cells]', fontsize=12)
+plt.xlabel('$e_f$', fontsize=14)
+#plt.xticks(x, mylabels)
+#plt.locator_params(axis='x', nbins=7)
+#plt.xticks(rotation=45)
+plt.savefig(fileout2)
+plt.show()
