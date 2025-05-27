@@ -63,10 +63,10 @@ def CREG_lkf_detect(date, creggrid, cregflag, grid_path, data_path, store_path, 
     grid_nc = grid_nc[variables]
     grid_nc = grid_nc.rename({'e1t':'DXU', 'e2t':'DYV', 'nav_lat':'ULATtp', 'nav_lon':'ULONtp'})
 
-    creg_nc = xr.Dataset.merge(creg_nc, grid_nc,compat='override')
+    creg_nc = xr.Dataset.merge(creg_nc, grid_nc, compat='override')
+    #creg_nc = grid_nc
 
-#creg_nc = creg_nc.rename({'ni':'x', 'nj':'y',cdivu:'div', cshear:'shr', cconc:'A', 
-#                          cuvel:'U', cvvel:'V', 'TLON':'ULON', 'TLAT':'ULAT'})
+    creg_nc = creg_nc.rename({'time_counter':'time'})
 
 #---- process data and detect LKFs ---
 
@@ -85,8 +85,8 @@ def CREG_lkf_detect(date, creggrid, cregflag, grid_path, data_path, store_path, 
 
     print('call process_dataset')
 
-    lkf_data = process_dataset(fileout,creg=cregflag, usepmask=pack_ice_mask, output_path=store_path,
-                               xarray=creg_nc, skeleton_kernel=kvalue, t_red=1)
+    lkf_data = process_dataset( fileout,creg=cregflag, usepmask=pack_ice_mask, output_path=store_path,
+                                xarray=creg_nc, skeleton_kernel=kvalue, t_red=1)
 
     lkf_data.detect_lkfs(indexes=[0])
 

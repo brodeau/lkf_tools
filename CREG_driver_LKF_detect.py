@@ -65,7 +65,8 @@ else:
 
 
 
-grid_path=os.path.join(main_dir_grid+'/mesh_mask_'+CONF+'_L31_4.2_1stlev.nc')
+#grid_path=os.path.join(main_dir_grid+'/mesh_mask_'+CONF+'_L31_4.2_1stlev.nc')
+grid_path=os.path.join(main_dir_grid+'/coordinates_'+CONF+'.nc')
 
 
 if (pack_ice_mask):
