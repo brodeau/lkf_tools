@@ -37,7 +37,7 @@ main_dir_exp  = main_dir+'/'+CONF+'-'+EXP+'_BBM'
 store_main_dirTP = '/data/gcm_setup/tmp/'+CONF
 
 kvalue = 7 # value for kernel
-produce_plot = False
+produce_plot = True
 pack_ice_mask = False
 SDATE = '19970201'
 EDATE = '19970202'
