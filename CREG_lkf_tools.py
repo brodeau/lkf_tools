@@ -22,22 +22,30 @@ def CREG_lkf_detect(date, creggrid, cregflag, grid_path, data_path, store_path, 
 
     print(fileout)
 
-#----- open netcdf file -----
+    #----- open netcdf file -----
 
+    cdivu  = 'sidive-t'
+    cshear = 'sishear-f'
+    cvort  = 'sivort-f'
+    cconc  = 'siconc-t'
+    cuvel  = 'u_ice-u'
+    cvvel  = 'v_ice-v'
+    
     creg_nc = xr.open_dataset(data_path)
 
     if cregflag == 1:
-        variables = ['divu','shear','vort','aice','uvel','vvel']
+        variables = [cdivu,cshear,cvort,cconc,cuvel,cvvel]
         creg_nc = xr.open_dataset(data_path)
         creg_nc=creg_nc[variables]
-        creg_nc = creg_nc.rename({'nj':'y','ni':'x','divu':'div', 'shear':'shr', 'vort':'vor', 'aice':'A', 
-                                  'uvel':'U', 'vvel':'V'})
+        #creg_nc = creg_nc.rename({'nj':'y','ni':'x',cdivu:'div', cshear:'shr', cvort:'vor', cconc:'A', 
+        #                          cuvel:'U', cvvel:'V'})
+        creg_nc = creg_nc.rename({cdivu:'div', cshear:'shr', cvort:'vor', cconc:'A', cuvel:'U', cvvel:'V'})
     elif cregflag == 2:
-        variables = ['divu','shear','aice','uvel','vvel']
+        variables = [cdivu,cshear,cconc,cuvel,cvvel]
         creg_nc = xr.open_dataset(data_path)
         creg_nc=creg_nc[variables]
-        creg_nc = creg_nc.rename({'nj':'y','ni':'x','divu':'div', 'shear':'shr', 'aice':'A', 
-                                  'uvel':'U', 'vvel':'V'})
+        creg_nc = creg_nc.rename({'nj':'y','ni':'x',cdivu:'div', cshear:'shr', cconc:'A', 
+                                  cuvel:'U', cvvel:'V'})
 
 #----- open grid coordinate file -----
 
@@ -57,8 +65,8 @@ def CREG_lkf_detect(date, creggrid, cregflag, grid_path, data_path, store_path, 
 
     creg_nc = xr.Dataset.merge(creg_nc, grid_nc,compat='override')
 
-#creg_nc = creg_nc.rename({'ni':'x', 'nj':'y','divu':'div', 'shear':'shr', 'aice':'A', 
-#                          'uvel':'U', 'vvel':'V', 'TLON':'ULON', 'TLAT':'ULAT'})
+#creg_nc = creg_nc.rename({'ni':'x', 'nj':'y',cdivu:'div', cshear:'shr', cconc:'A', 
+#                          cuvel:'U', cvvel:'V', 'TLON':'ULON', 'TLAT':'ULAT'})
 
 #---- process data and detect LKFs ---
 
