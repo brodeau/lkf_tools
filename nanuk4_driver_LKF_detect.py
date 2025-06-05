@@ -18,30 +18,25 @@ import calendar
 #------------------------------------------------------------
 
 #----- INPUT -----
-#ni = 528 ; creg025
-#nj = 735 ;
-#ni = 1580 ; creg12
-#nj = 2198 ;
 cregflag = 1 # 1: output includes vorticity, 2: no vorticity
-CONF = 'NANUK12'
+CONF = 'NANUK4'
 
-EXP='CPL00'
+EXP='N4CPL00'
 
 main_dir = '/data/gcm_setup/'+CONF
 
-main_dir_grid = main_dir+'/'+CONF+'.L31-I'
+main_dir_grid = main_dir+'/'+CONF+'.L75-I'
 
-main_dir_exp  = main_dir+'/'+CONF+'-'+EXP+'_BBM'
-
+main_dir_exp  = main_dir+'/'+CONF+'-'+EXP+'-S'
 
 store_main_dirTP = '/data/gcm_setup/tmp/'+CONF
 
 kvalue = 7 # value for kernel
 produce_plot = True
 pack_ice_mask = False
-SDATE = '19970201'
-EDATE = '19970202'
-FREQ = '3h'
+SDATE = '20091101'
+EDATE = '20091110'
+FREQ = '6h'
 suffix = 'icemod'
 
 #----- check kernel value ----------------

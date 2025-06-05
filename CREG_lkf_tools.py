@@ -25,8 +25,8 @@ def CREG_lkf_detect(date, creggrid, cregflag, grid_path, data_path, store_path, 
     #----- open netcdf file -----
 
     cdivu  = 'sidive-t'
-    cshear = 'sishear-f'
-    cvort  = 'sivort-f'
+    cshear = 'sishear-t'
+    cvort  = 'sivort-t'
     cconc  = 'siconc-t'
     cuvel  = 'u_ice-u'
     cvvel  = 'v_ice-v'
@@ -44,8 +44,7 @@ def CREG_lkf_detect(date, creggrid, cregflag, grid_path, data_path, store_path, 
         variables = [cdivu,cshear,cconc,cuvel,cvvel]
         creg_nc = xr.open_dataset(data_path)
         creg_nc=creg_nc[variables]
-        creg_nc = creg_nc.rename({'nj':'y','ni':'x',cdivu:'div', cshear:'shr', cconc:'A', 
-                                  cuvel:'U', cvvel:'V'})
+        creg_nc = creg_nc.rename({'nj':'y','ni':'x',cdivu:'div', cshear:'shr', cconc:'A', cuvel:'U', cvvel:'V'})
 
 #----- open grid coordinate file -----
 
@@ -76,8 +75,8 @@ def CREG_lkf_detect(date, creggrid, cregflag, grid_path, data_path, store_path, 
 # j = lkf[:,1] + lkf_data.index_y[0][0]
 #
 # pour creg025:
-# lkf_data.index_x[0][0]=93
-# lkf_data.index_y[0][0]=329
+#lkf_data.index_x[0][0]=93
+#lkf_data.index_y[0][0]=329
 # 
 # pour creg12:
 # lkf_data.index_x[0][0]=278
@@ -88,7 +87,9 @@ def CREG_lkf_detect(date, creggrid, cregflag, grid_path, data_path, store_path, 
     lkf_data = process_dataset( fileout,creg=cregflag, usepmask=pack_ice_mask, output_path=store_path,
                                 xarray=creg_nc, skeleton_kernel=kvalue, t_red=1)
 
-    lkf_data.detect_lkfs(indexes=[0])
+    #lolo: lkf_data.detect_lkfs(indexes=[0])
+    lkf_data.detect_lkfs(indexes=[10]) ; # lolo: do all time records...
+    #lkf_data.detect_lkfs() ; # lolo: do all time records...
 
 #---- plot LKFs ---------------------
 

@@ -109,6 +109,8 @@ class process_dataset(object):
         :param indexes: time indexes that should be detected. If None all time steps are detected
         """
 
+        print('LOLO1: indexes =', indexes)
+        
         thr_aice = 0.15 # detect LKFs only if aice > thr_aice
 
         # open pack ice mask HARD CODED!!!
@@ -128,7 +130,11 @@ class process_dataset(object):
             self.indexes = np.arange(self.time.size/self.t_red)
         else:
             self.indexes = indexes
-        
+
+
+        #
+        print('LOLO2: indexes =', indexes)
+            
         for it in [int(j) for j in self.indexes if j+1 not in self.ind_detect]:
             
             print("Compute deformation rates and detect features for day %i" %(it+1))
@@ -140,47 +146,57 @@ class process_dataset(object):
                 uice = self.data.U[it+itr,:,:]
                 vice = self.data.V[it+itr,:,:]
                 aice = self.data.A[it+itr,:,:]
-        
-                if (self.creg == 1):
-                    div = self.data.div[it+itr,:,:]/100.0 # from %day^-1 to day^-1
-                    shr = self.data.shr[it+itr,:,:]/100.0 # from %day^-1 to day^-1
-                    vor = self.data.vor[it+itr,:,:]/100.0 # from %day^-1 to day^-1
-                elif (self.creg == 2):
-                    div = self.data.div[it+itr,:,:]/100.0 # from %day^-1 to day^-1
-                    shr = self.data.shr[it+itr,:,:]/100.0 # from %day^-1 to day^-1
-                    vor = self.data.shr[it+itr,:,:]/100.0 # from %day^-1 to day^-1
-                else:
-                # Check if deformation rates are given
-                    if hasattr(self.data,'div') and hasattr(self.data,'shr') and hasattr(self.data,'vor'):
-                        div = self.data.div[it+itr,:,:]
-                        shr = self.data.shr[it+itr,:,:]
-                        vor = self.data.vor[it+itr,:,:]
-                    else:
-                        dudx = ((uice[2:,:]-uice[:-2,:])/(self.dxu[:-2,:]+self.dxu[1:-1,:]))[:,1:-1]
-                        dvdx = ((vice[2:,:]-vice[:-2,:])/(self.dxu[:-2,:]+self.dxu[1:-1,:]))[:,1:-1]
-                        dudy = ((uice[:,2:]-uice[:,:-2])/(self.dyu[:,:-2]+self.dyu[:,1:-1]))[1:-1,:]
-                        dvdy = ((vice[:,2:]-vice[:,:-2])/(self.dyu[:,:-2]+self.dyu[:,1:-1]))[1:-1,:]
 
-                        div = (dudx + dvdy) * 3600. *24. # in day^-1
-                        shr = np.sqrt((dudx-dvdy)**2 + (dudy + dvdx)**2) * 3600. *24. # in day^-1
-                        vor = 0.5*(dudy-dvdx) * 3600. *24. # in day^-1
+
+                
+                if (self.creg == 1):
+                    print('LOLO: vort is provided!')
+                    div = self.data.div[it+itr,:,:] * 3600.*24.0 # from s^-1 to d^-1
+                    shr = self.data.shr[it+itr,:,:] * 3600.*24.0 # from s^-1 to d^-1
+                    vor = self.data.vor[it+itr,:,:] * 3600.*24.0 # from s^-1 to d^-1
+                elif (self.creg == 2):
+                    div = self.data.div[it+itr,:,:] * 3600.*24.0 # from s^-1 to d^-1
+                    shr = self.data.shr[it+itr,:,:] * 3600.*24.0 # from s^-1 to d^-1
+                    vor = self.data.shr[it+itr,:,:] * 3600.*24.0 # from s^-1 to d^-1
+                else:
+                    print('FIXME: must compute strain rates out of velocities')
+                    exit(0)
+                # Check if deformation rates are given
+                #    if hasattr(self.data,'div') and hasattr(self.data,'shr') and hasattr(self.data,'vor'):
+                #        div = self.data.div[it+itr,:,:]
+                #        shr = self.data.shr[it+itr,:,:]
+                #        vor = self.data.vor[it+itr,:,:]
+                #    else:
+                #        dudx = ((uice[2:,:]-uice[:-2,:])/(self.dxu[:-2,:]+self.dxu[1:-1,:]))[:,1:-1]
+                #        dvdx = ((vice[2:,:]-vice[:-2,:])/(self.dxu[:-2,:]+self.dxu[1:-1,:]))[:,1:-1]
+                #        dudy = ((uice[:,2:]-uice[:,:-2])/(self.dyu[:,:-2]+self.dyu[:,1:-1]))[1:-1,:]
+                #        dvdy = ((vice[:,2:]-vice[:,:-2])/(self.dyu[:,:-2]+self.dyu[:,1:-1]))[1:-1,:]
+                #        div = (dudx + dvdy) * 3600. *24. # in day^-1
+                #        shr = np.sqrt((dudx-dvdy)**2 + (dudy + dvdx)**2) * 3600. *24. # in day^-1
+                #        vor = 0.5*(dudy-dvdx) * 3600. *24. # in day^-1
+
+
+
+
+                        
                 eps_tot = np.sqrt(div**2+shr**2)
                 if (self.usepmask):
                     eps_tot = eps_tot.where((aice>thr_aice) & (aice<=1) & (pmask==1) )
                 else:
                     eps_tot = eps_tot.where((aice>thr_aice) & (aice<=1))
 
-#               jfl replaced line below by line above...does not work because of nans?
-#                eps_tot = eps_tot.where((aice[1:-1,1:-1]>0) & (aice[1:-1,1:-1]<=1))
-
+                #               jfl replaced line below by line above...does not work because of nans?
+                #                eps_tot = eps_tot.where((aice[1:-1,1:-1]>0) & (aice[1:-1,1:-1]<=1))
+                
                 # Mask Arctic basin and shrink array
-
-#                eps_tot = eps_tot.where(self.mask) # jfl crashes here replace by line below:
+                
+                #                eps_tot = eps_tot.where(self.mask) # jfl crashes here replace by line below:
                 eps_tot = np.where(self.mask, eps_tot, np.nan)
-#                eps_tot = eps_tot.where(self.mask[1:-1,1:-1])
-
-#                plt.pcolor(eps_tot, vmin=0, vmax=1)
-#                plt.savefig('debugg.png')
+                #                eps_tot = eps_tot.where(self.mask[1:-1,1:-1])
+                
+                #                plt.pcolor(eps_tot, vmin=0, vmax=1)
+                #                plt.savefig('debugg.png')
+                
                 eps_tot = eps_tot[max([0,self.index_y[0][0]-1]):self.index_y[0][-1]+2:self.red_fac,
                                   max([0,self.index_x[0][0]-1]):self.index_x[0][-1]+2:self.red_fac]
 
