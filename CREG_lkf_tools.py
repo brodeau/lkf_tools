@@ -30,16 +30,17 @@ def CREG_lkf_detect(date, creggrid, cregflag, grid_path, data_path, store_path, 
     cconc  = 'siconc-t'
     cuvel  = 'u_ice-u'
     cvvel  = 'v_ice-v'
+    cdeft  = 'sidefo-t'    
     
     creg_nc = xr.open_dataset(data_path)
 
     if cregflag == 1:
-        variables = [cdivu,cshear,cvort,cconc,cuvel,cvvel]
+        variables = [cdivu,cshear,cvort,cconc,cuvel,cvvel,cdeft]
         creg_nc = xr.open_dataset(data_path)
         creg_nc=creg_nc[variables]
         #creg_nc = creg_nc.rename({'nj':'y','ni':'x',cdivu:'div', cshear:'shr', cvort:'vor', cconc:'A', 
         #                          cuvel:'U', cvvel:'V'})
-        creg_nc = creg_nc.rename({cdivu:'div', cshear:'shr', cvort:'vor', cconc:'A', cuvel:'U', cvvel:'V'})
+        creg_nc = creg_nc.rename({cdivu:'div', cshear:'shr', cvort:'vor', cconc:'A', cuvel:'U', cvvel:'V', cdeft:'eps_tot'})
     elif cregflag == 2:
         variables = [cdivu,cshear,cconc,cuvel,cvvel]
         creg_nc = xr.open_dataset(data_path)

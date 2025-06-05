@@ -154,10 +154,19 @@ class process_dataset(object):
                     div = self.data.div[it+itr,:,:] * 3600.*24.0 # from s^-1 to d^-1
                     shr = self.data.shr[it+itr,:,:] * 3600.*24.0 # from s^-1 to d^-1
                     vor = self.data.vor[it+itr,:,:] * 3600.*24.0 # from s^-1 to d^-1
+                    print('LOLO: reading `eps_tot` in input file!')
+                    eps_tot = self.data.eps_tot[it+itr,:,:] * 3600.*24.0 # from s^-1 to d^-1
                 elif (self.creg == 2):
                     div = self.data.div[it+itr,:,:] * 3600.*24.0 # from s^-1 to d^-1
                     shr = self.data.shr[it+itr,:,:] * 3600.*24.0 # from s^-1 to d^-1
                     vor = self.data.shr[it+itr,:,:] * 3600.*24.0 # from s^-1 to d^-1
+                    #
+                    eps_tot = np.sqrt(div**2+shr**2)
+                    if (self.usepmask):
+                        eps_tot = eps_tot.where((aice>thr_aice) & (aice<=1) & (pmask==1) )
+                    else:
+                        eps_tot = eps_tot.where((aice>thr_aice) & (aice<=1))
+                    
                 else:
                     print('FIXME: must compute strain rates out of velocities')
                     exit(0)
@@ -176,20 +185,8 @@ class process_dataset(object):
                 #        vor = 0.5*(dudy-dvdx) * 3600. *24. # in day^-1
 
 
-
-
-                        
-                eps_tot = np.sqrt(div**2+shr**2)
-                if (self.usepmask):
-                    eps_tot = eps_tot.where((aice>thr_aice) & (aice<=1) & (pmask==1) )
-                else:
-                    eps_tot = eps_tot.where((aice>thr_aice) & (aice<=1))
-
-                #               jfl replaced line below by line above...does not work because of nans?
-                #                eps_tot = eps_tot.where((aice[1:-1,1:-1]>0) & (aice[1:-1,1:-1]<=1))
                 
-                # Mask Arctic basin and shrink array
-                
+
                 #                eps_tot = eps_tot.where(self.mask) # jfl crashes here replace by line below:
                 eps_tot = np.where(self.mask, eps_tot, np.nan)
                 #                eps_tot = eps_tot.where(self.mask[1:-1,1:-1])
@@ -237,7 +234,8 @@ class process_dataset(object):
                                 np.array(vor[max([0,self.index_y[0][0]-1]):self.index_y[0][-1]+2:self.red_fac,
                                        max([0,self.index_x[0][0]-1]):self.index_x[0][-1]+2:self.red_fac]))
 
-            lkf_T = [j.T for j in lkf]
+            lkf_T = np.asarray( [j.T for j in lkf], dtype="object" ) ; #lolo: important to prevent an error when saving below !
+            
             np.save(self.lkfpath.joinpath('lkf_%s_%03i.npy' %(self.netcdf_file.split('/')[-1].split('.')[0],(it+1))), lkf_T)
             
             
