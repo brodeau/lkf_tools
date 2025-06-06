@@ -10,15 +10,15 @@ from pathlib import Path
 from shapely.geometry import LineString
 from lkf_tools.dataset import *
 
-#----  CREG_lkf_detect --------------------------------------
+#----  NANUK_lkf_detect --------------------------------------
 #
-# Prepares CREG netcdf outputs to be used by Nils' LKF
+# Prepares NANUK netcdf outputs to be used by Nils' LKF
 # detection algorithm. Also offers possibility to plot 
 # detected LKFs on pan-Arctic grid (produce_plot=True).
 #
 #------------------------------------------------------------
 
-def CREG_lkf_detect(date, creggrid, cregflag, grid_path, data_path, store_path, fileout, kvalue, produce_plot, pack_ice_mask):
+def NANUK_lkf_detect(date, creggrid, cregflag, grid_path, data_path, store_path, fileout, kvalue, produce_plot, pack_ice_mask):
 
     print(fileout)
 
@@ -85,7 +85,7 @@ def CREG_lkf_detect(date, creggrid, cregflag, grid_path, data_path, store_path, 
 
     print('call process_dataset')
 
-    lkf_data = process_dataset( fileout,creg=cregflag, usepmask=pack_ice_mask, output_path=store_path,
+    lkf_data = process_dataset( fileout, creg=cregflag, usepmask=pack_ice_mask, output_path=store_path,
                                 xarray=creg_nc, skeleton_kernel=kvalue, t_red=1)
 
     #lolo: lkf_data.detect_lkfs(indexes=[0])
@@ -106,7 +106,8 @@ def CREG_lkf_detect(date, creggrid, cregflag, grid_path, data_path, store_path, 
                                          max([0,lkf_data.index_x[0][0]-1]):lkf_data.index_x[0][-1]+2:lkf_data.red_fac],
                             lkf_data.lat[max([0,lkf_data.index_y[0][0]-1]):lkf_data.index_y[0][-1]+2:lkf_data.red_fac,
                                          max([0,lkf_data.index_x[0][0]-1]):lkf_data.index_x[0][-1]+2:lkf_data.red_fac],
-                            np.sum(lkf_data.eps_tot_list,axis=0),transform=ccrs.PlateCarree(),vmin=0,vmax=1e-1,cmap='Greys_r')
+                            np.sum(lkf_data.eps_tot_list,axis=0),
+                            transform=ccrs.PlateCarree(), vmin=0, vmax=1e-1, cmap='Greys_r')
 
         it = lkf_data.indexes[-1]
 
@@ -127,7 +128,7 @@ def CREG_lkf_detect(date, creggrid, cregflag, grid_path, data_path, store_path, 
         plt.colorbar(pcm,label='total deformation')
         plt.savefig(filefig)
 
-#----  CREG_lkf_calc_width ----------------------------------
+#----  NANUK_lkf_calc_width ----------------------------------
 #
 # Analyses detected LKFs in order to calculate half widths
 # of LKFs. Detected LKF points have maximum values of eps_tot. 
@@ -141,7 +142,7 @@ def CREG_lkf_detect(date, creggrid, cregflag, grid_path, data_path, store_path, 
 #
 #------------------------------------------------------------
 
-def CREG_lkf_calc_width(date,creggrid,path_filedist,path_filein,path_fileout,data_path,dsearch,frac,mindist):
+def NANUK_lkf_calc_width(date,creggrid,path_filedist,path_filein,path_fileout,data_path,dsearch,frac,mindist):
     
     print('working on date:')
     print(date)
@@ -313,13 +314,13 @@ def CREG_lkf_calc_width(date,creggrid,path_filedist,path_filein,path_fileout,dat
 
     np.save(path_fileout,out_lkfs,allow_pickle=True)
 
-#----  CREG_lkf_concatenate_width ---------------------------
+#----  NANUK_lkf_concatenate_width ---------------------------
 #
 # Concatenate half widths of a given LKF file in two vectors.
 # 
 #------------------------------------------------------------
 
-def CREG_lkf_concatenate_width (date,path_filein, hwidth):
+def NANUK_lkf_concatenate_width (date,path_filein, hwidth):
     
 # ilkf[n,7] = hwidth1
 # ilkf[n,8] = hwidth2
@@ -360,16 +361,16 @@ def CREG_lkf_concatenate_width (date,path_filein, hwidth):
     
     return tpvect
 
-#----  CREG_lkf_density -------------------------------------
+#----  NANUK_lkf_density -------------------------------------
 #
-# Called by CREG_driver_LKF_density to calculate contribution 
+# Called by NANUK_driver_LKF_density to calculate contribution 
 # to density from a single LKF file (containing many detected
 # LKFs). There is no criterion applied here for the distance 
 # to land. This could be done later when plotting the density. 
 #
 #------------------------------------------------------------
 
-def CREG_lkf_density(date,creggrid,path_filein):
+def NANUK_lkf_density(date,creggrid,path_filein):
     
     print('working on date:')
     print(date)
@@ -439,7 +440,7 @@ def CREG_lkf_density(date,creggrid,path_filein):
 
 
 #------------------------------------------------------------
-#  Functions for CREG_lkf_pairs_and_angles
+#  Functions for NANUK_lkf_pairs_and_angles
 #------------------------------------------------------------
 
 #---- identify type of intersection -------------------------
@@ -637,14 +638,14 @@ def extra_pt_end(im1, im2, jm1, jm2):
         
     return iend,jend
 
-#----  CREG_lkf_pairs_and_angles ----------------------------
+#----  NANUK_lkf_pairs_and_angles ----------------------------
 #
 # Identifies pairs of LKFs that intersect and calc the 
 # intersection angle. 
 #
 #------------------------------------------------------------
 
-def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout1,fileout2,dlt):
+def NANUK_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout1,fileout2,dlt):
     
     print('working on date:')
     print(date)
@@ -1005,13 +1006,13 @@ def CREG_lkf_pairs_and_angles(date,creggrid,path_filein,data_pathnc,fileout1,fil
     df1.insert(10, 'conj_pair', conjpairlt)
     df1.to_csv(fileout2, index=False)
 
-#----  CREG_lkf_angles_with_grid ----------------------------
+#----  NANUK_lkf_angles_with_grid ----------------------------
 #
 # Calculate angle of LKF with grid at mid LKF point
 #
 #------------------------------------------------------------
 
-def CREG_lkf_angles_with_grid(date,creggrid,path_filein,fileout,dlt):
+def NANUK_lkf_angles_with_grid(date,creggrid,path_filein,fileout,dlt):
     
     print('working on date:')
     print(date)
@@ -1102,7 +1103,7 @@ def CREG_lkf_angles_with_grid(date,creggrid,path_filein,fileout,dlt):
     df.to_csv(fileout, index=False)
 
 #------------------------------------------------------------
-#  Functions for CREG_lkf_length
+#  Functions for NANUK_lkf_length
 #------------------------------------------------------------
 
 def haversine(re,lat1, lon1, lat2, lon2):
@@ -1126,7 +1127,7 @@ def haversine(re,lat1, lon1, lat2, lon2):
     c = 2 * np.arcsin(np.sqrt(a))
     return c * re
 
-#----  CREG_lkf_length --------------------------------------
+#----  NANUK_lkf_length --------------------------------------
 #
 # Calculate length of LKF. There is no polynomial fit used. 
 # The length is calculated from one pixel to the next using 
@@ -1134,7 +1135,7 @@ def haversine(re,lat1, lon1, lat2, lon2):
 #
 #------------------------------------------------------------
 
-def CREG_lkf_length(date,creggrid,path_filein,fileout):
+def NANUK_lkf_length(date,creggrid,path_filein,fileout):
     
     print('working on date:')
     print(date)

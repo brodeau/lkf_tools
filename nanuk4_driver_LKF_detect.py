@@ -6,14 +6,14 @@ import os,sys
 import numpy as np
 import pandas as pd
 from datetime import timedelta
-from CREG_lkf_tools  import *
+from NANUK_lkf_tools  import *
 import pickle
 import calendar
 
-#----  CREG_driver_LKF_detect -------------------------------
+#----  nanuk4_driver_LKF_detect.py --------------------------
 #
 # Driver that loops through a series of files (dates) and that
-# calls the funtion CREG_lkf_detect.
+# calls the funtion NANUK_lkf_detect.
 #
 #------------------------------------------------------------
 
@@ -68,20 +68,18 @@ store_path=os.path.join(store_main_dir+'/'+EXP+'/detectedLKFs/')
 #    data_path=os.path.join(main_dir+'/'+EXP+'/hourly/'+date0+suffix+'.nc')
 #    fileout=date0 + '_' + EXP
 #    print(fileout)
-#    CREG_lkf_detect(date0, CONF, cregflag, grid_path, data_path, store_path, fileout, kvalue, produce_plot, pack_ice_mask)
+#    NANUK_lkf_detect(date0, CONF, cregflag, grid_path, data_path, store_path, fileout, kvalue, produce_plot, pack_ice_mask)
 
 data_path = main_dir_exp+'/'+CONF+'-'+EXP+'_'+FREQ+'_'+SDATE+'_'+EDATE+'_'+suffix+'.nc4'
 
 list_dates=list(pd.date_range(SDATE,SDATE, freq=FREQ))
 date0 = (list_dates[0] + timedelta(days=-0)).strftime('%Y%m%d%H')
 
-
-print('date0 =', date0)
-
+print('*** date0 =', date0)
 
 fileout=date0+'_'+CONF+'_'+EXP
 
-CREG_lkf_detect(date0, CONF, cregflag, grid_path, data_path, store_path, fileout, kvalue, produce_plot, pack_ice_mask)
+NANUK_lkf_detect(date0, CONF, cregflag, grid_path, data_path, store_path, fileout, kvalue, produce_plot, pack_ice_mask)
 
 print('Detection done for experiment:')
-print(CONF+'--'+EXP)
+print(CONF+'-'+EXP)

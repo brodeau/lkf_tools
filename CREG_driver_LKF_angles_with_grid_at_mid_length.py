@@ -1,3 +1,7 @@
+#!/usr/bin/env python3
+# -*- Mode: Python; coding: utf-8; indent-tabs-mode: nil; tab-width: 4 -*-
+##################################################################
+
 import os,sys
 import numpy as np
 import pandas as pd
@@ -16,10 +20,6 @@ import calendar
 #------------------------------------------------------------
 
 #----- INPUT -----
-#ni = 528 ; creg025
-#nj = 735 ;
-#ni = 1580 ; creg12
-#nj = 2198 ;
 
 # Important: given midpoint mp with coordinates (imp,jmp), polyfit on LKF is done for the region:
 # mp-delta to mp + delta. 
