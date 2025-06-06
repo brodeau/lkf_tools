@@ -51,16 +51,6 @@ else:
 
 #----- define paths and file name --------
 
-#if (CONF == 'creg025'):
-#    grid_path=os.path.join(main_dir_grid+'/creg025pe/grid/coordinates_CREG025_LIM.nc')
-#elif (CONF == 'creg12'):
-#    grid_path=os.path.join(main_dir_grid+'/creg012pe/grid/coordinates_CREG12_ext.nc')
-#else:
-#    print ("Wrong choice of grid")
-
-
-
-#grid_path=os.path.join(main_dir_grid+'/mesh_mask_'+CONF+'_L31_4.2_1stlev.nc')
 grid_path=os.path.join(main_dir_grid+'/coordinates_'+CONF+'.nc')
 
 

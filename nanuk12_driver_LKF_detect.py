@@ -18,10 +18,6 @@ import calendar
 #------------------------------------------------------------
 
 #----- INPUT -----
-#ni = 528 ; creg025
-#nj = 735 ;
-#ni = 1580 ; creg12
-#nj = 2198 ;
 cregflag = 1 # 1: output includes vorticity, 2: no vorticity
 CONF = 'NANUK12'
 
@@ -32,7 +28,6 @@ main_dir = '/data/gcm_setup/'+CONF
 main_dir_grid = main_dir+'/'+CONF+'.L31-I'
 
 main_dir_exp  = main_dir+'/'+CONF+'-'+EXP+'_BBM'
-
 
 store_main_dirTP = '/data/gcm_setup/tmp/'+CONF
 
@@ -56,16 +51,6 @@ else:
 
 #----- define paths and file name --------
 
-#if (CONF == 'creg025'):
-#    grid_path=os.path.join(main_dir_grid+'/creg025pe/grid/coordinates_CREG025_LIM.nc')
-#elif (CONF == 'creg12'):
-#    grid_path=os.path.join(main_dir_grid+'/creg012pe/grid/coordinates_CREG12_ext.nc')
-#else:
-#    print ("Wrong choice of grid")
-
-
-
-#grid_path=os.path.join(main_dir_grid+'/mesh_mask_'+CONF+'_L31_4.2_1stlev.nc')
 grid_path=os.path.join(main_dir_grid+'/coordinates_'+CONF+'.nc')
 
 
