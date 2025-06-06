@@ -226,6 +226,7 @@ class process_dataset(object):
                                         np.array(self.lat[max([0,self.index_y[0][0]-1]):self.index_y[0][-1]+2:self.red_fac,
                                             max([0,self.index_x[0][0]-1]):self.index_x[0][-1]+2:self.red_fac]))
             if self.return_eps:
+                print('* lolo [dataset.py]: we call `segs2epsvor` !!!')
                 lkf =  segs2epsvor(lkf,
                                 np.array(div[max([0,self.index_y[0][0]-1]):self.index_y[0][-1]+2:self.red_fac,
                                       max([0,self.index_x[0][0]-1]):self.index_x[0][-1]+2:self.red_fac]),
